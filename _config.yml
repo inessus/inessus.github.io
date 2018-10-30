@@ -1,11 +1,11 @@
 # Site settings
 title: readilen Blog
-SEOTitle: 学会的博客 | Hux Blog
+SEOTitle: 学会的博客 | readilen Blog
 header-img: img/home-bg.jpg
-email: readilen@163.com
-description: "关于程序与设计、黑客与画家 | 学会，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @readilen 学会 的个人博客，与你一起发现更大的世界。"
-keyword: "学会, readilen学会, readilen, 鬼栈, readilen, @readilen, 黄玄的博客, readilen Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计"
-url: "https://readilen.github.io"              # your host, for absolute URL
+email: huxpro@gmail.com
+description: "关于程序与设计、黑客与画家 | 学会，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @Hux学会 的个人博客，与你一起发现更大的世界。"
+keyword: "学会, Hux学会, readilen, 鬼栈, huxpro, @huxpro, 学会的博客, readilen Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计"
+url: "https://inessus.github.com"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
@@ -13,11 +13,11 @@ future: true
 
 # SNS settings
 RSS: false
-weibo_username:     readilen
-zhihu_username:     readilen
-github_username:    readilen
-twitter_username:   readilen
-#facebook_username:  readilen
+weibo_username:     huxpro
+zhihu_username:     huxpro
+github_username:    huxpro
+twitter_username:   huxpro
+#facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
 
 
@@ -59,7 +59,7 @@ kramdown:
 
 
 # Disqus settings
-disqus_username: hux
+disqus_username: readilen
 
 # Netease settings
 netease_comment: false
@@ -72,14 +72,14 @@ netease_comment: false
 
 # Google Analytics
 ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-ga_domain: readilen.me
+ga_domain: huangxuan.me
 
 
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "For the next quantum leap<br>离开世界之前，一切都是过程"
-sidebar-avatar: /img/avatar-hux-ny.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/avatar-readilen-ny.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
@@ -137,5 +137,3 @@ friends: [
         href: "http://xieminis.me/"
     }
 ]
-
-theme: jekyll-theme-slate
