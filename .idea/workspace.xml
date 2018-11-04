@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d14870a2-3bdb-4707-8f92-06082acc7708" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/_front-pages/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/_front-pages/404.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/announcement.html" beforeDir="false" afterPath="$PROJECT_DIR$/_includes/announcement.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/_includes/footer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_layouts/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/_layouts/base.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -18,26 +16,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="comment-section.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_includes/comment-section.html">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
       <file leaf-file-name="description-loop.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/_includes/description-loop.html">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="embedded-video.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_includes/embedded-video.html">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="footer.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/_includes/footer.html">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_front-pages/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+            <state relative-caret-position="286">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+              <folding>
+                <element signature="n#style#0;n#h1#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -51,36 +42,51 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="about.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_front-pages/about.html">
+      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_layouts/base.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1131" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="support.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_front-pages/support.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-515" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tutorials.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_front-pages/tutorials.html">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="announcement.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_includes/announcement.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="9" column="47" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
+            <state relative-caret-position="132">
+              <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="table-chapters.yml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_data/table-chapters.yml">
+      <file leaf-file-name="front-page.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_layouts/front-page.html">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="table-of-contents.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_layouts/table-of-contents.html">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="tutorial-post.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_layouts/tutorial-post.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-3661" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="with-nav.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_layouts/with-nav.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2627" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="1-basic.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_loop-description/python-basic/1-basic.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="others.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/_modules-intro/others.html">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
@@ -96,7 +102,6 @@
         <option value="$PROJECT_DIR$/_front-pages/discuss.html" />
         <option value="$PROJECT_DIR$/_front-pages/support.html" />
         <option value="$PROJECT_DIR$/_includes/share-donate.html" />
-        <option value="$PROJECT_DIR$/_layouts/base.html" />
         <option value="$PROJECT_DIR$/_layouts/with-nav.html" />
         <option value="$PROJECT_DIR$/static/announcement-files/markdown-template.md" />
         <option value="$PROJECT_DIR$/static/scraping/basic-structure.html" />
@@ -107,6 +112,7 @@
         <option value="$PROJECT_DIR$/_front-pages/404.html" />
         <option value="$PROJECT_DIR$/_includes/announcement.html" />
         <option value="$PROJECT_DIR$/_includes/footer.html" />
+        <option value="$PROJECT_DIR$/_layouts/base.html" />
       </list>
     </option>
   </component>
@@ -151,6 +157,39 @@
               <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
               <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
               <item name="_includes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
+              <item name="_layouts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
+              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
+              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
+              <item name="data-manipulation" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
+              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
+              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
+              <item name="python-basic" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
+              <item name="_modules-intro" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
@@ -211,12 +250,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1541325276450</updated>
-      <workItem from="1541325277783" duration="4306000" />
+      <workItem from="1541325277783" duration="4901000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4306000" />
+    <option name="totallyTimeSpent" value="4901000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1204" extended-state="6" />
@@ -248,70 +287,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-1-np-attributes.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-2-np-array.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-3-np-math1.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-2244" />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-4-np-math2.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-5-np-indexing.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-1639" />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-6-np-concat.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-1518" />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-7-np-split.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-1595" />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-8-np-copy.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-649" />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-1-pd-intro.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -510,16 +485,6 @@
     <entry file="file://$PROJECT_DIR$/_includes/assign-heading.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/_front-pages/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="2" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
-          <folding>
-            <element signature="n#style#0;n#h1#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_data/learning-steps.yml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -528,13 +493,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/_data/table-chapters.yml">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_front-pages/404.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" column="80" selection-start-line="12" selection-start-column="80" selection-end-line="12" selection-end-column="80" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/_front-pages/about.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -559,9 +517,6 @@
     <entry file="file://$PROJECT_DIR$/_includes/comment-section.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/_includes/description-loop.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/_includes/embedded-video.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -571,6 +526,65 @@
           <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/recent-posts.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-264" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/description-loop.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="n#style#0;n#h1#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/404.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="80" selection-start-line="12" selection-start-column="80" selection-end-line="12" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_layouts/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_layouts/front-page.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_layouts/table-of-contents.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_layouts/tutorial-post.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3661" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_layouts/with-nav.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2627" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_loop-description/python-basic/1-basic.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_modules-intro/others.html">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
