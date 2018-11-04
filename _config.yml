@@ -1,139 +1,267 @@
-# Site settings
-title: readilen Blog
-SEOTitle: 学会的博客 | readilen Blog
-header-img: img/home-bg.jpg
-email: huxpro@gmail.com
-description: "关于程序与设计、黑客与画家 | 学会，Web & Mobile Lover，Software Engineer，UX Designer | 这里是 @Hux学会 的个人博客，与你一起发现更大的世界。"
-keyword: "学会, Hux学会, readilen, 鬼栈, huxpro, @huxpro, 学会的博客, readilen Blog, 博客, 个人网站, 互联网, Web, JavaScript, 前端, 设计"
-url: "https://inessus.github.com"              # your host, for absolute URL
-baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
-# Publish posts or collection documents with a future date.
-future: true
-
-# SNS settings
-RSS: false
-weibo_username:     huxpro
-zhihu_username:     huxpro
-github_username:    huxpro
-twitter_username:   huxpro
-#facebook_username:  huxpro
-#linkedin_username:  firstname-lastname-idxxxx
-
-
-
-# Build settings
-# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
-highlighter: rouge
-permalink: pretty
-paginate: 10
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
-anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
-# If you have timezone issue (e.g. #68) in China, uncomment to use this:
-#timezone: CN  
-
-
-
-# Gems
-# from PR#40, to support local preview for Jekyll 3.0
-# make sure you have this gem installed
-# `$ gem install jekyll-paginate`
-plugins: [jekyll-paginate]
-
-
-
-# Markdown settings
-# replace redcarpet to kramdown,
-# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
-# document: http://jekyllrb.com/docs/configuration/#kramdown
 markdown: kramdown
-kramdown:
-  input: GFM                            # use Github Flavored Markdown !important
-  syntax_highlighter_opts:
-    span:
-      line_numbers: false
-    block:
-      line_numbers: true
-      start_line: 1
+
+highlighter: rouge
+url: https://inessus.github.io
+exclude: ['README.md']
+
+
+# collection and their defaults
+
+collections:
+  front-pages:
+    output: true
+  modules-intro:
+    output: true
+  loop-description:
+    output: false
+  tutorials:
+    output: true
+    permalink: /:collection/:path/
+  table-contents:
+    output: true
+    permalink: /tutorials/:path/
+
+
+defaults:
+  - scope:
+      path: "_front-pages"
+    values:
+      layout: front-page
+      enable_ads: true
+
+  - scope:
+      path: "_modules-intro"
+    values:
+      layout: front-page
+
+  - scope:
+      path: "_table-contents"
+    values:
+      layout: table-of-contents
+
+  - scope:
+      path: "_tutorials"
+    values:
+      layout: tutorial-post
+      editor: 莫烦
+      author: 莫烦
+      author-link: "#"
+      enable_ads: true
+      published: true  #TOD: change back to true
+
+  # module descriptions
+  - scope:
+      path: "_loop-description/python-basic"
+    values:
+      module: python-basic
+  - scope:
+      path: "_loop-description/home"
+    values:
+      module: home
+  - scope:
+      path: "_loop-description/data-manipulation"
+    values:
+      module: data-manipulation
+  - scope:
+      path: "_loop-description/machine-learning"
+    values:
+      module: machine-learning
+  - scope:
+      path: "_loop-description/others"
+    values:
+      module: others
 
 
 
-# Disqus settings
-disqus_username: readilen
+  # tutorial default
+  - scope:
+      path: "_tutorials/machine-learning/ML-intro"
+    values:
+      series: 有趣的机器学习
+      tut-permalink: /tutorials/machine-learning/ML-intro/
+      category: ML-intro
+      keywords: 机器学习, 简介, 动画
+      thumbnail: /static/img/course_cover/ML_intro.png
 
-# Netease settings
-netease_comment: false
+  - scope:
+      path: "_tutorials/machine-learning/reinforcement-learning"
+    values:
+      series: 强化学习 Reinforcement Learning
+      tut-permalink: /tutorials/machine-learning/reinforcement-learning/
+      category: reinforcement-learning
+      keywords: reinforcement learning, 强化学习, tensorflow
+      thumbnail: /static/img/course_cover/rl.jpg
+      b-cid: 27657236
+
+  - scope:
+      path: "_tutorials/machine-learning/evolutionary-algorithm"
+    values:
+      series: 进化算法 Evolutionary Algorithm
+      tut-permalink: /tutorials/machine-learning/evolutionary-algorithm/
+      category: evolutionary-algorithm
+      keywords: evolutionary algorithm, 进化算法, 遗传算法, genetic algorithm, neuro evalution
+      thumbnail: /static/img/course_cover/EA.jpg
+      b-cid: 27670572
+
+  - scope:
+      path: "_tutorials/machine-learning/keras"
+    values:
+      series: Keras
+      tut-permalink: /tutorials/machine-learning/keras/
+      category: keras
+      keywords: keras, 神经网络, tensorflow, theano
+      thumbnail: /static/img/course_cover/keras.jpg
+      b-cid: 27639729
+
+  - scope:
+      path: "_tutorials/machine-learning/torch"
+    values:
+      series: PyTorch
+      tut-permalink: /tutorials/machine-learning/torch/
+      category: torch
+      keywords: Torch, pytorch, 神经网络
+      thumbnail: /static/img/course_cover/torch.jpg
+      b-cid: 27669626
+
+  - scope:
+      path: "_tutorials/machine-learning/sklearn"
+    values:
+      series: Sklearn
+      tut-permalink: /tutorials/machine-learning/sklearn/
+      category: sklearn
+      keywords: sklearn, scikit-learn, 机器学习
+      thumbnail: /sstatic/img/course_cover/sklearn.jpg
+      b-cid: 27793625
+
+  - scope:
+      path: "_tutorials/machine-learning/tensorflow"
+    values:
+      series: Tensorflow
+      tut-permalink: /tutorials/machine-learning/tensorflow/
+      category: tensorflow
+      keywords: tensorflow, tensorboard, 机器学习, 神经网络
+      thumbnail: /static/img/course_cover/tf.jpg
+      b-cid: 27636880
+
+  - scope:
+      path: "_tutorials/machine-learning/theano"
+    values:
+      series: Theano
+      tut-permalink: /tutorials/machine-learning/theano/
+      category: theano
+      keywords: theano, 机器学习, 神经网络
+      thumbnail: /static/img/course_cover/theano.jpg
+      b-cid: 27691025
+
+  - scope:
+      path: "_tutorials/machine-learning/ML-practice"
+    values:
+      series: 机器学习实战
+      tut-permalink: /tutorials/machine-learning/ML-practice/
+      category: ML-practice
+      keywords: 从头开始, 实战, 机器学习, 神经网络
+      thumbnail: /static/img/course_cover/ML-practice.jpg
+      c-id: ""
+
+  - scope:
+      path: "_tutorials/machine-learning/computer-vision"
+    values:
+      series: 计算机视觉
+      tut-permalink: /tutorials/machine-learning/computer-vision/
+      category: computer-vision
+      keywords: tensorflow, 机器学习, 神经网络, 计算机视觉，Computer-vision
+      thumbnail: /static/img/course_cover/computer-vision.jpg
+      b-cid: ""
+
+  - scope:
+      path: "_tutorials/data-manipulation/np-pd"
+    values:
+      series: Numpy & Pandas
+      tut-permalink: /tutorials/data-manipulation/np-pd/
+      category: np-pd
+      keywords: numpy, pandas, 数据, 处理
+      thumbnail: /static/img/course_cover/np_pd.jpg
+      b-cid: 26721401
+
+  - scope:
+      path: "_tutorials/data-manipulation/plt"
+    values:
+      series: Matplotlib
+      tut-permalink: /tutorials/data-manipulation/plt/
+      category: plt
+      keywords: matplotlib, plt, 数据可视化
+      thumbnail: /static/img/course_cover/plt.jpg
+      b-cid: 26720349
+
+  - scope:
+      path: "_tutorials/data-manipulation/scraping"
+    values:
+      series: 网页爬虫
+      tut-permalink: /tutorials/data-manipulation/scraping/
+      category: scraping
+      keywords: scraping, 爬虫, beautifulsoup
+      thumbnail: /static/img/course_cover/scraping.jpg
+      b-cid: 29254375
+
+  - scope:
+      path: "_tutorials/python-basic/multiprocessing"
+    values:
+      series: 多进程 Multiprocessing
+      tut-permalink: /tutorials/python-basic/multiprocessing/
+      category: multiprocessing
+      keywords: python, 基础, 多进程, multiprocessing
+      thumbnail: /static/img/course_cover/multiprocessing.jpg
+      b-cid: 27699301
+
+  - scope:
+      path: "_tutorials/python-basic/threading"
+    values:
+      series: 多线程 Threading
+      tut-permalink: /tutorials/python-basic/threading/
+      category: threading
+      keywords: python, 基础, 多线程, threading
+      thumbnail: /static/img/course_cover/threading.jpg
+      b-cid: 27699349
 
 
+  - scope:
+      path: "_tutorials/python-basic/tkinter"
+    values:
+      series: 窗口 Tkinter
+      tut-permalink: /tutorials/python-basic/tkinter/
+      category: tkinter
+      keywords: python, 基础, GUI, 窗口, tkinter, tk
+      thumbnail: /static/img/course_cover/tkinter.jpg
+      b-cid: 27695903
 
-# Analytics settings
-# Baidu Analytics 
-# ba_track_id: [your track id]
+  - scope:
+      path: "_tutorials/python-basic/basic"
+    values:
+      series: Python 基础
+      tut-permalink: /tutorials/python-basic/basic/
+      category: basic
+      keywords: python, 基础
+      thumbnail: /static/img/course_cover/python_basic.jpg
+      b-cid: 27671105
 
-# Google Analytics
-ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
+  - scope:
+      path: "_tutorials/others/linux-basic"
+    values:
+      series: Linux 简易教学
+      tut-permalink: /tutorials/others/linux-basic/
+      category: linux-basic
+      keywords: linux, 基础
+      thumbnail: /static/img/course_cover/ML_intro.png
+      b-cid: 26070871
 
-
-
-# Sidebar settings
-sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "For the next quantum leap<br>离开世界之前，一切都是过程"
-sidebar-avatar: /img/avatar-readilen-ny.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
-
-
-
-# Featured Tags
-featured-tags: true                     # whether or not using Feature-Tags
-featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
-
-
-
-# Progressive Web Apps
-chrome-tab-theme-color: "#000000"
-service-worker: true
-
-
-
-# MathJax rendering for layout:page (e.g. post preview)
-page-mathjax: false
-
-
-
-# Friends
-friends: [
-    {
-    #     title: "Su",
-    #     href: "http://su.gallery/"
-    # },{
-        title: "乱序",
-        href: "http://mida.re/"
-    },{
-        title: "前端外刊评论",
-        href: "http://qianduan.guru/"
-    },{
-        title: "天镶的博客",
-        href: "http://lingyu.wang/"
-    },{
-        title: "Luke 的自留地",
-        href: "http://hmqk1995.github.io"
-    },{
-        title: "Ebn's Blog",
-        href: "http://ebnbin.com/"
-    },{
-        title: "SmdCn's Blog",
-        href: "http://blog.smdcn.net"
-    },{
-        title: "David's Game",
-        href: "https://www.ruoyaowu.com/"
-    },{
-        title: "DHong Say",
-        href: "http://dhong.co"
-    },{
-        title: "尹峰以为",
-        href: "http://ingf.github.io/"
-    },{
-        title: "解旻的博客",
-        href: "http://xieminis.me/"
-    }
-]
+  - scope:
+      path: "_tutorials/others/git"
+    values:
+      series: Git 版本管理
+      tut-permalink: /tutorials/others/git/
+      category: git
+      keywords: 其他, git, VCS
+      thumbnail: /static/img/course_cover/git.jpg
+      b-cid: 26719433
+      published: true

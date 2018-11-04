@@ -1,0 +1,91 @@
+---
+title: "关于易学习"
+youtube_id: DUZcIna1DWE
+youku_id: XMTU5NTQ2Mjc3Mg
+bilibili_id: 16017466
+permalink: /about/
+thumbnail: /static/img/description/my_pic_small.jpg
+items:
+  - [text, Email, "readilen@163.com"]
+  - [link, 优酷, "http://i.youku.com/pythontutorial"]
+  - [link, Bilibili, "https://space.bilibili.com/243821484#!/"]
+  - [link, 网易云课堂, "http://study.163.com/u/2635988091/"]
+  - [link, Github, "https://github.com/inessus"]
+  - [link, kaggle, "http://kaggle.com/readilen"]
+  - [link, 简书, "https://www.jianshu.com/readilen"]
+description: "笔名readilen, 所以 易学习 这个名字也是取了个谐音而已.
+大家多少在学习程序语言的时候都会有摸不着头脑的时候, 而 易学习 也正是这个意思. 当你跨入程序语言的时候,
+就相当于入了一个深坑, 我们还是得耐下性子, 好好地在这个黑暗的深坑中不断探索.希望像人民的名义中易学习那样踏踏实实好好学习"
+---
+
+<h1 style="display:none; padding:0; margin:0;">{{page.title}}</h1>
+<div class="section ie-size">
+	{% include embedded-video.html %}
+	<div class="pad-main">
+		<p>
+			<img class="lazy-img" data-src="/static/img/description/my_pic.jpg" src=""
+			     alt="My smile" style="float:left;width:20%;padding:10px;border-radius:50%;">
+		  我叫 <strong>readilen 易学习</strong> , 所以 <em>"易学习"</em> 这个名字也是取了个谐音而已.
+		  我就用人民的名义中易学习的例子鼓励大家. 即使遇到再多再大的困难, 我们还是要做自己，坚持学习
+		   <em>苦心人天不负，三千越甲可吞吴</em> .
+		</p>
+		<p>
+			原本, 我只是一名普普通通的员工, 因为喜欢人工智能, 浏览了很多网站，直到看到莫凡的web页面,
+			于是也想建立一个网站，来记录自己走过的道路，这些都是我在网上探索, 自学而来的.
+			所以说, 如果把学习知识的道路比作里程，学校教会了如何学习，锻炼你的速度和加速度. 我很欣赏网上那些默默奉献的人们, 分享自己所学的东西给了我.
+			. 我也要回报那些奉献的人们, 将我的所学奉献给大家~
+		</p>
+
+		<p>
+			有很多网友都问我: "你的教学做得比网上大部分的教学都要好, 可是为什么获得的关注却比他们少?" 我想主要的原因是我不想做 Marketing 这方面的事.
+			上面也提到谢绝了很多邀请, 自然出名的机会就少了很多. 个人认为, 我未来更愿意在工业界摸爬滚打,
+			而不是学术界, 不过爱分享的性格, 让我能有机会分享这些有趣的内容给大家, 帮助大家, 我也很开心~
+		</p>
+
+		<br>
+		<h2 class="small-h1">
+			我的一点点背景资料 (readilen's Background)
+		</h2>
+		<table class="my-background-table">
+			<colgroup>
+				<col width="15%" />
+				<col width="35%" />
+				<col width="50%" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<td>1979~</td>
+					<td>出生</td>
+					<td>内蒙人(Neimenggu, China)</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+		<br>
+
+		<h2 class="small-h1">
+			讨论与观看动向
+		</h2>
+		<p>
+		    联系到我有很多种方式, 欢迎大家用各种途径留言, 有时间的话, 我会尽量回复你的留言或问题. 以下是几种可以讨论的方式:
+		</p>
+		<div id="contact-table" style="font-size:0.9em;">
+			{% for item in page.items %}
+				<div class="row">
+				  <p style="color: #028e3d;">{{ item[1] }}:</p>
+					{% if item[0] == "link" %}
+				    <a href="{{ item[2] }}" style="font-size:0.7em;" target="_blank">
+					    {{ item[2] }}
+				    </a>
+					{% elsif item[0] == "text" %}
+					  <span style="text-decoration:none; color:#00b359;" >
+					    {{ item[2] }}
+				    </span>
+					{% endif %}
+				</div>
+			{% endfor %}
+
+		</div>
+	</div>
+</div>
