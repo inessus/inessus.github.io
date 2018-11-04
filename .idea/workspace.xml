@@ -2,238 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d14870a2-3bdb-4707-8f92-06082acc7708" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/3rdpartylicenses.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/404.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CNAME" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gruntfile.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.zh.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/_config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/about/en.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/about/zh.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/featured-tags.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_front-pages/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/_front-pages/404.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_includes/announcement.html" beforeDir="false" afterPath="$PROJECT_DIR$/_includes/announcement.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_includes/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/_includes/footer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/friends.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/head.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/intro-header.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/mathjax_support.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/nav.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/posts/2017-07-12-upgrading-eleme-to-pwa/en.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/posts/2017-07-12-upgrading-eleme-to-pwa/zh.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/short-about.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_includes/sns-links.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_layouts/default.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_layouts/keynote.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_layouts/page.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_layouts/post.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2014-01-29-hello-2015.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2014-08-16-miui6.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2014-09-04-is-pure-android-better.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2014-10-01-why-alibaba-ux-sucks.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2014-11-20-responsive-web-design.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2014-12-13-wechat-block-kuaidi.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-03-10-apple-event-2015.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-03-25-digital-native.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-03-31-e2e_user_scenarios.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-04-14-unix-linux-note.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-04-15-os-metro.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-05-11-see-u-ali.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-05-25-js-module-loader.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-06-15-alitrip-strategy.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-07-09-js-module-7day.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-09-22-js-version.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-10-28-how-designer-learn-fe.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-12-15-ios9-safari-web.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2015-12-28-css-sucks-2015.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2016-02-01-React-vs-Angular2.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2016-06-05-pwa-in-my-pov.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2016-09-22-the-open-web.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2016-10-20-pwa-qcon2016.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2016-11-20-sw-101-gdgdf.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-01-09-wechat-miniapp-ux.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-02-09-nextgen-web-pwa.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-04-06-html-document.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-05-28-sw-precache.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-06-25-you-are-slaves.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-07-12-upgrading-eleme-to-pwa.markdown" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-07-26-farewell-flash.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-10-06-css-complaints.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-12-12-halting-problem.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2017-12-12-uncomputable-funcs.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2018-06-30-dreamer.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2018-09-27-avoiding-success-at-all-cost.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2018-10-06-vim-cn-im.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/about.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/archive.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/hux-blog.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/hux-blog.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/feed.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fonts/glyphicons-halflings-regular.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fonts/glyphicons-halflings-regular.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fonts/glyphicons-halflings-regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fonts/glyphicons-halflings-regular.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fonts/glyphicons-halflings-regular.woff2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/404-bg.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/about-bg-walle.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/about-bg.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/avatar-hux-home.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/avatar-hux-ny.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/avatar-hux.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/blog-desktop.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/blog-keynote.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/blog-md-navbar.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/blog-sidebar.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/contact-bg.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/home-bg-art.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/home-bg-geek.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/home-bg-o.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/home-bg.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/icon_wechat.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/forcify.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/open-source-license.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.013.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.014.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.016.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.018.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.019.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.020.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.021.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.023.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.026.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.028.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.029.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.030.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-alitrip-pd/post-alitrip-pd.031.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-c-u-ali-079717.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-c-u-ali-memo.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-c-u-ali-team.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/Architecture.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/Lighthouse-after.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/Lighthouse-before.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/PRECACHE-future-routes.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/PUSH-link-rel-preload.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/after-skeleton.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/before-skeleton.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/eleme-at-io.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/msite-After-Optim.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/msite-Before-Optim.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/nextTick-&amp;-Load.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-eleme-pwa/thisTick-&amp;-Load.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-f-f-weibo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-js-version/javascript-java.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-js-version/keep-calm-and-learn-javascript.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-kuaidi-1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-kuaidi-2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-metro-panorama.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-metro-real.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-metro-ui.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/PWAR-007.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/PWAR-014+PWA.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/flipkart-1.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/flipkart-2.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/flipkart-3.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/ios2-a2hs.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/qcon-hybridzation.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/qcon-trend.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/sw-lifecycle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/sw-race.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-nextgen-web-pwa/sw-sw.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-wmu/maoyan.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-wmu/question.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/in-post/post-wmu/wepiao.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-2015.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-alibaba.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-alitrip.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-android.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-apple-event-2015.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-css.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-digital-native.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-dreamer.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-e2e-ux.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-farewell-flash.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-halting.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-infinity.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-ios9-web.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-js-module.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-js-version.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-kuaidi.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-miui-ux.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-miui6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-nextgen-web-pwa.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-os-metro.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-re-vs-ng2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-rwd.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-see-u-ali.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-universe.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-unix-linux.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-bg-web.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/post-sample-image.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/tag-bg.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/animatescroll.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/archive.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/hux-blog.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/hux-blog.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.nav.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.tagcloud.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/snackbar.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/sw-registration.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/less/highlight.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/less/hux-blog.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/less/mixins.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/less/side-catalog.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/less/sidebar.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/less/snackbar.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/less/variables.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/offline.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/polyfills.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/polyfills.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/css/timeline.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/fonts/huxico.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/fonts/huxico.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/fonts/huxico.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/fonts/huxico.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/hux_avatar.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/intern-alitrip.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/intern-lxu.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/logo-jquery.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/logo-kissy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/logo-react.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/logo-vue.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/newmedia.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/senova.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/work-busyweek.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/work-hslider.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/work-puzzle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/work-truth.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/work-uihome.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/work-wepiao-bo.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/images/work-yanshuo.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio/js/modernizr.custom.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pwa/icons/128.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pwa/icons/512.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pwa/manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sw.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor.js.map" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -247,62 +18,70 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="alipay.jpeg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/img/support/alipay.jpeg">
-          <provider selected="true" editor-type-id="images" />
+      <file leaf-file-name="comment-section.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_includes/comment-section.html">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="white_background.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/img/support/white_background.png">
-          <provider selected="true" editor-type-id="images" />
+      <file leaf-file-name="description-loop.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_includes/description-loop.html">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="Wechat.jpeg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/img/support/Wechat.jpeg">
-          <provider selected="true" editor-type-id="images" />
+      <file leaf-file-name="embedded-video.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_includes/embedded-video.html">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="sofasofa_logo.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/img/support/sofasofa_logo.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="patreon.jpg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/img/support/patreon.jpg">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="my_pic_small.jpg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/img/support/my_pic_small.jpg">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="1-1-1.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/results/torch/1-1-1.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="1-1-2.gif" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/results/torch/1-1-2.gif">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="basic-structure.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/scraping/basic-structure.html">
+      <file leaf-file-name="footer.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/_includes/footer.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+            <state relative-caret-position="396">
+              <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/static/scraping/index.html">
+      <file leaf-file-name="404.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_front-pages/404.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="14" column="57" lean-forward="true" selection-start-line="14" selection-start-column="57" selection-end-line="14" selection-end-column="57" />
+            <state relative-caret-position="264">
+              <caret line="12" column="80" selection-start-line="12" selection-start-column="80" selection-end-line="12" selection-end-column="80" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="about.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_front-pages/about.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1131" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="support.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_front-pages/support.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-515" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tutorials.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_front-pages/tutorials.html">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="announcement.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_includes/announcement.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="9" column="47" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="table-chapters.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_data/table-chapters.yml">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -316,13 +95,18 @@
         <option value="$PROJECT_DIR$/_front-pages/about.html" />
         <option value="$PROJECT_DIR$/_front-pages/discuss.html" />
         <option value="$PROJECT_DIR$/_front-pages/support.html" />
-        <option value="$PROJECT_DIR$/_includes/announcement.html" />
         <option value="$PROJECT_DIR$/_includes/share-donate.html" />
         <option value="$PROJECT_DIR$/_layouts/base.html" />
         <option value="$PROJECT_DIR$/_layouts/with-nav.html" />
         <option value="$PROJECT_DIR$/static/announcement-files/markdown-template.md" />
         <option value="$PROJECT_DIR$/static/scraping/basic-structure.html" />
         <option value="$PROJECT_DIR$/static/scraping/index.html" />
+        <option value="$PROJECT_DIR$/static/scraping/list.html" />
+        <option value="$PROJECT_DIR$/static/scraping/table.html" />
+        <option value="$PROJECT_DIR$/_config.yml" />
+        <option value="$PROJECT_DIR$/_front-pages/404.html" />
+        <option value="$PROJECT_DIR$/_includes/announcement.html" />
+        <option value="$PROJECT_DIR$/_includes/footer.html" />
       </list>
     </option>
   </component>
@@ -371,103 +155,7 @@
             <path>
               <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
               <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_layouts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-              <item name="data-manipulation" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-              <item name="home" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-              <item name="machine-learning" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-              <item name="others" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-              <item name="python-basic" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_modules-intro" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_table-contents" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_table-contents" type="462c0819:PsiDirectoryNode" />
-              <item name="data-manipulation" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_table-contents" type="462c0819:PsiDirectoryNode" />
-              <item name="machine-learning" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_table-contents" type="462c0819:PsiDirectoryNode" />
-              <item name="others" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_table-contents" type="462c0819:PsiDirectoryNode" />
-              <item name="python-basic" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_tutorials" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_tutorials" type="462c0819:PsiDirectoryNode" />
-              <item name="data-manipulation" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="announcement-files" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
@@ -485,62 +173,7 @@
               <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
               <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-              <item name="course_cover" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-              <item name="course_cover-small" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-              <item name="description" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-              <item name="icon" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-              <item name="support" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="results" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-              <item name="basic" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-              <item name="torch" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="scraping" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -578,12 +211,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1541325276450</updated>
-      <workItem from="1541325277783" duration="2763000" />
+      <workItem from="1541325277783" duration="4306000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2763000" />
+    <option name="totallyTimeSpent" value="4306000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1204" extended-state="6" />
@@ -615,22 +248,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/1-1-why.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/1-2-install.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-869" />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-1-np-attributes.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -642,164 +259,316 @@
     <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-2-np-array.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-2827" />
+          <first_editor />
           <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/announcement-files/markdown-template.md">
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-3-np-math1.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="748">
-            <caret line="34" column="34" selection-start-line="34" selection-start-column="34" selection-end-line="34" selection-end-column="34" />
+          <first_editor relative-caret-position="-2244" />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-4-np-math2.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-5-np-indexing.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-1639" />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-6-np-concat.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-1518" />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-7-np-split.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-1595" />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/2-8-np-copy.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-649" />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-1-pd-intro.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-2-pd-indexing.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-3-pd-assign.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-4-pd-nan.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-5-pd-to.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-99" />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-6-pd-concat.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-7-pd-merge.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/3-8-pd-plot.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/4-1-speed-up-numpy.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/1-1-why.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/1-2-install.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/2-1-basic-usage.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="528">
+            <caret line="24" column="2" selection-start-line="24" selection-start-column="2" selection-end-line="24" selection-end-column="2" />
           </first_editor>
           <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/files/Morvan Pycharm color scheme.icls">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/2-2-figure.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-198" />
+          <second_editor />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/CV.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/2-3-axis1.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="1210">
+            <caret line="55" column="8" selection-start-line="55" selection-start-column="8" selection-end-line="55" selection-end-column="8" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/EA.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/2-4-axis2.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/git.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/2-5-lagend.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/keras.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/2-6-annotation.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/linux.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/2-7-tick-visibility.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/ML-practice.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/3-1-scatter.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/ML_intro.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/multiprocessing.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/np_pd.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/plt.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/python_basic.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/rl.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/scraping.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/sklearn.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/tf.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/theano.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/threading.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover/tkinter.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/plt/3-2-Bar.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/img/course_cover/torch.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/course_cover-small/CV.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/google396c0ce3ab777973.html">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/description/404-Page.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/BingSiteAuth.xml">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/description/learning_step_flowchart.png">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/baidu_verify_Regtv4lr5U.html">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/description/loading.gif">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/a5649b49d7c3d77a86f1cbedf021b1d7.txt">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/description/more_update.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/description/my_pic.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/description/tab_icon.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/description/mofanpython.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/icon/partner_icon.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/icon/plt_icon.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/icon/rl_icon.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/icon/share_facebook_icon.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/icon/Ubuntu_icon.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/icon/weibo.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/icon/youku.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/support/juejin_top.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/support/alipay.jpeg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/support/white_background.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/support/Wechat.jpeg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/support/sofasofa_logo.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/support/patreon.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/img/support/my_pic_small.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/results/torch/1-1-1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/results/torch/1-1-2.gif">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/scraping/basic-structure.html">
+    <entry file="file://$PROJECT_DIR$/_config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+        <state relative-caret-position="5082">
+          <caret line="231" column="6" selection-start-line="231" selection-start-column="6" selection-end-line="231" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/scraping/index.html">
+    <entry file="file://$PROJECT_DIR$/_includes/tut-video.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/tut-image.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/share-donate.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/assign-heading.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="14" column="57" lean-forward="true" selection-start-line="14" selection-start-column="57" selection-end-line="14" selection-end-column="57" />
+        <state relative-caret-position="154">
+          <caret line="7" column="2" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
+          <folding>
+            <element signature="n#style#0;n#h1#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_data/learning-steps.yml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_data/Q-and-A.yml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_data/table-chapters.yml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/404.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="80" selection-start-line="12" selection-start-column="80" selection-end-line="12" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/about.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1131" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/support.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-515" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_front-pages/tutorials.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/announcement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="9" column="47" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/comment-section.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/description-loop.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/embedded-video.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_includes/footer.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
         </state>
       </provider>
     </entry>
