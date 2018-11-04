@@ -31,7 +31,7 @@ CSS 和 JavaScript 会在后期简单介绍一下. 因为爬网页的时候多�
 
 {% include tut-image.html image-name="1-1-00.jpg" %}
 
-虽然[莫烦Python](/)主打的是机器学习的教程. 但是这个爬虫教程适用于任何想学爬虫的朋友们.
+虽然[易学习 人工只能](/)主打的是机器学习的教程. 但是这个爬虫教程适用于任何想学爬虫的朋友们.
 从机器学习的角度看, 机器学习中的大量数据, 也是可以从这些网页中来, 使用爬虫来爬取各种网页上面的信息, 然后再放入各种机器学习的方法,
 这样的应用途径正在越来越多被采用. 所以如果你的数据也是分散在各个网页中, 爬虫是你减少人力劳动的必修课.
 
@@ -64,7 +64,7 @@ CSS 和 JavaScript 会在后期简单介绍一下. 因为爬网页的时候多�
 ```html
 <head>
 	<meta charset="UTF-8">
-	<title>Scraping tutorial 1 | 莫烦Python</title>
+	<title>Scraping tutorial 1 | 易学习Python</title>
 	<link rel="icon" href="https://morvanzhou.github.io/static/img/description/tab_icon.png">
 </head>
 ```
@@ -81,7 +81,7 @@ HTML 的第二大块是 `body`, 这个部分才是你看到的网页信息. 网�
 <body>
     <h1>爬虫测试1</h1>
     <p>
-        这是一个在 <a href="https://morvanzhou.github.io/">莫烦Python</a>
+        这是一个在 <a href="https://morvanzhou.github.io/">易学习Python</a>
         <a href="https://morvanzhou.github.io/tutorials/scraping">爬虫教程</a> 中的简单测试.
     </p>
 </body>
@@ -120,13 +120,13 @@ print 出来就是下面这样啦. 这就证明了我们能够成功读取这个
 <html lang="cn">
 <head>
 	<meta charset="UTF-8">
-	<title>Scraping tutorial 1 | 莫烦Python</title>
+	<title>Scraping tutorial 1 | 易学习Python</title>
 	<link rel="icon" href="https://morvanzhou.github.io/static/img/description/tab_icon.png">
 </head>
 <body>
 	<h1>爬虫测试1</h1>
 	<p>
-		这是一个在 <a href="https://morvanzhou.github.io/">莫烦Python</a>
+		这是一个在 <a href="https://morvanzhou.github.io/">易学习Python</a>
 		<a href="https://morvanzhou.github.io/tutorials/scraping">爬虫教程</a> 中的简单测试.
 	</p>
 
@@ -150,7 +150,7 @@ import re
 res = re.findall(r"<title>(.+?)</title>", html)
 print("\nPage title is: ", res[0])
 
-# Page title is:  Scraping tutorial 1 | 莫烦Python
+# Page title is:  Scraping tutorial 1 | 易学习Python
 ```
 
 如果想要找到中间的那个段落 `<p>`, 我们使用下面方法, 因为这个段落在 HTML 中还夹杂着 tab, new line, 所以我们给一个
@@ -161,7 +161,7 @@ res = re.findall(r"<p>(.*?)</p>", html, flags=re.DOTALL)    # re.DOTALL if multi
 print("\nPage paragraph is: ", res[0])
 
 # Page paragraph is:
-#  这是一个在 <a href="https://morvanzhou.github.io/">莫烦Python</a>
+#  这是一个在 <a href="https://morvanzhou.github.io/">易学习Python</a>
 #  <a href="https://morvanzhou.github.io/tutorials/scraping">爬虫教程</a> 中的简单测试.
 ```
 

@@ -87,7 +87,7 @@ sudo chmod +x /usr/local/bin/geckodriver
 
 {% include tut-image.html image-name="5-1-3.png" %}
 
-找到插件上的 record, 点它. 然后用火狐登录上 [莫烦Python](/), 开始你的各种点击工作,
+找到插件上的 record, 点它. 然后用火狐登录上 [易学习Python](/), 开始你的各种点击工作,
 比如我的一连串操作是 (强化学习教程->About页面->赞助页面->教程->数据处理->网页爬虫)
 
 {% include tut-image.html image-name="5-1-4.png" %}

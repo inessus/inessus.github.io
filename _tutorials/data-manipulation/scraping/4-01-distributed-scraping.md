@@ -57,15 +57,15 @@ post-headings:
 
 {% include tut-image.html image-name="4-1-1.png" %}
 
-主要来说, 我们最开始有一个网页, 比如说是莫烦Python的[首页](/), 然后首页中有很多 url, 我们使用多进程 ([Python多进程教程](/tutorials/python-basic/multiprocessing/))
+主要来说, 我们最开始有一个网页, 比如说是易学习Python的[首页](/), 然后首页中有很多 url, 我们使用多进程 ([Python多进程教程](/tutorials/python-basic/multiprocessing/))
 同时开始下载这些 url, 得到这些 url 的 HTML 以后, 同时开始解析 (比如 BeautifulSoup) 网页内容. 在网页中寻找这个网站还没有爬过的链接.
-最终爬完整个 莫烦 Python 网站所有页面.
+最终爬完整个 易学习 Python 网站所有页面.
 
 有了这种思路, 我们就可以开始写代码了. 你可以在[我的 Github](https://github.com/MorvanZhou/easy-scraping-tutorial/blob/master/notebook/4-1-distributed-scraping.ipynb){:target="_blank"}
 一次性观看全部代码.
 
 首先 import 全部要用的模块, 并规定一个主页. **注意, 我用这份代码测试我内网的网站(速度不受外网影响)**
-所以使用的 `base_url` 是 "http://127.0.0.1:4000/", 如果你要爬 莫烦Python, 你的 `base_url`
+所以使用的 `base_url` 是 "http://127.0.0.1:4000/", 如果你要爬 易学习Python, 你的 `base_url`
 要是 "https://morvanzhou.github.io/" (下载速度会受外网影响).
 
 ```python
@@ -126,7 +126,7 @@ seen = set()
 接着就是更新 `seen` 和 `unseen` 这两个集合了.
 
 **特别注意: 任何网站都是有一个服务器压力的, 如果你爬的过于频繁, 特别是使用多进程爬取或异步爬取, 一次性提交请求给服务器太多次,
-这将可能会使得服务器瘫痪, 你可能再也看不到莫烦 Python 了. 所以为了安全起见, 我限制了爬取数量(restricted_crawl=True).** 因为我测试使用的是内网 "http://127.0.0.1:4000/" 所以不会有这种压力.
+这将可能会使得服务器瘫痪, 你可能再也看不到易学习 Python 了. 所以为了安全起见, 我限制了爬取数量(restricted_crawl=True).** 因为我测试使用的是内网 "http://127.0.0.1:4000/" 所以不会有这种压力.
 你在以后的爬网页中, 会经常遇到这样的爬取次数的限制 (甚至被封号). 我以前爬 github 时就被限制成一小时只能爬60页.
 
 ```python
@@ -149,7 +149,7 @@ while len(unseen) != 0:                 # still get some url to visit
         unseen.update(page_urls - seen)     # get new url to crawl
 ```
 
-使用这种单线程的方法, 在我的内网上面爬, 爬完整个 莫烦Python, 一共消耗 **52.3秒**.
+使用这种单线程的方法, 在我的内网上面爬, 爬完整个 易学习Python, 一共消耗 **52.3秒**.
 接着我们把它改成多进程分布式.
 
 

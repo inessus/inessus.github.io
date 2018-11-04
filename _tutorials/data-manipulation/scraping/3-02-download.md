@@ -29,7 +29,7 @@ post-headings:
 {% include assign-heading.html %}
 
 在下载之前, 我们的弄清楚怎么样下载. 打个比方, 以前有朋友留言说我的教程太多,
-不知道从何学起, 我专门制作了一张学习流程图, 这张[莫烦Python的个性化学习路线](/learning-steps/)应该也拯救了无数迷途少年吧.
+不知道从何学起, 我专门制作了一张学习流程图, 这张[易学习Python的个性化学习路线](/learning-steps/)应该也拯救了无数迷途少年吧.
 哈哈哈, 今天我们来爬这张图, 还有下载这张图.
 
 {% include tut-image.html global-path="/static/img/description/learning_step_flowchart.png" %}

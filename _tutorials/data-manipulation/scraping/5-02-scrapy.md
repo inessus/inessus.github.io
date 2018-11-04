@@ -68,7 +68,7 @@ pip3 install scrapy
 
 如果安装遇到任何问题, 它们家的[网站](https://docs.scrapy.org/en/latest/intro/install.html){:target="_blank"}是个好去处.
 
-我们之前有做过爬取 [莫烦Python](/) 全网的信息. 用[多进程]({% link _tutorials/data-manipulation/scraping/4-01-distributed-scraping.md %})
+我们之前有做过爬取 [易学习Python](/) 全网的信息. 用[多进程]({% link _tutorials/data-manipulation/scraping/4-01-distributed-scraping.md %})
 和[异步爬取]({% link _tutorials/data-manipulation/scraping/4-02-asyncio.md %})都做过.
 这次, 我们就用 Scrapy 来实现这样的一个爬虫. 剧透一下, 做前两个的时候, 代码行数差不多都是 50+ 行,
 但是 scrapy 只需要用 20+ 行代码就解决的上面的事. 哈哈, 功能强大吧.
@@ -77,7 +77,7 @@ pip3 install scrapy
 
 
 我们导入 scrapy 模块, 并创建一个 spider 的 class. 并继承 `scrapy.Spider`,
-一定还要给这个 spider 一个名字, 我就用 `mofan` 好了, 因为是爬 莫烦Python 的.
+一定还要给这个 spider 一个名字, 我就用 `mofan` 好了, 因为是爬 易学习Python 的.
 给定一些初始爬取的网页, 写在 `start_urls` 里. 这里特别要提的是:
 **之前我们用 python 的 set 来去除重复的 url, 在 scrapy 中, 这是不需要的, 因为它自动帮你去重**.
 这可省心多了. 如果你想一次性看到全部代码, 请看到我的 [github](https://github.com/MorvanZhou/easy-scraping-tutorial/blob/master/notebook/5-2-scrapy.ipynb){:target="_blank"}.

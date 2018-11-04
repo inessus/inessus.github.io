@@ -107,7 +107,7 @@ Saved 20171214020322682.jpg
 如果你只是偶尔爬一爬网页, 学到目前为止, 你已经入门了, 但是如果你想要继续深入, 你开始对爬虫的效率担忧,
 觉得自己爬得太慢, 想要大规模爬取网页, 那么接下来的内容就再适合你不过了.
 [接下来]({% link _tutorials/data-manipulation/scraping/4-01-distributed-scraping.md %})我们就会提到爬虫的提效方法.
-而且现在我们爬取的都是静态网页 (莫烦python 就是静态网页), 如果你遇到 JavaScript 很多的动态加载网页 (淘宝等),
+而且现在我们爬取的都是静态网页 (易学习python 就是静态网页), 如果你遇到 JavaScript 很多的动态加载网页 (淘宝等),
 后面的 [selenium 教程]({% link _tutorials/data-manipulation/scraping/5-01-selenium.md %})就很适合你.
 
 *相关教程*

@@ -52,7 +52,7 @@ post-headings:
   * 正常打开网页
   * **不**往服务器传数据
 
-这样看来, 很多网页使用 `get` 就可以了, 比如 [莫烦Python](/) 里的所有页面, 都是只是 `get` 发送请求.
+这样看来, 很多网页使用 `get` 就可以了, 比如 [易学习Python](/) 里的所有页面, 都是只是 `get` 发送请求.
 而 `post`, 我们则是给服务器发送个性化请求, 比如将你的账号密码传给服务器, 让它给你返回一个含有你个人信息的 HTML.
 
 从主动和被动的角度来说, `post` 中文是*发送*, 比较主动, 你**控制**了服务器返回的内容.
@@ -105,23 +105,23 @@ pip3 install requests
 {% include assign-heading.html %}
 
 有了 requests, 我们可以发送个中 method 的请求. 比如 `get`. 我们想模拟一下百度的搜索.
-首先我们需要观看一下百度搜索的规律. 在百度搜索框中写上 "莫烦python" 我们发现它弹出了一串这么长的网址.
+首先我们需要观看一下百度搜索的规律. 在百度搜索框中写上 "易学习python" 我们发现它弹出了一串这么长的网址.
 
 {% include tut-image.html image-name="3-1-4.png" %}
 
-但是仔细一看, 和 "莫烦Python" 有关的信息, 只有前面一小段 ("s?wd=莫烦python"), 其他的对我们来说都是无用的信息.
-所以我们现在来尝试一下如果把后面的"无用" url 都去掉会怎样? Duang! 我们还是能搜到 "莫烦python".
+但是仔细一看, 和 "易学习Python" 有关的信息, 只有前面一小段 ("s?wd=易学习python"), 其他的对我们来说都是无用的信息.
+所以我们现在来尝试一下如果把后面的"无用" url 都去掉会怎样? Duang! 我们还是能搜到 "易学习python".
 
 {% include tut-image.html image-name="3-1-5.png" %}
 
-所以 "s?wd=莫烦python" 这就是我们搜索需要的关键信息. 我们就能用 `get` 来搭配一些自定义的搜索关键词来用 python 个性化搜索.
+所以 "s?wd=易学习python" 这就是我们搜索需要的关键信息. 我们就能用 `get` 来搭配一些自定义的搜索关键词来用 python 个性化搜索.
 首先, 我们固定不动的网址部分是 "http://www.baidu.com/s", `?` 后面的东西都是一些参数 (parameters), 所以我们将这些 parameters 用 python
  的字典代替, 然后传入 requests.get() 功能. 然后我们还能用 python (webbrowser模块) 打开一个你的默认浏览器, 观看你是否在百度的搜索页面.
 
 ```python
 import requests
 import webbrowser
-param = {"wd": "莫烦Python"}  # 搜索的信息
+param = {"wd": "易学习Python"}  # 搜索的信息
 r = requests.get('http://www.baidu.com/s', params=param)
 print(r.url)
 webbrowser.open(r.url)
@@ -129,7 +129,7 @@ webbrowser.open(r.url)
 # http://www.baidu.com/s?wd=%E8%8E%AB%E7%83%A6Python
 ```
 
-这时, python 会弹出一个浏览器界面, 然后你看到的, 就是 "莫烦Python" 的搜索结果了.
+这时, python 会弹出一个浏览器界面, 然后你看到的, 就是 "易学习Python" 的搜索结果了.
 
 
 
@@ -174,11 +174,11 @@ Form data, 组织成一个 python 字典. 让后把这个字典传入 `requests.
 
 
 ```python
-data = {'firstname': '莫烦', 'lastname': '周'}
+data = {'firstname': '易学习', 'lastname': '周'}
 r = requests.post('http://pythonscraping.com/files/processing.php', data=data)
 print(r.text)
 
-# Hello there, 莫烦 周!
+# Hello there, 易学习 周!
 ```
 
 通过这个练习, 我们对 HTML 中的 Form 有了理解, 学会了怎么样使用 python 来提交 Form, 登录上提交后的页面.
