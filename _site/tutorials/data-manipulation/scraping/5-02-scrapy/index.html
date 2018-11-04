@@ -1,0 +1,1032 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="前面的教程我们已经学会了如何写出自己的爬虫, 轻轻松松就能写出一个高性能的爬虫. 如果你想更高效的开发, 爬取网页, 记录数据库, Scrapy 是值得一推的. 它是一个爬虫的框架, 而不是一个简单的爬虫. 它整合了爬取, 处理数据, 存储数据的一条龙服务. 如果你只需要偶尔的一两次爬爬网页, 前面的教程已经够了, 如果你需要每天靠爬虫吃饭, Scrapy 还是有必要了解的.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,scraping, 爬虫, beautifulsoup">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/scraping/5-2 scrapy.jpg" />
+  <title>高级爬虫: 高效无忧的 Scrapy 爬虫库 - 网页爬虫 | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='高级爬虫: 高效无忧的 Scrapy 爬虫库 - 网页爬虫 | 易学习Python' />
+  <meta property="og:description" content="前面的教程我们已经学会了如何写出自己的爬虫, 轻轻松松就能写出一个高性能的爬虫. 如果你想更高效的开发, 爬取网页, 记录数据库, Scrapy 是值得一推的. 它是一个爬虫的框架, 而不是一个简单的爬虫. 它整合了爬取, 处理数据, 存储数据的一条龙服务. 如果你只需要偶尔的一两次爬爬网页, 前面的教程已经够了, 如果你需要每天靠爬虫吃饭, Scrapy 还是有必要了解的."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/scraping/5-2 scrapy.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/data-manipulation/scraping/5-02-scrapy/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/data-manipulation/scraping/5-02-scrapy/",
+    "headline": "高级爬虫: 高效无忧的 Scrapy 爬虫库",
+    "image": "http://localhost:4000/static/thumbnail-small/scraping/5-2 scrapy.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "前面的教程我们已经学会了如何写出自己的爬虫, 轻轻松松就能写出一个高性能的爬虫. 如果你想更高效的开发, 爬取网页, 记录数据库, Scrapy 是值得一推的. 它是一个爬虫的框架, 而不是一个简单的爬虫. 它整合了爬取, 处理数据, 存储数据的一条龙服务. 如果你只需要偶尔的一两次爬爬网页, 前面的教程已经够了, 如果你需要每天靠爬虫吃饭, Scrapy 还是有必要了解的.",
+    "url": "http://localhost:4000/tutorials/data-manipulation/scraping/5-02-scrapy/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/data-manipulation/scraping/",
+    "datePublished": "2017-12-30",
+    "dateModified": "2017-12-30",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/0Uug1fDa8nw";
+			var youku_src = "//player.youku.com/embed/XMzM1MTA5Nzc3Mg==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=17920849&cid=29254375&page=13";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=17920849&page=13";
+
+    	getEmbeddedVideo(bilibili_src, "17920849&page=13", youtube_src, "0Uug1fDa8nw", youku_src, "XMzM1MTA5Nzc3Mg");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', '0Uug1fDa8nw')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMzM1MTA5Nzc3Mg')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '17920849&page=13')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/data-manipulation/scraping/5-01-selenium/">
+    <strong>&laquo;</strong> <i>高级爬虫: 让 Selenium 控制你的浏览器帮你爬</i></a>
+  
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>高级爬虫: 高效无忧的 Scrapy 爬虫库</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-12-30
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="https://github.com/MorvanZhou/easy-scraping-tutorial/blob/master/notebook/5-2-scrapy.ipynb" target="_blank">本节学习代码</a></li>
+  <li>Scrapy <a href="https://scrapy.org/" target="_blank">官网</a></li>
+</ul>
+
+<p>前面的教程我们已经学会了如何写出自己的爬虫, 轻轻松松就能写出一个高性能的爬虫. 如果你想更高效的开发,
+爬取网页, 记录数据库, Scrapy 是值得一推的. 它是一个爬虫的框架, 而不是一个简单的爬虫. 它整合了爬取, 处理数据, 存储数据的一条龙服务.
+如果你只需要偶尔的一两次爬爬网页, 前面的教程已经够了, 如果你需要每天靠爬虫吃饭, Scrapy 还是有必要了解的.</p>
+
+<p><a href="/static/results/scraping/5-2-1.png">
+ <img class="course-image lazy-img" data-src="/static/results/scraping/5-2-1.png" src="/static/img/description/loading.gif" alt="高级爬虫: 高效无忧的 Scrapy 爬虫库" title="高级爬虫: 高效无忧的 Scrapy 爬虫库" />
+</a></p>
+
+<p>这个教程教你写出一个 Scrapy 形式的爬虫, 带你入门 Scrapy, 但是 Scrapy 不仅仅只有爬虫, 你需要学习更多.
+那学习 Scrapy 的地方, 当然是他们<a href="https://docs.scrapy.org/en/latest/" target="_blank">自家网站</a>咯.</p>
+
+<h2 class="tut-h2-pad" id="Scrapy-的优势">Scrapy 的优势
+  <a href="/tutorials/data-manipulation/scraping/5-02-scrapy/#Scrapy-的优势" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>Scrapy 是一个整合了的爬虫框架, 有着非常健全的管理系统. 而且它也是分布式爬虫,
+但是比我们<a href="/tutorials/data-manipulation/scraping/4-01-distributed-scraping/">之前写的</a>那个分布式爬虫高级多了.
+下面就是 Scrapy 的框架示意图(<a href="https://docs.scrapy.org/en/latest/topics/architecture.html#topics-architecture" target="_blank">来源</a>).
+它的管理体系非常复杂. 但是特别高效. 让你又刷网页, 又下载, 同时能处理数据. 简直千手观音呀.</p>
+
+<p><a href="/static/results/scraping/5-2-2.png">
+ <img class="course-image lazy-img" data-src="/static/results/scraping/5-2-2.png" src="/static/img/description/loading.gif" alt="高级爬虫: 高效无忧的 Scrapy 爬虫库" title="高级爬虫: 高效无忧的 Scrapy 爬虫库" />
+</a></p>
+
+<p>而且做 Scrapy 的项目, 绝对不是只需要写一个脚本就能解决的. 为了把你带入门, 这次我们只写一个脚本, 只涉及里面的爬虫(spider)部分.
+其他的部分你可以在这里深入学习.</p>
+
+<ul>
+  <li>官网教程 <a href="https://docs.scrapy.org/en/latest/" target="_blank">英文</a>, <a href="https://scrapy-chs.readthedocs.io/zh_CN/0.24/" target="_blank">中文</a></li>
+  <li>JasonDing 的<a href="https://www.jianshu.com/p/a8aad3bf4dc4" target="_blank">学习Scrapy入门</a></li>
+  <li>young-hz 的<a href="http://blog.csdn.net/u012150179/article/details/32343635" target="_blank">Scrapy研究探索系列</a></li>
+</ul>
+
+<h2 class="tut-h2-pad" id="Scrapy-爬虫">Scrapy 爬虫
+  <a href="/tutorials/data-manipulation/scraping/5-02-scrapy/#Scrapy-爬虫" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>好了, 我们开始今天的简单 Scrapy 教程吧. 首先你得安装 Scrapy. 在 terminal 或者 cmd
+使用 pip 安装就好.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># python 2+</span>
+pip <span class="nb">install </span>scrapy
+
+<span class="c"># python 3+</span>
+pip3 <span class="nb">install </span>scrapy
+</code></pre></div></div>
+
+<p>如果安装遇到任何问题, 它们家的<a href="https://docs.scrapy.org/en/latest/intro/install.html" target="_blank">网站</a>是个好去处.</p>
+
+<p>我们之前有做过爬取 <a href="/">易学习Python</a> 全网的信息. 用<a href="/tutorials/data-manipulation/scraping/4-01-distributed-scraping/">多进程</a>
+和<a href="/tutorials/data-manipulation/scraping/4-02-asyncio/">异步爬取</a>都做过.
+这次, 我们就用 Scrapy 来实现这样的一个爬虫. 剧透一下, 做前两个的时候, 代码行数差不多都是 50+ 行,
+但是 scrapy 只需要用 20+ 行代码就解决的上面的事. 哈哈, 功能强大吧.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<p>我们导入 scrapy 模块, 并创建一个 spider 的 class. 并继承 <code class="highlighter-rouge">scrapy.Spider</code>,
+一定还要给这个 spider 一个名字, 我就用 <code class="highlighter-rouge">mofan</code> 好了, 因为是爬 易学习Python 的.
+给定一些初始爬取的网页, 写在 <code class="highlighter-rouge">start_urls</code> 里. 这里特别要提的是:
+<strong>之前我们用 python 的 set 来去除重复的 url, 在 scrapy 中, 这是不需要的, 因为它自动帮你去重</strong>.
+这可省心多了. 如果你想一次性看到全部代码, 请看到我的 <a href="https://github.com/MorvanZhou/easy-scraping-tutorial/blob/master/notebook/5-2-scrapy.ipynb" target="_blank">github</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">scrapy</span>
+
+<span class="k">class</span> <span class="nc">MofanSpider</span><span class="p">(</span><span class="n">scrapy</span><span class="o">.</span><span class="n">Spider</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"mofan"</span>
+    <span class="n">start_urls</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s">'https://morvanzhou.github.io/'</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="c1"># unseen = set()
+</span>    <span class="c1"># seen = set()      # 我们不在需要 set 了, 它自动去重
+</span></code></pre></div></div>
+
+<p>接着我们还要定义这个 class 中的一个功能就能完事了. 我们使用 python 的 <code class="highlighter-rouge">yield</code> 来返回搜集到的数据
+(为什么是yield? 因为在 scrapy 中也有异步处理, 加速整体效率).
+这些 title 和 url 的数据, 我们都是用 scrapy 中<a href="https://docs.scrapy.org/en/latest/intro/tutorial.html#extracting-data" target="_blank">抓取信息的方式</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MofanSpider</span><span class="p">(</span><span class="n">scrapy</span><span class="o">.</span><span class="n">Spider</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="p">{</span>     <span class="c1"># return some results
+</span>            <span class="s">'title'</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'h1::text'</span><span class="p">)</span><span class="o">.</span><span class="n">extract_first</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">'Missing'</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'"'</span><span class="p">,</span> <span class="s">""</span><span class="p">),</span>
+            <span class="s">'url'</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">urls</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'a::attr(href)'</span><span class="p">)</span><span class="o">.</span><span class="n">re</span><span class="p">(</span><span class="s">r'^/.+?/$'</span><span class="p">)</span>     <span class="c1"># find all sub urls
+</span>        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">response</span><span class="o">.</span><span class="n">follow</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">)</span>     <span class="c1"># it will filter duplication automatically
+</span></code></pre></div></div>
+
+<p>然后在这个response网页中筛选 <code class="highlighter-rouge">urls</code>, 这里我们也不需要使用 <code class="highlighter-rouge">urljoin()</code> 这种功能给 url 改变形式. 它在 <code class="highlighter-rouge">follow()</code> 这一步会自动检测 url 的格式.
+(真是省心啊~), 然后对于每个找到的 url, 然后 yield 重新使用 <code class="highlighter-rouge">self.parse()</code> 来爬取, 这里又是自动去重!
+Scrapy 仿佛知道你最不想做什么, 它自动帮你都做好了. 开心~</p>
+
+<p>最后需要运行的时候有点不同, 你需要在 terminal 或 cmd 中运行这个爬虫. 而且还能帮你保存刚刚 yield 的 <code class="highlighter-rouge">{title:, url:}</code> 的结果.
+<code class="highlighter-rouge">runspider 5-2-scrapy.py</code> 就是选择你要跑的这个 Python 文件.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>scrapy runspider 5-2-scrapy.py <span class="nt">-o</span> res.json
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">-o res.json</code> 这个 <code class="highlighter-rouge">-o</code> 就是输出的指令, 你可以在那个文件夹中找到一个名字叫 <code class="highlighter-rouge">res.json</code>
+的文件, 里面存有所有找到的 <code class="highlighter-rouge">{title:, url:}</code>.</p>
+
+<p><a href="/static/results/scraping/5-2-3.png">
+ <img class="course-image lazy-img" data-src="/static/results/scraping/5-2-3.png" src="/static/img/description/loading.gif" alt="高级爬虫: 高效无忧的 Scrapy 爬虫库" title="高级爬虫: 高效无忧的 Scrapy 爬虫库" />
+</a></p>
+
+<p>其实我们今天只做了 scrapy 中的爬虫, 一个正常的 scrapy 项目还包括有很多其他的内容(见下面).
+这个教程就不会细说了, 因为学好 scrapy 还是比较麻烦的. 你可以在上面推荐给你的链接中, 继续深入学习 scrapy.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tutorial/
+    scrapy.cfg            # deploy configuration file
+
+    tutorial/             # project's Python module, you'll import your code from here
+        __init__.py
+
+        items.py          # project items definition file
+
+        middlewares.py    # project middlewares file
+
+        pipelines.py      # project pipelines file
+
+        settings.py       # project settings file
+
+        spiders/          # a directory where you'll later put your spiders
+            __init__.py
+</code></pre></div></div>
+
+<p><em>相关教程</em></p>
+
+<ul>
+  <li><em><a href="/tutorials/data-manipulation/scraping/4-01-distributed-scraping/">简单的分布式爬虫</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/4-02-asyncio/">加速爬虫: 异步加载 Asyncio</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/5-01-selenium/">高级爬虫: 让 Selenium 控制你的浏览器帮你爬</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/5-02-scrapy/">高级爬虫: 高效无忧的 Scrapy 爬虫库</a></em></li>
+</ul>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/5-02-scrapy/&pic=https://morvanzhou.github.io/static/thumbnail-small/scraping/5-2 scrapy.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/5-02-scrapy/&type=icon&language=zh_cn&searchPic=true&title=高级爬虫: 高效无忧的 Scrapy 爬虫库+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/scraping/5-2 scrapy.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/5-02-scrapy/&title=高级爬虫: 高效无忧的 Scrapy 爬虫库+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/5-02-scrapy/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/5-02-scrapy/&original_referer=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/5-02-scrapy/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/data-manipulation/scraping/5-01-selenium/">
+    <strong>&laquo;</strong> <i>高级爬虫: 让 Selenium 控制你的浏览器帮你爬</i></a>
+  
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/data-manipulation/scraping/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/data-manipulation/scraping/"><p><strong>网页爬虫</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">爬虫简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/1-00-why/">Why?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/1-01-understand-website/">了解网页结构</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">BeautifulSoup 解析网页</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-01-beautifulsoup-basic/">BeautifulSoup 解析网页: 基础</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/">BeautifulSoup 解析网页: CSS</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-03-beautifulsoup-regex/">BeautifulSoup 解析网页: 正则表达</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-04-practice-baidu-baike/">小练习: 爬百度百科</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">更多请求/下载方式</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/3-01-requests/">多功能的 Requests</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/3-02-download/">下载文件</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/3-03-practice-download-image/">小练习: 下载美图</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">加速你的爬虫</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/4-01-distributed-scraping/">加速爬虫: 多进程分布式</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/4-02-asyncio/">加速爬虫: 异步加载 Asyncio</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">高级爬虫</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/5-01-selenium/">高级爬虫: 让 Selenium 控制你的浏览器帮你爬</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/5-02-scrapy/" style="color:#ffffff;">高级爬虫: 高效无忧的 Scrapy 爬虫库</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/data-manipulation/scraping/5-02-scrapy/#Scrapy-的优势" style="color:#ffffff;">Scrapy 的优势</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/data-manipulation/scraping/5-02-scrapy/#Scrapy-爬虫" style="color:#ffffff;">Scrapy 爬虫</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

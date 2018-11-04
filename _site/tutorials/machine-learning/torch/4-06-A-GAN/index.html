@@ -1,0 +1,1181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hello 大家好, 欢迎观看有趣的机器学习系列视频, 今天我们会来说说现在最流行的一种生成网络, 叫做 GAN, 又称生成对抗网络, 也是 Generative Adversarial Nets 的简称. 完全没有听懂, GAN 是什么鬼.. 不急, 我们慢慢来解释.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,Torch, pytorch, 神经网络">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/ML-intro/gan1.png" />
+  <title>什么是生成对抗网络 (GAN) - PyTorch | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='什么是生成对抗网络 (GAN) - PyTorch | 易学习Python' />
+  <meta property="og:description" content="Hello 大家好, 欢迎观看有趣的机器学习系列视频, 今天我们会来说说现在最流行的一种生成网络, 叫做 GAN, 又称生成对抗网络, 也是 Generative Adversarial Nets 的简称. 完全没有听懂, GAN 是什么鬼.. 不急, 我们慢慢来解释."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/ML-intro/gan1.png">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/torch/4-06-A-GAN/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/torch/4-06-A-GAN/",
+    "headline": "什么是生成对抗网络 (GAN)",
+    "image": "http://localhost:4000/static/thumbnail-small/ML-intro/gan1.png",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "Hello 大家好, 欢迎观看有趣的机器学习系列视频, 今天我们会来说说现在最流行的一种生成网络, 叫做 GAN, 又称生成对抗网络, 也是 Generative Adversarial Nets 的简称. 完全没有听懂, GAN 是什么鬼.. 不急, 我们慢慢来解释.",
+    "url": "http://localhost:4000/tutorials/machine-learning/torch/4-06-A-GAN/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/torch/",
+    "datePublished": " 2016-11-11 ",
+    "dateModified": " 2016-11-11 ",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/yYUN_k36u5Q";
+			var youku_src = "//player.youku.com/embed/XMjc1OTY2OTMxNg==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=15997678&cid=27669626&page=28";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=15997678&page=28";
+
+    	getEmbeddedVideo(bilibili_src, "15997678&page=28", youtube_src, "yYUN_k36u5Q", youku_src, "XMjc1OTY2OTMxNg");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', 'yYUN_k36u5Q')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMjc1OTY2OTMxNg')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '15997678&page=28')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/torch/4-05-DQN/">
+    <strong>&laquo;</strong> <i>DQN 强化学习</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/torch/4-06-GAN/">
+    <i>GAN (Generative Adversarial Nets 生成对抗网络)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>什么是生成对抗网络 (GAN)</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2016-11-03
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        
+<p>学习资料:</p>
+<ul>
+  <li><a href="/tutorials/machine-learning/torch/4-06-GAN/">PyTorch GAN 教程</a></li>
+  <li><a href="https://github.com/MorvanZhou/Tensorflow-Tutorial/blob/master/tutorial-contents/406_GAN.py" target="_blank">Tensorflow 50行 GAN 代码</a></li>
+  <li><a href="https://arxiv.org/abs/1406.2661" target="_blank">论文 Generative Adversarial Networks</a></li>
+</ul>
+
+<p>Hello 大家好, 欢迎观看有趣的机器学习系列视频, 今天我们会来说说现在最流行的一种生成网络, 叫做 GAN, 又称生成对抗网络, 也是 Generative Adversarial Nets 的简称. 完全没有听懂, GAN 是什么鬼.. 不急, 我们慢慢来解释.</p>
+
+<p><strong>注: 本文不会涉及数学推导. 大家可以在很多其他地方找到优秀的数学推导文章.</strong></p>
+
+<h2 class="tut-h2-pad" id="常见神经网络形式">常见神经网络形式
+  <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/#常见神经网络形式" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/gan2.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan2.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>神经网络分很多种, 有普通的前向传播神经网络 , 有分析图片的 CNN 卷积神经网络 , 有分析序列化数据, 比如语音的 RNN 循环神经网络 , 这些神经网络都是用来输入数据, 得到想要的结果, 我们看中的是这些神经网络能很好的将数据与结果通过某种关系联系起来.</p>
+
+<h2 class="tut-h2-pad" id="生成网络">生成网络
+  <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/#生成网络" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/gan3.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan3.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>但是还有另外一种形式的神经网络, 他不是用来把数据对应上结果的,  而是用来”凭空”捏造结果, 这就是我们要说的生成网络啦. GAN 就是其中的一种形式. 那么 GAN 是怎么做到的呢? 当然这里的”凭空”并不是什么都没有的空盒子, 而是一些随机数.</p>
+
+<p><a href="/static/results/ML-intro/gan4.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan4.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>对, 你没听错, 我们就是用没有意义的随机数来生成有有意义的作品, 比如著名画作. 当然, 这还不是全部, 这只是一个 GAN 的一部分而已, 这一部分的神经网络我们可以想象成是一个新手画家.</p>
+
+<h2 class="tut-h2-pad" id="新手画家">新手画家
+  <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/#新手画家" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/gan5.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan5.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>画家作画都需要点灵感 , 他们都是依照自己的灵感来完成作品. 有了灵感不一定有用, 因为他的作画技术并没有我们想象得好,  画出来有可能是一团糟. 这可怎么办, 聪明的新手画家找到了自己的一个正在学鉴赏的好朋友 – 新手鉴赏家.</p>
+
+<h2 class="tut-h2-pad" id="新手鉴赏家">新手鉴赏家
+  <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/#新手鉴赏家" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/gan6.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan6.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>可是新手鉴赏家也没什么能耐, 他也不知道如何鉴赏著名画作 , 所以坐在电脑旁边的你实在看不下去了, 拿起几个标签往屏幕上一甩 ,  然后新手鉴赏家就被你这样一次次的甩来甩去着甩乖了,  慢慢也学会了怎么样区分著名画家的画了. 重要的是, 新手鉴赏家和新手画家是好朋友, 他们总爱分享学习到的东西.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="新手鉴赏家和新手画家">新手鉴赏家和新手画家
+  <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/#新手鉴赏家和新手画家" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/gan7.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan7.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>所以新手鉴赏家告诉新手画家,  “你的画实在太丑了, 你看看人家达芬奇, 你也学学它呀, 比如这里要多加一点, 这里要画淡一点.” 就这样, 新手鉴赏家将他从你这里所学到的知识都分享给了新手画家, 让好朋友新手画家也能越画越像达芬奇. 这就是 GAN 的整套流程, 我们在来理一下.</p>
+
+<p><a href="/static/results/ML-intro/gan8.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan8.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>新手画家用随机灵感画画 , 新手鉴赏家会接收一些画作,  但是他不知道这是新手画家画的还是著名画家画的, 他说出他的判断,  你来纠正他的判断, 新手鉴赏家一边学如何判断,  一边告诉新手画家要怎么画才能画得更像著名画家, 新手画家就能学习到如何从自己的灵感画出更像著名画家的画了. GAN 也就这么回事.</p>
+
+<h2 class="tut-h2-pad" id="GAN-网络">GAN 网络
+  <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/#GAN-网络" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/gan9.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan9.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>Generator 会根据随机数来生成有意义的数据 , Discriminator 会学习如何判断哪些是真实数据 , 哪些是生成数据, 然后将学习的经验反向传递给 Generator, 让 Generator 能根据随机数生成更像真实数据的数据. 这样训练出来的 Generator 可以有很多用途, 比如最近有人就拿它来生成各种卧室的图片.</p>
+
+<h2 class="tut-h2-pad" id="GAN-应用">GAN 应用
+  <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/#GAN-应用" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/gan10.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/gan10.png" src="/static/img/description/loading.gif" alt="生成对抗网络 (GAN)" title="生成对抗网络 (GAN)" />
+</a></p>
+
+<p>甚至你还能玩点新花样,  比如让图片来做加减法, 戴眼镜的男人 减去 男人 加上 女人, 他居然能生成 戴眼镜的女人的图片.  甚至还能根据你随便画的几笔草图来生成可能是你需要的蓝天白云大草地图片. 哈哈, 看起来机器也能有想象力啦. 如果你想试着动手做一个 GAN 的实践, 却不知道如何做, 不用担心, 我也为准备好了一个使用 Python 和他神经网络模块搭建的最简单的 GAN 实践代码. 欢迎大家访问易学习 Python 了解更多机器学习的内容.</p>
+
+<p><em>Python相关教程</em></p>
+
+<ul>
+  <li><em>Tensorflow <a href="https://github.com/MorvanZhou/Tensorflow-Tutorial/blob/master/tutorial-contents/406_GAN.py" target="_blank">50行 GAN 代码</a></em></li>
+  <li><em>PyTorch <a href="/tutorials/machine-learning/torch/4-06-GAN/">GAN 教程</a></em></li>
+</ul>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/torch/4-06-A-GAN/&pic=https://morvanzhou.github.io/static/thumbnail-small/ML-intro/gan1.png" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/torch/4-06-A-GAN/&type=icon&language=zh_cn&searchPic=true&title=什么是生成对抗网络 (GAN)+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/ML-intro/gan1.png' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/torch/4-06-A-GAN/&title=什么是生成对抗网络 (GAN)+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/torch/4-06-A-GAN/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/torch/4-06-A-GAN/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/torch/4-06-A-GAN/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/torch/4-05-DQN/">
+    <strong>&laquo;</strong> <i>DQN 强化学习</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/torch/4-06-GAN/">
+    <i>GAN (Generative Adversarial Nets 生成对抗网络)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/torch/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/torch/"><p><strong>PyTorch</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">PyTorch 简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/1-1-A-ANN-and-NN/">科普: 人工神经网络 VS 生物神经网络</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/1-1-B-NN/">什么是神经网络 (Neural Network)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/1-1-C-gradient-descent/">神经网络 梯度下降</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/1-1-D-feature-representation/">科普: 神经网络的黑盒不黑</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/1-1-why/">Why Pytorch?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/1-2-install/">Pytorch 安装</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">PyTorch 神经网络基础</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/2-01-torch-numpy/">Torch 或 Numpy</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/2-02-variable/">变量 (Variable)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/2-03-A-activation-function/">什么是激励函数 (Activation Function)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/2-03-activation/">激励函数 (Activation)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">建造第一个神经网络</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/3-01-regression/">关系拟合 (回归)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/3-02-classification/">区分类型 (分类)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/3-03-fast-nn/">快速搭建法</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/3-04-save-reload/">保存提取</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/3-05-train-on-batch/">批训练</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/3-06-A-speed-up-learning/">加速神经网络训练 (Speed Up Training)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/3-06-optimizer/">Optimizer 优化器</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">高级神经网络结构</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-01-A-CNN/">什么是卷积神经网络 CNN (Convolutional Neural Network)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-01-CNN/">CNN 卷积神经网络</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-02-A-RNN/">什么是循环神经网络 RNN (Recurrent Neural Network)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-02-B-LSTM/">什么是 LSTM 循环神经网络</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-02-RNN-classification/">RNN 循环神经网络 (分类)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-03-RNN-regression/">RNN 循环神经网络 (回归)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-04-A-autoencoder/">什么是自编码 (Autoencoder)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-04-autoencoder/">AutoEncoder (自编码/非监督学习)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-05-A-DQN/">什么是 DQN</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-05-DQN/">DQN 强化学习</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-06-A-GAN/" style="color:#ffffff;">什么是生成对抗网络 (GAN)</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/torch/4-06-A-GAN/#常见神经网络形式" style="color:#ffffff;">常见神经网络形式</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/torch/4-06-A-GAN/#生成网络" style="color:#ffffff;">生成网络</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/torch/4-06-A-GAN/#新手画家" style="color:#ffffff;">新手画家</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/torch/4-06-A-GAN/#新手鉴赏家" style="color:#ffffff;">新手鉴赏家</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/torch/4-06-A-GAN/#新手鉴赏家和新手画家" style="color:#ffffff;">新手鉴赏家和新手画家</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/torch/4-06-A-GAN/#GAN-网络" style="color:#ffffff;">GAN 网络</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/torch/4-06-A-GAN/#GAN-应用" style="color:#ffffff;">GAN 应用</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/4-06-GAN/">GAN (Generative Adversarial Nets 生成对抗网络)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">高阶内容</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/5-01-dynamic/">为什么 Torch 是动态的</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/5-02-GPU/">GPU 加速运算</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/5-03-A-overfitting/">什么是过拟合 (Overfitting)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/5-03-dropout/">Dropout 缓解过拟合</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/5-04-A-batch-normalization/">什么是批标准化 (Batch Normalization)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/5-04-batch-normalization/">Batch Normalization 批标准化</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">高阶内容2</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/torch/6-01-actiavte/">激活函数</a>
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

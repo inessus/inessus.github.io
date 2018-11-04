@@ -1,0 +1,1184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="2016 年, AlphaGo 第一版发表在了 Nature 自然杂志上, 这可是牛逼得不要不要的期刊, 如果有谁能发表一篇期刊去Nature, 哈哈, 保证他下半生衣食无忧. 而如今刚过去一年, Google DeepMind 又在 Nature 上发表了一篇 AlphaGo 的改进版, AlphaGo zero, 同样的围棋 AI, 竟然在自然杂志上发了两次! 赞叹他们的实力呀! 要弄懂 AlphaGo zero, 首先我们得弄懂 AlphaGo 是怎样战胜人类的. AlphaGo 战胜过欧洲冠军樊麾, 韩国九段棋手李世石, 近期的比赛中又赢了世界冠军柯洁, 种种迹象表明, 人类已经失守最拿手的围棋了. 这些围棋高手一个个都表示 AlphaGo 走到了他们想不到的地方, 战胜了人类的生物极限, 不会感觉疲惫等等. 的确, 这就是机器相比人类的一个绝大优势. 那 AlphaGo 又是怎么在策略上战胜人类的呢? 很简单, 它会做计划.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,机器学习, 简介, 动画">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/ML-intro/alphago.png" />
+  <title>AlphaGo Zero 为什么更厉害? - 有趣的机器学习 | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='AlphaGo Zero 为什么更厉害? - 有趣的机器学习 | 易学习Python' />
+  <meta property="og:description" content="2016 年, AlphaGo 第一版发表在了 Nature 自然杂志上, 这可是牛逼得不要不要的期刊, 如果有谁能发表一篇期刊去Nature, 哈哈, 保证他下半生衣食无忧. 而如今刚过去一年, Google DeepMind 又在 Nature 上发表了一篇 AlphaGo 的改进版, AlphaGo zero, 同样的围棋 AI, 竟然在自然杂志上发了两次! 赞叹他们的实力呀! 要弄懂 AlphaGo zero, 首先我们得弄懂 AlphaGo 是怎样战胜人类的. AlphaGo 战胜过欧洲冠军樊麾, 韩国九段棋手李世石, 近期的比赛中又赢了世界冠军柯洁, 种种迹象表明, 人类已经失守最拿手的围棋了. 这些围棋高手一个个都表示 AlphaGo 走到了他们想不到的地方, 战胜了人类的生物极限, 不会感觉疲惫等等. 的确, 这就是机器相比人类的一个绝大优势. 那 AlphaGo 又是怎么在策略上战胜人类的呢? 很简单, 它会做计划."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/ML-intro/alphago.png">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/",
+    "headline": "AlphaGo Zero 为什么更厉害?",
+    "image": "http://localhost:4000/static/thumbnail-small/ML-intro/alphago.png",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "2016 年, AlphaGo 第一版发表在了 Nature 自然杂志上, 这可是牛逼得不要不要的期刊, 如果有谁能发表一篇期刊去Nature, 哈哈, 保证他下半生衣食无忧. 而如今刚过去一年, Google DeepMind 又在 Nature 上发表了一篇 AlphaGo 的改进版, AlphaGo zero, 同样的围棋 AI, 竟然在自然杂志上发了两次! 赞叹他们的实力呀! 要弄懂 AlphaGo zero, 首先我们得弄懂 AlphaGo 是怎样战胜人类的. AlphaGo 战胜过欧洲冠军樊麾, 韩国九段棋手李世石, 近期的比赛中又赢了世界冠军柯洁, 种种迹象表明, 人类已经失守最拿手的围棋了. 这些围棋高手一个个都表示 AlphaGo 走到了他们想不到的地方, 战胜了人类的生物极限, 不会感觉疲惫等等. 的确, 这就是机器相比人类的一个绝大优势. 那 AlphaGo 又是怎么在策略上战胜人类的呢? 很简单, 它会做计划.",
+    "url": "http://localhost:4000/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/ML-intro/",
+    "datePublished": "2017-10-23",
+    "dateModified": "2017-10-23",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/tABt4fdmaFg";
+			var youku_src = "//player.youku.com/embed/XMzEwNDMxODAwMA==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=15986543&cid=&";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=15986543";
+
+    	getEmbeddedVideo(bilibili_src, "15986543", youtube_src, "tABt4fdmaFg", youku_src, "XMzEwNDMxODAwMA");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', 'tABt4fdmaFg')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMzEwNDMxODAwMA')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '15986543')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/ML-intro/4-10-A3C/">
+    <strong>&laquo;</strong> <i>Asynchronous Advantage Actor-Critic (A3C)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/ML-intro/5-01-genetic-algorithm/">
+    <i>遗传算法 (Genetic Algorithm)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>AlphaGo Zero 为什么更厉害?</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-10-23
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="/tutorials/machine-learning/reinforcement-learning/">强化学习教程</a></li>
+  <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">强化学习实战</a></li>
+  <li>论文 <a href="https://www.nature.com/nature/journal/v550/n7676/full/nature24270.html" target="_blank">Mastering the game of Go without human knowledge</a></li>
+</ul>
+
+<p><a href="/static/results/ML-intro/alphago2.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago2.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>在2017年10月19日, Google Deepmind 推出了新一代的围棋人工智能 AlphaGo Zero. Alpha狗 zero 被放出的当天,
+我的朋友圈, 微博等等社交平台都被刷屏了. 各大社交版面都充斥这 AlphaGo Zero 的新闻. 为什么 AlphaGo Zero 影响力这么大呢, 能在 AI 界炸开了锅? 它和之前几代的 AlphaGo 又有什么不同呢?</p>
+
+<p><strong>注: 本文不会涉及数学推导. 大家可以在很多其他地方找到优秀的数学推导文章.</strong></p>
+
+<h2 class="tut-h2-pad" id="AlphaGo-引发轰动">AlphaGo 引发轰动
+  <a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#AlphaGo-引发轰动" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/alphago3.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago3.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>2016 年, AlphaGo 第一版发表在了 Nature 自然杂志上, 这可是牛逼得不要不要的期刊, 如果有谁能发表一篇期刊去Nature, 哈哈, 保证他下半生衣食无忧. 而如今刚过去一年, Google DeepMind 又在 Nature 上发表了一篇 AlphaGo 的改进版, AlphaGo zero, 同样的围棋 AI, 竟然在自然杂志上发了两次! 赞叹他们的实力呀! 要弄懂 AlphaGo zero, 首先我们得弄懂 AlphaGo 是怎样战胜人类的.
+AlphaGo 战胜过欧洲冠军樊麾, 韩国九段棋手李世石, 近期的比赛中又赢了世界冠军柯洁, 种种迹象表明, 人类已经失守最拿手的围棋了. 这些围棋高手一个个都表示 AlphaGo 走到了他们想不到的地方, 战胜了人类的生物极限, 不会感觉疲惫等等. 的确, 这就是机器相比人类的一个绝大优势. 那 AlphaGo 又是怎么在策略上战胜人类的呢? 很简单, 它会做计划.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="蒙特卡洛树搜索">蒙特卡洛树搜索
+  <a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#蒙特卡洛树搜索" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/alphago4.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago4.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>它能使用这种树形结构来尝试非常多的策略, 每一个树的分支就是一种可能的发展趋势, 可是围棋的下棋趋势被公认比天上的星星还要多, 人类目前的计算机是无法在每一步都尝试这种数不尽的趋势.</p>
+
+<p><a href="/static/results/ML-intro/alphago5.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago5.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>所以它采用的是一种叫做蒙特卡洛树搜索(Monte Carlo Tree Search)的形式对未知方面进行探索,</p>
+
+<p><a href="/static/results/ML-intro/alphago6.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago6.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>而这种形式正是在国际象棋AI上所采取的方式, 当时IBM开发的国际象棋人工智能 Deep Blue, 通过这种树形搜索在1997年战胜人类的. 可是同样树形结构在接下来的20年中却没有多大发展, 不然围棋早就被攻克了. 问题在哪里?</p>
+
+<p><a href="/static/results/ML-intro/alphago7.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago7.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>这是当时用于国际象棋的搜索树结构, 因为国际象棋中可能发生的情况要比围棋少太多, 通过计算机广泛的搜索, 是完全可行的. 但是在围棋中, 同样的套路并不适用, 所以 DeepMind 团队放弃广泛的搜索, 取而代之的是深度搜索, 这种搜索更节省计算资源, 对有限的情况, 分析更加准确. 不过单单有这种树形搜索是远远不够的.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="神经网络">神经网络
+  <a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#神经网络" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/alphago8.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago8.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>所以我们还将会加上正在飞速发展的神经网络结构, 用来对当前状态进行评估, 和做决策.</p>
+
+<p><a href="/static/results/ML-intro/alphago9.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago9.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>一个简单的神经网络包括了三个方面, 接受外界的信息, 比如说一张棋谱, 然后通过神经网络内部的千万个神经节点, 将接收到的信息进行加工处理, 换做我们人类, 这个过程就叫做”理解”. 最后将理解的东西输出, 它可以是下一个要采取的动作, 或者是对当前下棋状态的评估. AlphaGo 中就使用了两套神经网络系统
+一个神经网络基于当前的状态给出下一步的动作, 一个神经网络用来评估当前状态是否对我方有利.
+使用神经网络配合搜索树来提供好的下棋行为, 将这些好行为作为训练数据反过来训练神经网络, 这样一来一回, 使用<a href="/tutorials/machine-learning/ML-intro/4-01-RL/">强化学习</a>的方法不断训练, 我们的神经网络就能不断的提升自己下棋的能力. 这就是 AlphaGo 能够战胜人类的主要原因.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="AlphaGo-Zero">AlphaGo Zero
+  <a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#AlphaGo-Zero" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/ML-intro/alphago10.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago10.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>可是 AlphaGo 新版本 AlphaGo Zero 为什么被提出, 而且提出后为什么又能引起轩然大波? 很显然, 它肯定比前几个 AlphaGo 好, 首先也是最重要的是, 它完全没有学习过任何人类棋谱.</p>
+
+<p><a href="/static/results/ML-intro/alphago11.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago11.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>人类学习下棋, 学习前辈们留下来的优秀棋谱是必不可少的, 所以上几个版本的 AlphaGo 也继承了这个思想, 我要从人类那里学习下棋的原则, 有一个好老师, 将会比无师自通方便多了.</p>
+
+<p><a href="/static/results/ML-intro/alphago12.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago12.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>如果你和这样一个有人类老师的 AlphaGo 交手, 那可能还会在它背后看到人类下棋的影子. 但是 AlphaGo Zero, 完全是一个无师自通的家伙, 和它下棋, 你可能闻到很浓烈的机械味. 从另一方面想, 这样的 AlphaGo 打破了数千年来人类下棋思维的限制, 探索了人类想不到的下棋境界, 学会了一个崭新的下棋方式.</p>
+
+<p><a href="/static/results/ML-intro/alphago13.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago13.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>在技术层面来说, AlphaGo Zero 使用的不再是两套神经网络系统, 而是将它们融合成一个神经网络系统, 这样做能更有效利用资源, 学习效果更好.</p>
+
+<p><a href="/static/results/ML-intro/alphago14.png">
+ <img class="course-image lazy-img" data-src="/static/results/ML-intro/alphago14.png" src="/static/img/description/loading.gif" alt="AlphaGo Zero 为什么更厉害?" title="AlphaGo Zero 为什么更厉害?" />
+</a></p>
+
+<p>而且它不再仅仅使用 GPU, 转而添加了自家的专门为机器学习打造的 TPU, 而且使用的硬件个数也在逐步降低, 然而学习的效果却不断上升.
+在短短40天没有老师教的训练中, AlphaGo Zero 超越了他所有的前辈, 在这个时候, 我相信它真正做到了在围棋场上无人能敌了. 最后, 正如 AlphaGo 之父 David Silver 所说, 一个无师自通 AlphaGo 的产生, 并不仅仅意味着我们的 AI 能在围棋场上战胜人类, 放眼未来, 它还意味着, 在更多方面, 我们能用这样的 AI 创造出更多人类历史上的新篇章.</p>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/&pic=https://morvanzhou.github.io/static/thumbnail-small/ML-intro/alphago.png" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/&type=icon&language=zh_cn&searchPic=true&title=AlphaGo Zero 为什么更厉害?+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/ML-intro/alphago.png' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/&title=AlphaGo Zero 为什么更厉害?+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/ML-intro/4-10-A3C/">
+    <strong>&laquo;</strong> <i>Asynchronous Advantage Actor-Critic (A3C)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/ML-intro/5-01-genetic-algorithm/">
+    <i>遗传算法 (Genetic Algorithm)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/ML-intro/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/ML-intro/"><p><strong>有趣的机器学习</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">机器学习方法</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/1-1-machine-learning/">机器学习 (Machine Learning)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">神经网络</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-0-ANN-and-NN/">科普: 人工神经网络 VS 生物神经网络</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-1-NN/">神经网络 (Neural Network)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-2-CNN/">卷积神经网络 CNN (Convolutional Neural Network)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-3-RNN/">循环神经网络 RNN (Recurrent Neural Network)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-4-LSTM/">LSTM RNN 循环神经网络 (LSTM)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-5-autoencoder/">自编码 (Autoencoder)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-6-GAN/">生成对抗网络 (GAN)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-7-feature-representation/">科普: 神经网络的黑盒不黑</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-8-gradient-descent/">神经网络 梯度下降</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/2-9-transfer-learning/">迁移学习 Transfer Learning</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">神经网络技巧</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-01-Evaluate-NN/">检验神经网络 (Evaluation)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-02-normalization/">特征标准化 (Feature Normalization)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-03-choose-feature/">选择好特征 (Good Features)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-04-activation-function/">激励函数 (Activation Function)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-05-overfitting/">过拟合 (Overfitting)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-06-speed-up-learning/">加速神经网络训练 (Speed Up Training)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-07-imbalanced-data/">处理不均衡数据 (Imbalanced data)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-08-batch-normalization/">批标准化 (Batch Normalization)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/3-09-l1l2regularization/">L1 / L2 正规化 (Regularization)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">强化学习</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-01-RL/">强化学习 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-02-RL-methods/">强化学习方法汇总 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-03-q-learning/">Q Leaning</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-04-sarsa/">Sarsa</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-05-sarsa-lambda/">Sarsa(lambda)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-06-DQN/">DQN</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-07-PG/">Policy Gradients</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-08-AC/">Actor Critic</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-09-DDPG/">Deep Deterministic Policy Gradient (DDPG)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-10-A3C/">Asynchronous Advantage Actor-Critic (A3C)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/" style="color:#ffffff;">AlphaGo Zero 为什么更厉害?</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#AlphaGo-引发轰动" style="color:#ffffff;">AlphaGo 引发轰动</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#蒙特卡洛树搜索" style="color:#ffffff;">蒙特卡洛树搜索</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#神经网络" style="color:#ffffff;">神经网络</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-intro/4-11-AlphaGo-zero/#AlphaGo-Zero" style="color:#ffffff;">AlphaGo Zero</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">进化算法</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/5-01-genetic-algorithm/">遗传算法 (Genetic Algorithm)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/5-02-evolution-strategy/">进化策略 (Evolution Strategy)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-intro/5-03-neuro-evolution/">神经网络进化 (Neuro-Evolution)</a>
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

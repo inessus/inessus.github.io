@@ -1,0 +1,1308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="根据 OpenAI 的官方博客, PPO 已经成为他们在强化学习上的默认算法. 如果一句话概括 PPO: OpenAI 提出的一种解决 Policy Gradient 不好确定 Learning rate (或者 Step size) 的问题. 因为如果 step size 过大, 学出来的 Policy 会一直乱动, 不会收敛, 但如果 Step Size 太小, 对于完成训练, 我们会等到绝望. PPO 利用 New Policy 和 Old Policy 的比例, 限制了 New Policy 的更新幅度, 让 Policy Gradient 对稍微大点的 Step size 不那么敏感. 因为 PPO 是基于 Actor-Critic 算法, 所以还不了解 Actor-Critic 的朋友们, 强烈推荐你在这个短视频 和这个 Python 教程中获得了解, ">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,reinforcement learning, 强化学习, tensorflow">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/rl/6.4_PPO.jpg" />
+  <title>Distributed Proximal Policy Optimization (DPPO) (Tensorflow) - 强化学习 Reinforcement Learning | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='Distributed Proximal Policy Optimization (DPPO) (Tensorflow) - 强化学习 Reinforcement Learning | 易学习Python' />
+  <meta property="og:description" content="根据 OpenAI 的官方博客, PPO 已经成为他们在强化学习上的默认算法. 如果一句话概括 PPO: OpenAI 提出的一种解决 Policy Gradient 不好确定 Learning rate (或者 Step size) 的问题. 因为如果 step size 过大, 学出来的 Policy 会一直乱动, 不会收敛, 但如果 Step Size 太小, 对于完成训练, 我们会等到绝望. PPO 利用 New Policy 和 Old Policy 的比例, 限制了 New Policy 的更新幅度, 让 Policy Gradient 对稍微大点的 Step size 不那么敏感. 因为 PPO 是基于 Actor-Critic 算法, 所以还不了解 Actor-Critic 的朋友们, 强烈推荐你在这个短视频 和这个 Python 教程中获得了解, "/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/rl/6.4_PPO.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/",
+    "headline": "Distributed Proximal Policy Optimization (DPPO) (Tensorflow)",
+    "image": "http://localhost:4000/static/thumbnail-small/rl/6.4_PPO.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "根据 OpenAI 的官方博客, PPO 已经成为他们在强化学习上的默认算法. 如果一句话概括 PPO: OpenAI 提出的一种解决 Policy Gradient 不好确定 Learning rate (或者 Step size) 的问题. 因为如果 step size 过大, 学出来的 Policy 会一直乱动, 不会收敛, 但如果 Step Size 太小, 对于完成训练, 我们会等到绝望. PPO 利用 New Policy 和 Old Policy 的比例, 限制了 New Policy 的更新幅度, 让 Policy Gradient 对稍微大点的 Step size 不那么敏感. 因为 PPO 是基于 Actor-Critic 算法, 所以还不了解 Actor-Critic 的朋友们, 强烈推荐你在这个短视频 和这个 Python 教程中获得了解, ",
+    "url": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/reinforcement-learning/",
+    "datePublished": "2017-08-28",
+    "dateModified": "2017-08-28",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/_B2oMdOVVJc";
+			var youku_src = "//player.youku.com/embed/XMjk5NTA2NTQ4OA==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=16921335&cid=27657236&page=31";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=16921335&page=31";
+
+    	getEmbeddedVideo(bilibili_src, "16921335&page=31", youtube_src, "_B2oMdOVVJc", youku_src, "XMjk5NTA2NTQ4OA");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', '_B2oMdOVVJc')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMjk5NTA2NTQ4OA')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '16921335&page=31')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">
+    <strong>&laquo;</strong> <i>Asynchronous Advantage Actor-Critic (A3C) (Tensorflow)</i></a>
+  
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>Distributed Proximal Policy Optimization (DPPO) (Tensorflow)</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-08-28
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/tree/master/contents/12_Proximal_Policy_Optimization" target="_blank">全部代码</a></li>
+  <li><a href="/tutorials/machine-learning/ML-intro/4-08-AC/">什么是 Actor-Critic 短视频</a></li>
+  <li><a href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">我的 A3C Python 教程</a></li>
+  <li><a href="/tutorials/python-basic/threading/">我的 Python Threading 多线程教程</a></li>
+  <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">强化学习实战</a></li>
+  <li>OpenAI 的 PPO 论文 <a href="https://arxiv.org/abs/1707.06347" target="_blank">Proximal Policy Optimization</a></li>
+  <li>Google DeepMind 的 DPPO 论文 <a href="https://arxiv.org/abs/1707.02286" target="_blank">Emergence of Locomotion Behaviours in Rich Environments</a></li>
+</ul>
+
+<h2 class="tut-h2-pad" id="要点">要点
+  <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#要点" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>根据 OpenAI 的<a href="https://blog.openai.com/openai-baselines-ppo/" target="_blank">官方博客</a>, PPO 已经成为他们在强化学习上的默认算法.
+<strong>如果一句话概括 PPO:
+OpenAI 提出的一种解决 Policy Gradient 不好确定 Learning rate (或者 Step size) 的问题.
+因为如果 step size 过大, 学出来的 Policy 会一直乱动, 不会收敛, 但如果 Step Size 太小, 对于完成训练, 我们会等到绝望.
+PPO 利用 New Policy 和 Old Policy 的比例, 限制了 New Policy 的更新幅度, 让 Policy Gradient 对稍微大点的 Step size 不那么敏感.</strong></p>
+
+<p>因为 PPO 是基于 <code class="highlighter-rouge">Actor-Critic</code> 算法, 所以还不了解 <code class="highlighter-rouge">Actor-Critic</code> 的朋友们, 强烈推荐你在<a href="/tutorials/machine-learning/ML-intro/4-08-AC/">这个短视频</a>
+和<a href="/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/">这个 Python 教程</a>中获得了解,</p>
+
+<p>下面是这节内容的效果提前看:</p>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/reinforcement-learning/Pendulum A3C.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<h2 class="tut-h2-pad" id="OpenAI-和-DeepMind-的-Demo">OpenAI 和 DeepMind 的 Demo
+  <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#OpenAI-和-DeepMind-的-Demo" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>OpenAI 的 <a href="https://blog.openai.com/openai-baselines-ppo/#ppo" target="_blank">Demo</a>:</p>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/reinforcement-learning/6-4-demo_openai.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<p>DeepMind 的 <a href="https://deepmind.com/blog/producing-flexible-behaviours-simulated-environments/" target="_blank">Demo</a>:</p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-demo_google2.gif">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-demo_google2.gif" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-demo_google1.gif">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-demo_google1.gif" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p>看 Demo 他们都说 PPO 在复杂环境中有更好的表现. 那我也就提起性子, 把 papers 看了一遍.</p>
+
+<h2 class="tut-h2-pad" id="算法">算法
+  <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#算法" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>PPO 的前生是 OpenAI 发表的 <a href="https://arxiv.org/abs/1502.05477" target="_blank">Trust Region Policy Optimization</a>,
+但是 Google DeepMind 看过 OpenAI 关于 Trust Region Policy Optimization 的 conference 后,
+却抢在 OpenAI 前面 (2017年7月7号) 把 <a href="https://arxiv.org/abs/1707.02286" target="_blank">Distributed PPO</a>给先发布了.
+我觉得 DeepMind 有点抢, 这让 OpenAI 有点难堪. 不过 OpenAI 还是在 2017年7月20号 发表了一份拿得出手的 <a href="https://arxiv.org/abs/1707.06347" target="_blank">PPO 论文</a>
+(估计是突然看到了 Google 抢了自己的东西, 所以赶紧把自己的也发了).</p>
+
+<p>所以我也总结了一下 DeepMind 和 OpenAI 的两篇 papers, 基于他们两者的优势, 写下了这份教程, 还有练习代码.</p>
+
+<p>OpenAI PPO 论文里给出的算法… 写得也太简单了 (注意他们这个 PPO 算法应该算是单线程的):</p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-1.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-1.png" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p>看了上面的主结构, 觉得少了很多东西. 这让我直接跑去 DeepMind 的 Paper 看他们总结 OpenAI conference 上的 PPO 的代码:</p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-2.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-2.png" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p>总的来说 PPO 是一套 Actor-Critic 结构, Actor 想<strong>最大化</strong> <code class="highlighter-rouge">J_PPO</code>, Critic 想<strong>最小化</strong> <code class="highlighter-rouge">L_BL</code>.  Critic 的 loss 好说, 就是减小 TD error.
+而 Actor 的就是在 old Policy 上根据 Advantage (TD error) 修改 new Policy, advantage 大的时候, 修改幅度大, 让 new Policy 更可能发生.
+而且他们附加了一个 KL Penalty (惩罚项, 不懂的同学搜一下 KL divergence),
+简单来说, 如果 new Policy 和 old Policy 差太多, 那 KL divergence 也越大,
+我们不希望 new Policy 比 old Policy 差太多, 如果会差太多, 就相当于用了一个大的 Learning rate,
+这样是不好的, 难收敛.</p>
+
+<p>关于 DeepMind 在这篇 paper 中提出的 DPPO 算法, 和怎么样把 OpenAI 的 PPO 多线程. 我们之后在下面细说, 我们先把简单的 PPO 算法给实现.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="简单-PPO-的主结构">简单 PPO 的主结构
+  <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#简单-PPO-的主结构" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>我们用 Tensorflow 搭建神经网络, tensorboard 中可以看清晰的看到我们是如果搭建的:</p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-3.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-3.png" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p>图中的 <code class="highlighter-rouge">pi</code> 就是我们的 Actor 了. 每次要进行 PPO 更新 Actor 和 Critic 的时候, 我们有需要将 <code class="highlighter-rouge">pi</code> 的参数复制给 <code class="highlighter-rouge">oldpi</code>.
+这就是 <code class="highlighter-rouge">update_oldpi</code> 这个 operation 在做的事. Critic 和 Actor 的内部结构, 我们不会打开细说了. 因为就是一堆的神经网络而已.
+这里的 Actor 使用了 normal distribution 正态分布输出动作.</p>
+
+<p>这个 <code class="highlighter-rouge">PPO</code> 我们可以用一个 Python 的 class 代替:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PPO</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 建 Actor Critic 网络
+</span>        <span class="c1"># 搭计算图纸 graph
+</span>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="c1"># 更新 PPO
+</span>    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="c1"># 选动作
+</span>    <span class="k">def</span> <span class="nf">get_v</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="c1"># 算 state value
+</span></code></pre></div></div>
+
+<p>而这个 <code class="highlighter-rouge">PPO</code> 和 <code class="highlighter-rouge">env</code> 环境的互动可以简化成这样.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ppo</span> <span class="o">=</span> <span class="n">PPO</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EP_MAX</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">buffer_s</span><span class="p">,</span> <span class="n">buffer_a</span><span class="p">,</span> <span class="n">buffer_r</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EP_LEN</span><span class="p">):</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">ppo</span><span class="o">.</span><span class="n">choose_action</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">s_</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">buffer_s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">buffer_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">buffer_r</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">r</span><span class="o">+</span><span class="mi">8</span><span class="p">)</span><span class="o">/</span><span class="mi">8</span><span class="p">)</span>    <span class="c1"># normalize reward, 发现有帮助
+</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">s_</span>
+
+        <span class="c1"># 如果 buffer 收集一个 batch 了或者 episode 完了
+</span>        <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">BATCH</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">==</span> <span class="n">EP_LEN</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># 计算 discounted reward
+</span>            <span class="n">v_s_</span> <span class="o">=</span> <span class="n">ppo</span><span class="o">.</span><span class="n">get_v</span><span class="p">(</span><span class="n">s_</span><span class="p">)</span>
+            <span class="n">discounted_r</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">buffer_r</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">v_s_</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">v_s_</span>
+                <span class="n">discounted_r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v_s_</span><span class="p">)</span>
+            <span class="n">discounted_r</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+            <span class="n">bs</span><span class="p">,</span> <span class="n">ba</span><span class="p">,</span> <span class="n">br</span> <span class="o">=</span> <span class="n">batch</span><span class="p">(</span><span class="n">buffer_s</span><span class="p">,</span> <span class="n">buffer_a</span><span class="p">,</span> <span class="n">discounted_r</span><span class="p">)</span>
+            <span class="c1"># 清空 buffer
+</span>            <span class="n">buffer_s</span><span class="p">,</span> <span class="n">buffer_a</span><span class="p">,</span> <span class="n">buffer_r</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+            <span class="n">ppo</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">ba</span><span class="p">,</span> <span class="n">br</span><span class="p">)</span>  <span class="c1"># 更新 PPO
+</span></code></pre></div></div>
+
+<p>了解了这些更新步骤, 我们就来看看如何更新我们的 <code class="highlighter-rouge">PPO</code>. 我们更新 Critic 的时候是根据 刚刚计算的 <code class="highlighter-rouge">discounted_r</code> 和自己分析出来的
+<code class="highlighter-rouge">state value</code> 这两者的差 (advantage). 然后最小化这个差值:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PPO</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advantage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfdc_r</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span>   <span class="c1"># discounted reward - Critic 出来的 state value
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">closs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">advantage</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctrain_op</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">C_LR</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">closs</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>在更新 Actor 的时候, 其实有两种方式, 一种是用之前提到的 KL penalty 来更新.</p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-4.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-4.png" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p>我在代码中也写上的这种方式的计算图纸要怎么搭, 不过还有一种是 OpenAI 在 <a href="https://arxiv.org/abs/1707.06347" target="_blank">PPO 这篇 paper</a> 中提到的 <code class="highlighter-rouge">clipped surrogate objective</code>,
+<code class="highlighter-rouge">surrogate objective</code> 就是这个 <img src="/static/results/reinforcement-learning/6-4-5.png" alt="surrogate" />. 他们实验中得出的结论说: <code class="highlighter-rouge">clipped surrogate objective</code> 要比 <code class="highlighter-rouge">KL penalty</code> 形式好.
+那 <code class="highlighter-rouge">clipped surrogate objective</code> 到底是什么呢? 其实就是限制了 surrogate 的变化幅度, 和 <code class="highlighter-rouge">KL</code> 的规则差不多.</p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-6.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-6.png" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p>这里的 <code class="highlighter-rouge">r(theta)</code> 是 (New Policy/Old Policy) 的比例, 和前面的公式一样.
+我在代码中把这两种都写上了, 如果觉得我这些代码省略的很严重, 请直接前往我的 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/12_Proximal_Policy_Optimization/simply_PPO.py" target="_blank">Github 看全套代码</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PPO</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tfa</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">A_DIM</span><span class="p">],</span> <span class="s">'action'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tfadv</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s">'advantage'</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s">'loss'</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s">'surrogate'</span><span class="p">):</span>
+                <span class="n">ratio</span> <span class="o">=</span> <span class="n">pi</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tfa</span><span class="p">)</span> <span class="o">/</span> <span class="n">oldpi</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tfa</span><span class="p">)</span>
+                <span class="n">surr</span> <span class="o">=</span> <span class="n">ratio</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfadv</span>   <span class="c1"># surrogate objective
+</span>            <span class="k">if</span> <span class="n">METHOD</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'kl_pen'</span><span class="p">:</span>      <span class="c1"># 如果用 KL penatily
+</span>                <span class="bp">self</span><span class="o">.</span><span class="n">tflam</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">'lambda'</span><span class="p">)</span>
+                <span class="n">kl</span> <span class="o">=</span> <span class="n">kl_divergence</span><span class="p">(</span><span class="n">oldpi</span><span class="p">,</span> <span class="n">pi</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kl_mean</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">kl</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">aloss</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">surr</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tflam</span> <span class="o">*</span> <span class="n">kl</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>                               <span class="c1"># 如果用 clipping 的方式
+</span>                <span class="bp">self</span><span class="o">.</span><span class="n">aloss</span> <span class="o">=</span> <span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                    <span class="n">surr</span><span class="p">,</span>
+                    <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="mf">1.</span><span class="o">-</span><span class="n">METHOD</span><span class="p">[</span><span class="s">'epsilon'</span><span class="p">],</span> <span class="mf">1.</span><span class="o">+</span><span class="n">METHOD</span><span class="p">[</span><span class="s">'epsilon'</span><span class="p">])</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">tfadv</span><span class="p">))</span>
+
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s">'atrain'</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atrain_op</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">A_LR</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aloss</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>好了, 接下来就是最重要的更新 PPO 时间了, 同样, 如果觉得我这些代码省略的很严重, 请直接前往我的 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/12_Proximal_Policy_Optimization/simply_PPO.py" target="_blank">Github 看全套代码</a>.
+注意的是, 这个 <code class="highlighter-rouge">update</code> 的步骤里, 我们用 <code class="highlighter-rouge">for loop</code> 更新了很多遍 Actor 和 Critic, 在 loop 之前, <code class="highlighter-rouge">pi</code> 和 <code class="highlighter-rouge">old pi</code> 是一样的,
+每次 loop 的之后, <code class="highlighter-rouge">pi</code> 会变动, 而 <code class="highlighter-rouge">old pi</code> 不变, 这样这个 surrogate <img src="/static/results/reinforcement-learning/6-4-5.png" alt="surrogate" /> 就会开始变动了. 这就是 PPO 的精辟.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PPO</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="c1"># 先要将 oldpi 里的参数更新 pi 中的
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_oldpi_op</span><span class="p">)</span>
+
+        <span class="c1"># 更新 Actor 时, kl penalty 和 clipping 方式是不同的
+</span>        <span class="k">if</span> <span class="n">METHOD</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'kl_pen'</span><span class="p">:</span>  <span class="c1"># 如果用 KL penalty
+</span>            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A_UPDATE_STEPS</span><span class="p">):</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">kl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">atrain_op</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kl_mean</span><span class="p">],</span>
+                        <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tfs</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfa</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfadv</span><span class="p">:</span> <span class="n">adv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tflam</span><span class="p">:</span> <span class="n">METHOD</span><span class="p">[</span><span class="s">'lam'</span><span class="p">]})</span>
+                <span class="c1"># 之后根据 kl 的值, 调整 METHOD['lam'] 这个参数
+</span>        <span class="k">else</span><span class="p">:</span>   <span class="c1"># 如果用 clipping 的方法
+</span>            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atrain_op</span><span class="p">,</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tfs</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfa</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfadv</span><span class="p">:</span> <span class="n">adv</span><span class="p">})</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A_UPDATE_STEPS</span><span class="p">)]</span>
+
+        <span class="c1"># 更新 Critic 的时候, 他们是一样的
+</span>        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctrain_op</span><span class="p">,</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tfs</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfdc_r</span><span class="p">:</span> <span class="n">r</span><span class="p">})</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">C_UPDATE_STEPS</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<p>最后我们看一张学习的效果图:</p>
+
+<p><a href="/static/results/reinforcement-learning/6-4-7.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/6-4-7.png" src="/static/img/description/loading.gif" alt="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" title="Distributed Proximal Policy Optimization (DPPO) (Tensorflow)" />
+</a></p>
+
+<p>好了这就是整个 PPO 的主要流程了, 其他的步骤都没那么重要了, 可以直接在我的 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/12_Proximal_Policy_Optimization/simply_PPO.py" target="_blank">Github 看全套代码</a>
+中轻松弄懂. 接下来我们看看怎么样把这个单线程的 PPO 变到多线程去 (Distributed PPO).</p>
+
+<h2 class="tut-h2-pad" id="Distributed-PPO">Distributed PPO
+  <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#Distributed-PPO" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>Google DeepMind 提出来了一套和 A3C (<a href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">A3C 教程见这里</a>) 类似的并行 PPO 算法.
+看了他们 <a href="https://arxiv.org/abs/1707.02286" target="_blank">paper</a> 中的这个 DPPO 算法后, 我觉得….不好编! 取而代之, 我觉得如果采用 OpenAI 的思路, 用他那个 “简陋” 伪代码, 但是弄成并行计算倒是好弄点.
+所以我就结合了 DeepMind 和 OpenAI, 取他们的精华, 写下了<a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/12_Proximal_Policy_Optimization/DPPO.py" target="_blank">这份 DPPO 的代码</a>.</p>
+
+<p>总结一下我是怎么写的.</p>
+
+<ul>
+  <li>用 OpenAI 提出的 <code class="highlighter-rouge">Clipped Surrogate Objective</code></li>
+  <li>使用多个线程 (workers) 平行在不同的环境中收集数据</li>
+  <li>workers 共享一个 Global PPO</li>
+  <li>workers 不会自己算 PPO 的 gradients, 不会像 A3C 那样推送 Gradients 给 Global net</li>
+  <li>workers 只推送自己采集的数据给 Global PPO</li>
+  <li>Global PPO 拿到多个 workers 一定批量的数据后进行更新 (更新时 worker 停止采集)</li>
+  <li>更新完后, workers 用最新的 Policy 采集数据</li>
+</ul>
+
+<p>我使用的代码框架和<a href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">自己的 A3C</a> 框架有点像.
+这个 DPPO 具体的代码我不会在这边描述了, 请直接看到<a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/12_Proximal_Policy_Optimization/DPPO.py" target="_blank">我写的代码</a>吧.</p>
+
+<p>不过有些细节我想提前提一下, 方便你们看代码:</p>
+
+<ul>
+  <li>我用到了 python threading 当中的 Event 功能, 用来控制 PPO 的更新时间和 worker 停止工作的时间</li>
+  <li>使用了 threading 中的 Queue 来存放 worker 收集的数据, 发现用 python 的列表也可以达到一样效果, 计算时间上没太多差别.</li>
+  <li>更新 PPO 的时候, 我采用的是 DeepMind 的 for loop 形式.</li>
+</ul>
+
+<p>我也用这套 DPPO 测试过自己写的机器手臂的环境, 发现效果也还行. 有兴趣的朋友可以<a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/tree/master/experiments/Robot_arm" target="_blank">看到这里</a>.</p>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/reinforcement-learning/experiment_arm.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<p>有很多人留言说想要我做一个关于这个机器手臂的教程, 不负众望, 你可以在<a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">这里</a>
+看到我怎么从零开始, 手写环境, debug 测试, 来制作一个强化学习的机器手臂.</p>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/6.4_PPO.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/&type=icon&language=zh_cn&searchPic=true&title=Distributed Proximal Policy Optimization (DPPO) (Tensorflow)+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/6.4_PPO.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/&title=Distributed Proximal Policy Optimization (DPPO) (Tensorflow)+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">
+    <strong>&laquo;</strong> <i>Asynchronous Advantage Actor-Critic (A3C) (Tensorflow)</i></a>
+  
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/reinforcement-learning/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/reinforcement-learning/"><p><strong>强化学习 Reinforcement Learning</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-A-RL/">什么是 强化学习 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-B-RL-methods/">强化学习方法汇总 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-why/">为什么用强化学习 Why?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-2-requirment/">课程要求</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Q-learning</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-1-general-rl/">小例子</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-A-q-learning/">什么是 Q Leaning</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-tabular-q1/">Q-learning 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-3-tabular-q2/">Q-learning 思维决策</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Sarsa</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-A-sarsa/">什么是 Sarsa</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-tabular-sarsa1/">Sarsa 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-2-tabular-sarsa2/">Sarsa 思维决策</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-A-sarsa-lambda/">什么是 Sarsa(lambda)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-tabular-sarsa-lambda/">Sarsa-lambda</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Deep Q Network</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-A-DQN/">什么是 DQN</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-DQN1/">DQN 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-2-DQN2/">DQN 神经网络 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/">DQN 思维决策 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/">OpenAI gym 环境库</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">Double DQN (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/">Prioritized Experience Replay (DQN) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-7-dueling-DQN/">Dueling DQN (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Policy Gradient</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-A-PG/">什么是 Policy Gradients</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-policy-gradient-softmax1/">Policy Gradients 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/">Policy Gradients 思维决策 (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Actor Critic</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-A-AC/">什么是 Actor Critic</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/">Actor Critic (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-A-DDPG/">什么是 Deep Deterministic Policy Gradient (DDPG)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-DDPG/">Deep Deterministic Policy Gradient (DDPG) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A1-A3C/">什么是 Asynchronous Advantage Actor-Critic (A3C)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">Asynchronous Advantage Actor-Critic (A3C) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/" style="color:#ffffff;">Distributed Proximal Policy Optimization (DPPO) (Tensorflow)</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#要点" style="color:#ffffff;">要点</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#OpenAI-和-DeepMind-的-Demo" style="color:#ffffff;">OpenAI 和 DeepMind 的 Demo</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#算法" style="color:#ffffff;">算法</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#简单-PPO-的主结构" style="color:#ffffff;">简单 PPO 的主结构</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/#Distributed-PPO" style="color:#ffffff;">Distributed PPO</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Model Based RL</p>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

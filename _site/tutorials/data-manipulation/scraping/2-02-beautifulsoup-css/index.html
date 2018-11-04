@@ -1,0 +1,1045 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BeautifulSoup 十分好用, 能快速定位到你需要的网页信息. 上次我们学着使用了 BeautifulSoup, 这次我们将会了解它更强大的功能, 使用 CSS 的 Class 来选择内容.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,scraping, 爬虫, beautifulsoup">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/scraping/2-2 bs.jpg" />
+  <title>BeautifulSoup 解析网页: CSS - 网页爬虫 | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='BeautifulSoup 解析网页: CSS - 网页爬虫 | 易学习Python' />
+  <meta property="og:description" content="BeautifulSoup 十分好用, 能快速定位到你需要的网页信息. 上次我们学着使用了 BeautifulSoup, 这次我们将会了解它更强大的功能, 使用 CSS 的 Class 来选择内容."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/scraping/2-2 bs.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/",
+    "headline": "BeautifulSoup 解析网页: CSS",
+    "image": "http://localhost:4000/static/thumbnail-small/scraping/2-2 bs.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "BeautifulSoup 十分好用, 能快速定位到你需要的网页信息. 上次我们学着使用了 BeautifulSoup, 这次我们将会了解它更强大的功能, 使用 CSS 的 Class 来选择内容.",
+    "url": "http://localhost:4000/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/data-manipulation/scraping/",
+    "datePublished": "2017-12-29",
+    "dateModified": "2017-12-29",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/SiIwSAIC458";
+			var youku_src = "//player.youku.com/embed/XMzI4ODIxNDU1Mg==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=17920849&cid=29254375&page=4";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=17920849&page=4";
+
+    	getEmbeddedVideo(bilibili_src, "17920849&page=4", youtube_src, "SiIwSAIC458", youku_src, "XMzI4ODIxNDU1Mg");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', 'SiIwSAIC458')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMzI4ODIxNDU1Mg')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '17920849&page=4')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/data-manipulation/scraping/2-01-beautifulsoup-basic/">
+    <strong>&laquo;</strong> <i>BeautifulSoup 解析网页: 基础</i></a>
+  
+  
+  <a class="next" href="/tutorials/data-manipulation/scraping/2-03-beautifulsoup-regex/">
+    <i>BeautifulSoup 解析网页: 正则表达</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>BeautifulSoup 解析网页: CSS</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-12-29
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="https://github.com/MorvanZhou/easy-scraping-tutorial/blob/master/notebook/2-2-beautifulsoup-css.ipynb" target="_blank">本节学习代码</a></li>
+  <li>BeautifulSoup <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/" target="_blank">英文官网</a>, <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc.zh/" target="_blank">中文官网</a></li>
+  <li>本节使用的爬虫<a href="/static/scraping/list.html">测试网页</a></li>
+  <li>CSS 的<a href="https://www.w3schools.com/css/" target="_blank">详细规则</a></li>
+</ul>
+
+<p>BeautifulSoup 十分好用, 能快速定位到你需要的网页信息.
+<a href="/tutorials/data-manipulation/scraping/2-01-beautifulsoup-basic/">上次</a>
+我们学着使用了 BeautifulSoup, 这次我们将会了解它更强大的功能, 使用 CSS 的 Class 来选择内容.</p>
+
+<p><a href="/static/results/scraping/2-2-1.png">
+ <img class="course-image lazy-img" data-src="/static/results/scraping/2-2-1.png" src="/static/img/description/loading.gif" alt="BeautifulSoup 解析网页: CSS" title="BeautifulSoup 解析网页: CSS" />
+</a></p>
+
+<h2 class="tut-h2-pad" id="什么是-CSS">什么是 CSS
+  <a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/#什么是-CSS" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>提到这个, 我们肯定需要知道什么是 CSS. HTML 和 CSS 是一对好搭档, 他们共同组成了当今的众多网页.
+如果这个世界上没有 CSS, 你看到的所有网页可能都长得像这样. 特别”骨感”!</p>
+
+<p><a href="/static/results/scraping/2-2-2.png">
+ <img class="course-image lazy-img" data-src="/static/results/scraping/2-2-2.png" src="/static/img/description/loading.gif" alt="BeautifulSoup 解析网页: CSS" title="BeautifulSoup 解析网页: CSS" />
+</a></p>
+
+<p>如果有 CSS, 你的网页就变得丰富多彩起来. 文字有了颜色, 字体, 位置也多样了, 图片也有规则了.</p>
+
+<p><a href="/static/results/scraping/2-2-3.png">
+ <img class="course-image lazy-img" data-src="/static/results/scraping/2-2-3.png" src="/static/img/description/loading.gif" alt="BeautifulSoup 解析网页: CSS" title="BeautifulSoup 解析网页: CSS" />
+</a></p>
+
+<p>所以, CSS 主要用途就是装饰你 “骨感” HTML 页面. 如果将 HTML 比喻成没穿衣服的人, 那 CSS 就是五颜六色的衣服.
+穿在人身上让人有了气质. CSS 的规则很多, 好在如果你只是需要爬网页, 你并不需要学习 CSS 的这些用法或规则,
+(如果你想, 你可以看到<a href="https://www.w3schools.com/css/" target="_blank">这里</a>),
+你只需要注意 CSS 的一条规则就能玩转爬虫了.</p>
+
+<h2 class="tut-h2-pad" id="CSS-的-Class">CSS 的 Class
+  <a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/#CSS-的-Class" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>这条规则就是 CSS 的 Class, CSS 在装饰每一个网页部件的时候, 都会给它一个名字.
+而且一个类型的部件, 名字都可以一样. 比如我们这个<a href="/static/scraping/list.html">练习网页</a>.
+里面的字体/背景颜色, 字体大小, 都是由 CSS 来掌控的.</p>
+
+<p><a href="/static/results/scraping/2-2-4.png">
+ <img class="course-image lazy-img" data-src="/static/results/scraping/2-2-4.png" src="/static/img/description/loading.gif" alt="BeautifulSoup 解析网页: CSS" title="BeautifulSoup 解析网页: CSS" />
+</a></p>
+
+<p>而 CSS 的代码, 可能就会放在这个网页的 <code class="highlighter-rouge">&lt;head&gt;</code> 中. 我们先使用 Python 读取这个页面.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+
+<span class="c1"># if has Chinese, apply decode()
+</span><span class="n">html</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="s">"https://morvanzhou.github.io/static/scraping/list.html"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<p>在 <code class="highlighter-rouge">&lt;head&gt;</code> 中, 你会发现有这样一些东西被放在 <code class="highlighter-rouge">&lt;style&gt;</code> 里面, 这些东西都是某些 class 的 CSS 代码. 比如 <code class="highlighter-rouge">jan</code> 就是一个 class.
+<code class="highlighter-rouge">jan</code> 这个类掌控了这个类型的背景颜色. 所以在 <code class="highlighter-rouge">&lt;ul class="jan"&gt;</code> 这里, 这个 ul 的背景颜色就是黄色的.
+而如果是 <code class="highlighter-rouge">month</code> 这个类, 它们的字体颜色就是红色.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;head&gt;</span>
+	...
+	<span class="nt">&lt;style&gt;</span>
+	<span class="nc">.jan</span> <span class="p">{</span>
+		<span class="nl">background-color</span><span class="p">:</span> <span class="no">yellow</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+	<span class="nc">.month</span> <span class="p">{</span>
+		<span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+
+<span class="nt">&lt;body&gt;</span>
+...
+<span class="nt">&lt;ul&gt;</span>
+	<span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"month"</span><span class="nt">&gt;</span>一月<span class="nt">&lt;/li&gt;</span>
+	<span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"jan"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;li&gt;</span>一月一号<span class="nt">&lt;/li&gt;</span>
+		<span class="nt">&lt;li&gt;</span>一月二号<span class="nt">&lt;/li&gt;</span>
+		<span class="nt">&lt;li&gt;</span>一月三号<span class="nt">&lt;/li&gt;</span>
+	<span class="nt">&lt;/ul&gt;</span>
+	...
+<span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div></div>
+
+<p>这样, 我们就知道, 有时候, 网页中, 这种 class 归类一些组件还是很有用的. 比如我就想找 <code class="highlighter-rouge">jan</code> 下面的这些 <code class="highlighter-rouge">&lt;li&gt;</code>.
+我就能通过寻找 <code class="highlighter-rouge">class="jan"</code> 找到它们. BeautifulSoup 就能这么干.</p>
+
+<h2 class="tut-h2-pad" id="按-Class-匹配">按 Class 匹配
+  <a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/#按-Class-匹配" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>按 Class 匹配很简单. 比如我要找所有 class=month 的信息. 并打印出它们的 tag 内文字.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s">'lxml'</span><span class="p">)</span>
+
+<span class="c1"># use class to narrow search
+</span><span class="n">month</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'li'</span><span class="p">,</span> <span class="p">{</span><span class="s">"class"</span><span class="p">:</span> <span class="s">"month"</span><span class="p">})</span>
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">month</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+
+<span class="s">"""
+一月
+二月
+三月
+四月
+五月
+"""</span>
+</code></pre></div></div>
+
+<p>或者找到 class=jan 的信息. 然后在 <code class="highlighter-rouge">&lt;ul&gt;</code> 下面继续找 <code class="highlighter-rouge">&lt;ul&gt;</code> 内部的 <code class="highlighter-rouge">&lt;li&gt;</code> 信息.
+这样一层层嵌套的信息, 非常容易找到.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">jan</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'ul'</span><span class="p">,</span> <span class="p">{</span><span class="s">"class"</span><span class="p">:</span> <span class="s">'jan'</span><span class="p">})</span>
+<span class="n">d_jan</span> <span class="o">=</span> <span class="n">jan</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'li'</span><span class="p">)</span>              <span class="c1"># use jan as a parent
+</span><span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">d_jan</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+
+<span class="s">"""
+一月一号
+一月二号
+一月三号
+"""</span>
+</code></pre></div></div>
+
+<p>如果想要找到一些有着一定格式的信息, 比如使用正则表达来寻找相类似的信息, 我们在 BeautifulSoup 中也能嵌入正则表达式,
+让 BeautifulSoup 更为强大. 怎么用, 我们就接着往下看啦.</p>
+
+<p><em>相关教程</em></p>
+
+<ul>
+  <li><em><a href="/tutorials/data-manipulation/scraping/1-00-why/">Why 爬虫?</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/1-01-understand-website/">了解网页结构</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/2-01-beautifulsoup-basic/">BeautifulSoup 解析网页: 基础</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/">BeautifulSoup 解析网页: CSS</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/2-03-beautifulsoup-regex/">BeautifulSoup 解析网页: 正则表达</a></em></li>
+  <li><em><a href="/tutorials/data-manipulation/scraping/2-04-practice-baidu-baike/">小练习: 爬百度百科</a></em></li>
+</ul>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/&pic=https://morvanzhou.github.io/static/thumbnail-small/scraping/2-2 bs.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/&type=icon&language=zh_cn&searchPic=true&title=BeautifulSoup 解析网页: CSS+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/scraping/2-2 bs.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/&title=BeautifulSoup 解析网页: CSS+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/&original_referer=https://morvanzhou.github.io/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/data-manipulation/scraping/2-01-beautifulsoup-basic/">
+    <strong>&laquo;</strong> <i>BeautifulSoup 解析网页: 基础</i></a>
+  
+  
+  <a class="next" href="/tutorials/data-manipulation/scraping/2-03-beautifulsoup-regex/">
+    <i>BeautifulSoup 解析网页: 正则表达</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/data-manipulation/scraping/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/data-manipulation/scraping/"><p><strong>网页爬虫</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">爬虫简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/1-00-why/">Why?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/1-01-understand-website/">了解网页结构</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">BeautifulSoup 解析网页</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-01-beautifulsoup-basic/">BeautifulSoup 解析网页: 基础</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/" style="color:#ffffff;">BeautifulSoup 解析网页: CSS</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/#什么是-CSS" style="color:#ffffff;">什么是 CSS</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/#CSS-的-Class" style="color:#ffffff;">CSS 的 Class</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/data-manipulation/scraping/2-02-beautifulsoup-css/#按-Class-匹配" style="color:#ffffff;">按 Class 匹配</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-03-beautifulsoup-regex/">BeautifulSoup 解析网页: 正则表达</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/2-04-practice-baidu-baike/">小练习: 爬百度百科</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">更多请求/下载方式</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/3-01-requests/">多功能的 Requests</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/3-02-download/">下载文件</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/3-03-practice-download-image/">小练习: 下载美图</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">加速你的爬虫</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/4-01-distributed-scraping/">加速爬虫: 多进程分布式</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/4-02-asyncio/">加速爬虫: 异步加载 Asyncio</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">高级爬虫</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/5-01-selenium/">高级爬虫: 让 Selenium 控制你的浏览器帮你爬</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/data-manipulation/scraping/5-02-scrapy/">高级爬虫: 高效无忧的 Scrapy 爬虫库</a>
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

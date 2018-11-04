@@ -1,0 +1,1042 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="上次我们搭建好了一个静态的环境, 整个环境还没有动起来. 这次我们结合手臂的运动部分和手臂的成像部分来写全整个手臂的摆动规则. 并且通过不断地可视化来测试是否写错.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,从头开始, 实战, 机器学习, 神经网络">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/ML-practice/arm3.jpg" />
+  <title>从头开始做一个机器手臂3 写动态环境 - 机器学习实战 | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='从头开始做一个机器手臂3 写动态环境 - 机器学习实战 | 易学习Python' />
+  <meta property="og:description" content="上次我们搭建好了一个静态的环境, 整个环境还没有动起来. 这次我们结合手臂的运动部分和手臂的成像部分来写全整个手臂的摆动规则. 并且通过不断地可视化来测试是否写错."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/ML-practice/arm3.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/",
+    "headline": "从头开始做一个机器手臂3 写动态环境",
+    "image": "http://localhost:4000/static/thumbnail-small/ML-practice/arm3.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "上次我们搭建好了一个静态的环境, 整个环境还没有动起来. 这次我们结合手臂的运动部分和手臂的成像部分来写全整个手臂的摆动规则. 并且通过不断地可视化来测试是否写错.",
+    "url": "http://localhost:4000/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/ML-practice/",
+    "datePublished": "2017-11-22",
+    "dateModified": "2017-11-22",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/T5QlePZ4s3U";
+			var youku_src = "//player.youku.com/embed/XMzE5NDgxNjIwOA==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=16797357&cid=27444433&page=3";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=16797357&page=3";
+
+    	getEmbeddedVideo(bilibili_src, "16797357&page=3", youtube_src, "T5QlePZ4s3U", youku_src, "XMzE5NDgxNjIwOA");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', 'T5QlePZ4s3U')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMzE5NDgxNjIwOA')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '16797357&page=3')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch2/">
+    <strong>&laquo;</strong> <i>从头开始做一个机器手臂2 写静态环境</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch4/">
+    <i>从头开始做一个机器手臂4 加入强化学习算法</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>从头开始做一个机器手臂3 写动态环境</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-11-22
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="/tutorials/machine-learning/reinforcement-learning/1-1-A-RL/">强化学习系列教程</a></li>
+  <li><a href="https://github.com/MorvanZhou/train-robot-arm-from-scratch/tree/master/part3" target="_blank">本节学习代码</a></li>
+</ul>
+
+<p><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch2/">上次</a>我们搭建好了一个静态的环境, 整个环境还没有动起来.
+这次我们结合手臂的运动部分和手臂的成像部分来写全整个手臂的摆动规则. 并且通过不断地可视化来测试是否写错.</p>
+
+<p>下面可以看到我们使用随机动作来测试手臂的运行情况.</p>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/ML-practice/arm3-1.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<h2 class="tut-h2-pad" id="建立手臂信息">建立手臂信息
+  <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#建立手臂信息" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>要定义手臂, 我们就需要用一个表来存储手臂的所有信息. 这个表的信息是流通的,
+我们也能将这个信息传送到 <code class="highlighter-rouge">Viewer</code> 来进行可视化处理. 所以这个表是非常重要的.
+在 <code class="highlighter-rouge">ArmEnv</code> 中, 除了一些提前定义的环境属性, 就是在 <code class="highlighter-rouge">__init__</code> 中定义手臂的表格了.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># env.py
+</span>
+<span class="k">class</span> <span class="nc">ArmEnv</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">viewer</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>                                <span class="c1"># 转动的速度和 dt 有关
+</span>    <span class="n">action_bound</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>                  <span class="c1"># 转动的角度范围
+</span>    <span class="n">goal</span> <span class="o">=</span> <span class="p">{</span><span class="s">'x'</span><span class="p">:</span> <span class="mf">100.</span><span class="p">,</span> <span class="s">'y'</span><span class="p">:</span> <span class="mf">100.</span><span class="p">,</span> <span class="s">'l'</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>  <span class="c1"># 蓝色 goal 的 x,y 坐标和长度 l
+</span>    <span class="n">state_dim</span> <span class="o">=</span> <span class="mi">2</span>                           <span class="c1"># 两个观测值
+</span>    <span class="n">action_dim</span> <span class="o">=</span> <span class="mi">2</span>                          <span class="c1"># 两个动作
+</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s">'l'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="p">(</span><span class="s">'r'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)])</span>
+        <span class="c1"># 生成出 (2,2) 的矩阵
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>        <span class="c1"># 两段手臂都 100 长
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">6</span>    <span class="c1"># 两段手臂的端点角度
+</span></code></pre></div></div>
+
+<p><code class="highlighter-rouge">self.arm_info</code> 是一个 2x2 的表, <code class="highlighter-rouge">self.arm_info['l']</code> 有两个信息, 都是两段手臂的长度,
+<code class="highlighter-rouge">self.arm_info['r']</code> 记录的则是当前两段手臂的旋转角度. 之后手臂做动作时, 都只是这个旋转角度的变化.</p>
+
+<p>接着我们在 <code class="highlighter-rouge">Viewer</code> 中将 <code class="highlighter-rouge">arm_info</code> 和 <code class="highlighter-rouge">goal</code> 传入, 并确定手臂的初始中心点. 手臂将围绕这个中心点旋转.
+这里我们按在上面定义的 <code class="highlighter-rouge">goal</code> 的坐标重新画了 <code class="highlighter-rouge">goal</code> 位置信息. 这样 goal 就会出现在左下角.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># env.py
+</span>
+<span class="k">class</span> <span class="nc">Viewer</span><span class="p">(</span><span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">Window</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arm_info</span><span class="p">,</span> <span class="n">goal</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="c1"># 添加 arm 信息
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span> <span class="o">=</span> <span class="n">arm_info</span>
+        <span class="c1"># 添加窗口中心点, 手臂的根
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">center_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
+
+        <span class="o">...</span>
+        <span class="c1"># 蓝色 goal 的信息包括他的 x, y 坐标, goal 的长度 l
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="mi">4</span><span class="p">,</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">gl</span><span class="o">.</span><span class="n">GL_QUADS</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>    <span class="c1"># 4 corners
+</span>            <span class="p">(</span><span class="s">'v2f'</span><span class="p">,</span> <span class="p">[</span><span class="n">goal</span><span class="p">[</span><span class="s">'x'</span><span class="p">]</span> <span class="o">-</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">goal</span><span class="p">[</span><span class="s">'y'</span><span class="p">]</span> <span class="o">-</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                     <span class="n">goal</span><span class="p">[</span><span class="s">'x'</span><span class="p">]</span> <span class="o">-</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">goal</span><span class="p">[</span><span class="s">'y'</span><span class="p">]</span> <span class="o">+</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                     <span class="n">goal</span><span class="p">[</span><span class="s">'x'</span><span class="p">]</span> <span class="o">+</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">goal</span><span class="p">[</span><span class="s">'y'</span><span class="p">]</span> <span class="o">+</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                     <span class="n">goal</span><span class="p">[</span><span class="s">'x'</span><span class="p">]</span> <span class="o">+</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">goal</span><span class="p">[</span><span class="s">'y'</span><span class="p">]</span> <span class="o">-</span> <span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s">'c3B'</span><span class="p">,</span> <span class="p">(</span><span class="mi">86</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span> <span class="mi">249</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>    <span class="c1"># color
+</span></code></pre></div></div>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="矩形手臂的点坐标">矩形手臂的点坐标
+  <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#矩形手臂的点坐标" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>看下面不要被吓到了, 下面一大堆, 但是说的就一件事, 给我了 <code class="highlighter-rouge">self.arm_info</code> 的手臂角度信息, 我怎么样在屏幕上显示手臂的移动信息.
+下面都是一些三角函数的计算, 找出每段手臂4个端点的坐标, 然后将坐标赋值给 <code class="highlighter-rouge">self.arm1.vertices</code> 和 <code class="highlighter-rouge">self.arm2.vertices</code>.
+这样手臂就能自由摆动了, 无论摆动到哪个角度, 我们都能找到对应的点坐标. 我觉得我这应该都不是最优的换算方法, 三角函数学得好的朋友们应该能写出更好的方法.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># env.py
+</span>
+<span class="k">class</span> <span class="nc">Viewer</span><span class="p">(</span><span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">Window</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_update_arm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">a1l</span><span class="p">,</span> <span class="n">a2l</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span>     <span class="c1"># radius, arm length
+</span>        <span class="p">(</span><span class="n">a1r</span><span class="p">,</span> <span class="n">a2r</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span>     <span class="c1"># radian, angle
+</span>        <span class="n">a1xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_coord</span>            <span class="c1"># a1 start (x0, y0)
+</span>        <span class="n">a1xy_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1r</span><span class="p">)])</span> <span class="o">*</span> <span class="n">a1l</span> <span class="o">+</span> <span class="n">a1xy</span>   <span class="c1"># a1 end and a2 start (x1, y1)
+</span>        <span class="n">a2xy_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1r</span><span class="o">+</span><span class="n">a2r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1r</span><span class="o">+</span><span class="n">a2r</span><span class="p">)])</span> <span class="o">*</span> <span class="n">a2l</span> <span class="o">+</span> <span class="n">a1xy_</span>  <span class="c1"># a2 end (x2, y2)
+</span>
+        <span class="c1"># 第一段手臂的4个点信息
+</span>        <span class="n">a1tr</span><span class="p">,</span> <span class="n">a2tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span>
+        <span class="n">xy01</span> <span class="o">=</span> <span class="n">a1xy</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1tr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+        <span class="n">xy02</span> <span class="o">=</span> <span class="n">a1xy</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1tr</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+        <span class="n">xy11</span> <span class="o">=</span> <span class="n">a1xy_</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1tr</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+        <span class="n">xy12</span> <span class="o">=</span> <span class="n">a1xy_</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1tr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+
+        <span class="c1"># 第二段手臂的4个点信息
+</span>        <span class="n">xy11_</span> <span class="o">=</span> <span class="n">a1xy_</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a2tr</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a2tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+        <span class="n">xy12_</span> <span class="o">=</span> <span class="n">a1xy_</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a2tr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a2tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+        <span class="n">xy21</span> <span class="o">=</span> <span class="n">a2xy_</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a2tr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a2tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+        <span class="n">xy22</span> <span class="o">=</span> <span class="n">a2xy_</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a2tr</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a2tr</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_thc</span>
+
+        <span class="c1"># 将点信息都放入手臂显示中
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arm1</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">xy01</span><span class="p">,</span> <span class="n">xy02</span><span class="p">,</span> <span class="n">xy11</span><span class="p">,</span> <span class="n">xy12</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arm2</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">xy11_</span><span class="p">,</span> <span class="n">xy12_</span><span class="p">,</span> <span class="n">xy21</span><span class="p">,</span> <span class="n">xy22</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 class="tut-h2-pad" id="手臂移动方式">手臂移动方式
+  <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#手臂移动方式" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>定义好了手臂的 update 规则, 我们就继续定义 update 规则时, 需要用到的手臂角度信息更新原则. 这个更新原则体现在 <code class="highlighter-rouge">ArmEnv</code> 中.
+如果你还记得, 我们把手臂的运动和手臂的画图分开了. 所以运动的部分写在 <code class="highlighter-rouge">ArmEnv</code> 里. 这里我们会要用到手臂的 <code class="highlighter-rouge">self.arm_info</code> 信息,
+加上 <code class="highlighter-rouge">step()</code> 功能传入的一个 <code class="highlighter-rouge">action</code> 来更新手臂的在下一时刻的 info 信息.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># env.py
+</span>
+<span class="k">class</span> <span class="nc">ArmEnv</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="c1"># 计算单位时间 dt 内旋转的角度, 将角度限制在360度以内
+</span>        <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">action_bound</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span> <span class="o">+=</span> <span class="n">action</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span> <span class="o">%=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span>    <span class="c1"># normalize
+</span>
+        <span class="c1"># 我们可以将两截手臂的角度信息当做一个 state (之后会变)
+</span>        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span>
+
+        <span class="c1"># 如果手指接触到蓝色的 goal, 我们判定结束回合 (done)
+</span>        <span class="c1"># 所以需要计算 finger 的坐标
+</span>        <span class="p">(</span><span class="n">a1l</span><span class="p">,</span> <span class="n">a2l</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span>  <span class="c1"># radius, arm length
+</span>        <span class="p">(</span><span class="n">a1r</span><span class="p">,</span> <span class="n">a2r</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span>  <span class="c1"># radian, angle
+</span>        <span class="n">a1xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">200.</span><span class="p">,</span> <span class="mf">200.</span><span class="p">])</span>    <span class="c1"># a1 start (x0, y0)
+</span>        <span class="n">a1xy_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1r</span><span class="p">)])</span> <span class="o">*</span> <span class="n">a1l</span> <span class="o">+</span> <span class="n">a1xy</span>  <span class="c1"># a1 end and a2 start (x1, y1)
+</span>        <span class="n">finger</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a1r</span> <span class="o">+</span> <span class="n">a2r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a1r</span> <span class="o">+</span> <span class="n">a2r</span><span class="p">)])</span> <span class="o">*</span> <span class="n">a2l</span> <span class="o">+</span> <span class="n">a1xy_</span>  <span class="c1"># a2 end (x2, y2)
+</span>
+        <span class="c1"># 根据 finger 和 goal 的坐标得出 done and reward
+</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'x'</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">finger</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'x'</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'y'</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">finger</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'y'</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">[</span><span class="s">'l'</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="mf">1.</span>      <span class="c1"># finger 在 goal 以内
+</span>        <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span>
+</code></pre></div></div>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="添加随机动作">添加随机动作
+  <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#添加随机动作" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>为了完成所有任务, 我们需要让环境产生一些随机动作, 用来测试现在的这个环境可行性.
+还有每次开始回合的时候, 手臂的初始状态也可以在这里设置. 有了这些设置, 我们就能测试旋转的手臂啦.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># env.py
+</span>
+<span class="k">class</span> <span class="nc">ArmEnv</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arm_info</span><span class="p">[</span><span class="s">'r'</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">sample_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span>    <span class="c1"># two radians
+</span></code></pre></div></div>
+
+<p>最后测试的时候, 在 env.py 最下面写一个简单的循环, 直接在 env.py 里进行测试.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">ArmEnv</span><span class="p">()</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">sample_action</span><span class="p">())</span>
+</code></pre></div></div>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/ML-practice/arm3-1.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<p>上面这个基础环境的<a href="https://github.com/MorvanZhou/train-robot-arm-from-scratch/tree/master/part3/env.py" target="_blank">全部代码在这</a>.
+这就是我们一个抛开 RL 的环境, 手臂经测试, 能够用, 而且每个关节都正常. 接着我们就<a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch4/">套上一个 RL 的方法</a>, 来测试一下整体效果.</p>
+
+<p><em>实战:从头开始搭建训练机器人手臂</em></p>
+
+<ul>
+  <li><em><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">搭建结构</a></em></li>
+  <li><em><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch2/">写静态环境</a></em></li>
+  <li><em><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/">写动态环境</a></em></li>
+  <li><em><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch4/">加入强化学习算法</a></em></li>
+  <li><em><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch5/">完善测试</a></em></li>
+</ul>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/&pic=https://morvanzhou.github.io/static/thumbnail-small/ML-practice/arm3.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/&type=icon&language=zh_cn&searchPic=true&title=从头开始做一个机器手臂3 写动态环境+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/ML-practice/arm3.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/&title=从头开始做一个机器手臂3 写动态环境+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch2/">
+    <strong>&laquo;</strong> <i>从头开始做一个机器手臂2 写静态环境</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch4/">
+    <i>从头开始做一个机器手臂4 加入强化学习算法</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/ML-practice/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/ML-practice/"><p><strong>机器学习实战</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">强化学习机器人手臂</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">从头开始做一个机器手臂1 搭建结构</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch2/">从头开始做一个机器手臂2 写静态环境</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/" style="color:#ffffff;">从头开始做一个机器手臂3 写动态环境</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#建立手臂信息" style="color:#ffffff;">建立手臂信息</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#矩形手臂的点坐标" style="color:#ffffff;">矩形手臂的点坐标</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#手臂移动方式" style="color:#ffffff;">手臂移动方式</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch3/#添加随机动作" style="color:#ffffff;">添加随机动作</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch4/">从头开始做一个机器手臂4 加入强化学习算法</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch5/">从头开始做一个机器手臂5 完善测试</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">汽车状态分类器</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-practice/build-car-classifier-from-scratch1/">从头开始做一个汽车状态分类器1: 分析数据</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/ML-practice/build-car-classifier-from-scratch2/">从头开始做一个汽车状态分类器2: 搭建模型</a>
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d14870a2-3bdb-4707-8f92-06082acc7708" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_layouts/tutorial-post.html" beforeDir="false" afterPath="$PROJECT_DIR$/_layouts/tutorial-post.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_tutorials/machine-learning/torch/6-01-actiavte.md" beforeDir="false" afterPath="$PROJECT_DIR$/_tutorials/machine-learning/torch/6-01-actiavte.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -22,7 +20,7 @@
         <entry file="file://$PROJECT_DIR$/_includes/embedded-video.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="22">
-              <caret line="1" column="17" lean-forward="true" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+              <caret line="1" column="17" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#span#0;n#div#1;n#!!top" expanded="true" />
@@ -34,8 +32,17 @@
       <file leaf-file-name="tutorial-post.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/_layouts/tutorial-post.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+            <state relative-caret-position="444">
+              <caret line="38" column="27" selection-start-line="38" selection-start-column="27" selection-end-line="38" selection-end-column="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="_config.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_config.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="880">
+              <caret line="123" column="17" selection-start-line="123" selection-start-column="17" selection-end-line="123" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -45,7 +52,7 @@
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
               <first_editor relative-caret-position="22">
-                <caret line="1" column="11" lean-forward="true" selection-start-line="1" selection-start-column="11" selection-end-line="1" selection-end-column="11" />
+                <caret line="1" column="11" selection-start-line="1" selection-start-column="11" selection-end-line="1" selection-end-column="11" />
               </first_editor>
               <second_editor />
             </state>
@@ -64,7 +71,7 @@
       <file leaf-file-name="video-select.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/video-select.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1122">
+            <state relative-caret-position="1320">
               <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
             </state>
           </provider>
@@ -141,8 +148,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="381" />
-    <option name="y" value="115" />
+    <option name="x" value="65" />
+    <option name="y" value="80" />
     <option name="width" value="1849" />
     <option name="height" value="1132" />
   </component>
@@ -164,95 +171,7 @@
             <path>
               <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
               <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_includes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
               <item name="_layouts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_loop-description" type="462c0819:PsiDirectoryNode" />
-              <item name="machine-learning" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_table-contents" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_tutorials" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_tutorials" type="462c0819:PsiDirectoryNode" />
-              <item name="machine-learning" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="_tutorials" type="462c0819:PsiDirectoryNode" />
-              <item name="machine-learning" type="462c0819:PsiDirectoryNode" />
-              <item name="torch" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="files" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-              <item name="description" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-              <item name="support" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="inessus.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="inessus.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
-              <item name="torch" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -290,18 +209,18 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1541325276450</updated>
-      <workItem from="1541325277783" duration="9294000" />
+      <workItem from="1541325277783" duration="10297000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9294000" />
+    <option name="totallyTimeSpent" value="10297000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1204" extended-state="6" />
+    <frame x="65" y="108" width="1849" height="1104" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23342317" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23418064" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
@@ -502,13 +421,6 @@
         <state relative-caret-position="-53" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/_config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="123" column="17" selection-start-line="123" selection-start-column="17" selection-end-line="123" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_data/learning-steps.yml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -593,23 +505,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/video-select.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1122">
-          <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/4-1-speed-up-numpy.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="22">
-            <caret line="1" column="11" lean-forward="true" selection-start-line="1" selection-start-column="11" selection-end-line="1" selection-end-column="11" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_loop-description/machine-learning/05-PyTorch.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -651,7 +546,7 @@
     <entry file="file://$PROJECT_DIR$/_includes/embedded-video.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
-          <caret line="1" column="17" lean-forward="true" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+          <caret line="1" column="17" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
           <folding>
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#div#1;n#!!top" expanded="true" />
@@ -659,10 +554,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="880">
+          <caret line="123" column="17" selection-start-line="123" selection-start-column="17" selection-end-line="123" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_tutorials/data-manipulation/np-pd/4-1-speed-up-numpy.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="22">
+            <caret line="1" column="11" selection-start-line="1" selection-start-column="11" selection-end-line="1" selection-end-column="11" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/video-select.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1320">
+          <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/_layouts/tutorial-post.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+        <state relative-caret-position="444">
+          <caret line="38" column="27" selection-start-line="38" selection-start-column="27" selection-end-line="38" selection-end-column="27" />
         </state>
       </provider>
     </entry>

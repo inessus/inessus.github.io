@@ -1,0 +1,1267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="手动编环境是一件很耗时间的事情, 所以如果有能力使用别人已经编好的环境, 可以节约我们很多时间. OpenAI gym 就是这样一个模块, 他提供了我们很多优秀的模拟环境. 我们的各种 RL 算法都能使用这些环境. 不过 OpenAI gym 暂时只支持 MacOS 和 Linux 系统. Windows 可能某一天就能支持了, 大家时不时查看下官网, 可能就有惊喜. 是在等不及更新了, 也行用 tkinter 来手动编写一下环境. 这里有我制作的很好的 tkinter 入门教程, 之前的 maze 环境也是用 tkinter 编出来的. 大家可以仿照这个文件编写就 ok 啦. ">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,reinforcement learning, 强化学习, tensorflow">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/rl/4.4_openai.jpg" />
+  <title>OpenAI gym 环境库 - 强化学习 Reinforcement Learning | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='OpenAI gym 环境库 - 强化学习 Reinforcement Learning | 易学习Python' />
+  <meta property="og:description" content="手动编环境是一件很耗时间的事情, 所以如果有能力使用别人已经编好的环境, 可以节约我们很多时间. OpenAI gym 就是这样一个模块, 他提供了我们很多优秀的模拟环境. 我们的各种 RL 算法都能使用这些环境. 不过 OpenAI gym 暂时只支持 MacOS 和 Linux 系统. Windows 可能某一天就能支持了, 大家时不时查看下官网, 可能就有惊喜. 是在等不及更新了, 也行用 tkinter 来手动编写一下环境. 这里有我制作的很好的 tkinter 入门教程, 之前的 maze 环境也是用 tkinter 编出来的. 大家可以仿照这个文件编写就 ok 啦. "/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/rl/4.4_openai.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/4-4-gym/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/4-4-gym/",
+    "headline": "OpenAI gym 环境库",
+    "image": "http://localhost:4000/static/thumbnail-small/rl/4.4_openai.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "手动编环境是一件很耗时间的事情, 所以如果有能力使用别人已经编好的环境, 可以节约我们很多时间. OpenAI gym 就是这样一个模块, 他提供了我们很多优秀的模拟环境. 我们的各种 RL 算法都能使用这些环境. 不过 OpenAI gym 暂时只支持 MacOS 和 Linux 系统. Windows 可能某一天就能支持了, 大家时不时查看下官网, 可能就有惊喜. 是在等不及更新了, 也行用 tkinter 来手动编写一下环境. 这里有我制作的很好的 tkinter 入门教程, 之前的 maze 环境也是用 tkinter 编出来的. 大家可以仿照这个文件编写就 ok 啦. ",
+    "url": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/4-4-gym/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/reinforcement-learning/",
+    "datePublished": "2017-02-26",
+    "dateModified": "2017-02-26",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/9m3DN2dyi8I";
+			var youku_src = "//player.youku.com/embed/XMjUzMjA1NjY2NA==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=16921335&cid=27657236&page=18";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=16921335&page=18";
+
+    	getEmbeddedVideo(bilibili_src, "16921335&page=18", youtube_src, "9m3DN2dyi8I", youku_src, "XMjUzMjA1NjY2NA");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', '9m3DN2dyi8I')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMjUzMjA1NjY2NA')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '16921335&page=18')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/">
+    <strong>&laquo;</strong> <i>DQN 思维决策 (Tensorflow)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">
+    <i>Double DQN (Tensorflow)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>OpenAI gym 环境库</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-02-26
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/tree/master/contents/6_OpenAI_gym" target="_blank">全部代码</a></li>
+  <li><a href="/tutorials/machine-learning/ML-intro/4-06-DQN/">什么是 DQN 短视频</a></li>
+  <li><a href="https://gym.openai.com/envs/" target="_blank">OpenAI gym 官网</a></li>
+  <li>本节内容的模拟视频效果:
+    <ul>
+      <li>CartPole: <a href="https://www.youtube.com/watch?v=qlqqezju0xo" target="_blank">Youtube</a>, <a href="https://www.youtube.com/watch?v=qlqqezju0xo" target="_blank">Youtube</a></li>
+      <li>Mountain Car: <a href="https://www.youtube.com/watch?v=r1mNIDN3zNM" target="_blank">Youtube</a>, <a href="https://www.youtube.com/watch?v=r1mNIDN3zNM" target="_blank">Youtube</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 class="tut-h2-pad" id="要点">要点
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#要点" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>手动编环境是一件很耗时间的事情, 所以如果有能力使用别人已经编好的环境, 可以节约我们很多时间. OpenAI gym 就是这样一个模块, 他提供了我们很多优秀的模拟环境.
+我们的各种 RL 算法都能使用这些环境. 不过 OpenAI gym 暂时只支持 MacOS 和 Linux 系统. Windows 已经支持, 但是听说还没有全面支持, 大家时不时查看下官网, 可能就有惊喜.
+是在等不及更新了, 也行用 tkinter 来手动编写一下环境.
+这里有我制作的很好的 <a href="/tutorials/python-basic/tkinter/">tkinter 入门教程</a>, 之前的 maze 环境也是用 tkinter
+编出来的. 大家可以仿照<a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/5_Deep_Q_Network/maze_env.py" target="_blank">这个文件</a>编写就 ok 啦.
+或者还可以玩玩更厉害的, 想 OpenAI 一样, 使用 pyglet 模块来编写, 我做了一个从环境开始编写的<a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">强化学习实战</a>.</p>
+
+<h2 class="tut-h2-pad" id="安装-gym">安装 gym
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#安装-gym" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>在 MacOS 和 Linux 系统下, 安装 gym 很方便, 首先确定你是 python 2.7 或者 python 3.5 版本.
+然后在你的 terminal 中复制下面这些. 但是 gym 暂时还不完全支持 Windows, 不过有些虚拟环境已经的到了支持, 想立杆子那个已经支持了.
+所以接下来要说的安装方法只有 MacOS 和 Linux 的. Windows 用户的安装方式应该也差不多, 如果 Windows 用户遇到了问题, 欢迎在留言区分享解决的方法.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># python 2.7, 复制下面</span>
+<span class="nv">$ </span>pip <span class="nb">install </span>gym
+
+<span class="c"># python 3.5, 复制下面</span>
+<span class="nv">$ </span>pip3 <span class="nb">install </span>gym
+</code></pre></div></div>
+
+<p>如果没有报错, 恭喜你, 这样你就装好了 gym 的最基本款, 可以开始玩以下游戏啦:</p>
+
+<ul>
+  <li><a href="https://gym.openai.com/envs#algorithmic" target="_blank">algorithmic</a></li>
+  <li><a href="https://gym.openai.com/envs#toy_text" target="_blank">toy_text</a></li>
+  <li><a href="https://gym.openai.com/envs#classic_control" target="_blank">classic_control</a> (这个需要 pyglet 模块)</li>
+</ul>
+
+<p>如果在安装中遇到问题. 可能是缺少了一些必要模块, 可以使用下面语句来安装这些模块(安装时间可能有点久):</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># MacOS:</span>
+<span class="nv">$ </span>brew <span class="nb">install </span>cmake boost boost-python sdl2 swig wget
+
+<span class="c"># Ubuntu 14.04:</span>
+<span class="nv">$ </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> python-numpy python-dev cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
+</code></pre></div></div>
+
+<p>如果想要玩 gym 提供的全套游戏, 下面这几句就能满足你:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># python 2.7, 复制下面</span>
+<span class="nv">$ </span>pip <span class="nb">install </span>gym[all]
+
+<span class="c"># python 3.5, 复制下面</span>
+<span class="nv">$ </span>pip3 <span class="nb">install </span>gym[all]
+</code></pre></div></div>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="CartPole-例子">CartPole 例子
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#CartPole-例子" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/reinforcement-learning/cartpole dqn.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<p>之前我编写的 <code class="highlighter-rouge">maze_env</code> 基本上是按照 <code class="highlighter-rouge">gym</code> 环境格式写的, 所以你换成 <code class="highlighter-rouge">gym</code> 格式会很简单.</p>
+
+<p>接下来我们对应上面的算法, 来实现主循环. 首先 import 所需模块.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">from</span> <span class="nn">RL_brain</span> <span class="kn">import</span> <span class="n">DeepQNetwork</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s">'CartPole-v0'</span><span class="p">)</span>   <span class="c1"># 定义使用 gym 库中的那一个环境
+</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span> <span class="c1"># 不做这个会有很多限制
+</span>
+<span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="c1"># 查看这个环境中可用的 action 有多少个
+</span><span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">)</span>    <span class="c1"># 查看这个环境中可用的 state 的 observation 有多少个
+</span><span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>   <span class="c1"># 查看 observation 最高取值
+</span><span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>    <span class="c1"># 查看 observation 最低取值
+</span></code></pre></div></div>
+
+<p>于之前使用 tkinter 定义的环境有点不一样, 我们可以不适用 <code class="highlighter-rouge">if __name__ == "__main__"</code> 的方式, 下面是一种类似, 却更简单的写法.
+之中我们会用到里面的 reward, 但是 <code class="highlighter-rouge">env.step()</code> 说提供的 <code class="highlighter-rouge">reward</code> 不一定是最有效率的 <code class="highlighter-rouge">reward</code>, 我们大可对这些进行修改,
+使 DQN 学得更有效率. 你可以自己对比一下不修改 reward 和 按我这样修改, 他们学习过程的不同.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 定义使用 DQN 的算法
+</span><span class="n">RL</span> <span class="o">=</span> <span class="n">DeepQNetwork</span><span class="p">(</span><span class="n">n_actions</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">,</span>
+                  <span class="n">n_features</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                  <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">e_greedy</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+                  <span class="n">replace_target_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">memory_size</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+                  <span class="n">e_greedy_increment</span><span class="o">=</span><span class="mf">0.0008</span><span class="p">,)</span>
+
+<span class="n">total_steps</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 记录步数
+</span>
+<span class="k">for</span> <span class="n">i_episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+
+    <span class="c1"># 获取回合 i_episode 第一个 observation
+</span>    <span class="n">observation</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">ep_r</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>    <span class="c1"># 刷新环境
+</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">RL</span><span class="o">.</span><span class="n">choose_action</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>  <span class="c1"># 选行为
+</span>
+        <span class="n">observation_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="c1"># 获取下一个 state
+</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">x_dot</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">theta_dot</span> <span class="o">=</span> <span class="n">observation_</span>   <span class="c1"># 细分开, 为了修改原配的 reward
+</span>
+        <span class="c1"># x 是车的水平位移, 所以 r1 是车越偏离中心, 分越少
+</span>        <span class="c1"># theta 是棒子离垂直的角度, 角度越大, 越不垂直. 所以 r2 是棒越垂直, 分越高
+</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">x_dot</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">theta_dot</span> <span class="o">=</span> <span class="n">observation_</span>
+        <span class="n">r1</span> <span class="o">=</span> <span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">x_threshold</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">env</span><span class="o">.</span><span class="n">x_threshold</span> <span class="o">-</span> <span class="mf">0.8</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">theta_threshold_radians</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="o">/</span><span class="n">env</span><span class="o">.</span><span class="n">theta_threshold_radians</span> <span class="o">-</span> <span class="mf">0.5</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">+</span> <span class="n">r2</span>   <span class="c1"># 总 reward 是 r1 和 r2 的结合, 既考虑位置, 也考虑角度, 这样 DQN 学习更有效率
+</span>
+        <span class="c1"># 保存这一组记忆
+</span>        <span class="n">RL</span><span class="o">.</span><span class="n">store_transition</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">observation_</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">total_steps</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="n">RL</span><span class="o">.</span><span class="n">learn</span><span class="p">()</span>  <span class="c1"># 学习
+</span>
+        <span class="n">ep_r</span> <span class="o">+=</span> <span class="n">reward</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'episode: '</span><span class="p">,</span> <span class="n">i_episode</span><span class="p">,</span>
+                  <span class="s">'ep_r: '</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ep_r</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                  <span class="s">' epsilon: '</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">RL</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="k">break</span>
+
+        <span class="n">observation</span> <span class="o">=</span> <span class="n">observation_</span>
+        <span class="n">total_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="c1"># 最后输出 cost 曲线
+</span><span class="n">RL</span><span class="o">.</span><span class="n">plot_cost</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>这是更为典型的 RL cost 曲线:</p>
+
+<p><a href="/static/results/reinforcement-learning/4-4-1.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/4-4-1.png" src="/static/img/description/loading.gif" alt="OpenAI gym 环境库" title="OpenAI gym 环境库" />
+</a></p>
+
+<h2 class="tut-h2-pad" id="MountainCar-例子">MountainCar 例子
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#MountainCar-例子" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/reinforcement-learning/mountaincar dqn.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<p>代码基本和上述代码相同, 就只是在 reward 上动了下手脚.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">from</span> <span class="nn">RL_brain</span> <span class="kn">import</span> <span class="n">DeepQNetwork</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s">'MountainCar-v0'</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+
+<span class="n">RL</span> <span class="o">=</span> <span class="n">DeepQNetwork</span><span class="p">(</span><span class="n">n_actions</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">e_greedy</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+                  <span class="n">replace_target_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">memory_size</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
+                  <span class="n">e_greedy_increment</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,)</span>
+
+<span class="n">total_steps</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="k">for</span> <span class="n">i_episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+
+    <span class="n">observation</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">ep_r</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="n">RL</span><span class="o">.</span><span class="n">choose_action</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+
+        <span class="n">observation_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="n">position</span><span class="p">,</span> <span class="n">velocity</span> <span class="o">=</span> <span class="n">observation_</span>
+
+        <span class="c1"># 车开得越高 reward 越大
+</span>        <span class="n">reward</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">position</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span>
+
+        <span class="n">RL</span><span class="o">.</span><span class="n">store_transition</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">observation_</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">total_steps</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="n">RL</span><span class="o">.</span><span class="n">learn</span><span class="p">()</span>
+
+        <span class="n">ep_r</span> <span class="o">+=</span> <span class="n">reward</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="n">get</span> <span class="o">=</span> <span class="s">'| Get'</span> <span class="k">if</span> <span class="n">observation_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">goal_position</span> <span class="k">else</span> <span class="s">'| ----'</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Epi: '</span><span class="p">,</span> <span class="n">i_episode</span><span class="p">,</span>
+                  <span class="n">get</span><span class="p">,</span>
+                  <span class="s">'| Ep_r: '</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ep_r</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                  <span class="s">'| Epsilon: '</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">RL</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="k">break</span>
+
+        <span class="n">observation</span> <span class="o">=</span> <span class="n">observation_</span>
+        <span class="n">total_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">RL</span><span class="o">.</span><span class="n">plot_cost</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>出来的 cost 曲线是这样:</p>
+
+<p><a href="/static/results/reinforcement-learning/4-4-2.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/4-4-2.png" src="/static/img/description/loading.gif" alt="OpenAI gym 环境库" title="OpenAI gym 环境库" />
+</a></p>
+
+<p>这两个都只是例子而已, 具体的实施你也可以大动手脚, 比如你的 reward 定义得更好, 你的神经网络结构更好, 使得他们学的更快.
+这些都是自己定义的.</p>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-4-gym/&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/4.4_openai.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-4-gym/&type=icon&language=zh_cn&searchPic=true&title=OpenAI gym 环境库+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/4.4_openai.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-4-gym/&title=OpenAI gym 环境库+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-4-gym/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-4-gym/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-4-gym/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/">
+    <strong>&laquo;</strong> <i>DQN 思维决策 (Tensorflow)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">
+    <i>Double DQN (Tensorflow)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/reinforcement-learning/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/reinforcement-learning/"><p><strong>强化学习 Reinforcement Learning</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-A-RL/">什么是 强化学习 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-B-RL-methods/">强化学习方法汇总 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-why/">为什么用强化学习 Why?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-2-requirment/">课程要求</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Q-learning</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-1-general-rl/">小例子</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-A-q-learning/">什么是 Q Leaning</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-tabular-q1/">Q-learning 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-3-tabular-q2/">Q-learning 思维决策</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Sarsa</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-A-sarsa/">什么是 Sarsa</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-tabular-sarsa1/">Sarsa 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-2-tabular-sarsa2/">Sarsa 思维决策</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-A-sarsa-lambda/">什么是 Sarsa(lambda)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-tabular-sarsa-lambda/">Sarsa-lambda</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Deep Q Network</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-A-DQN/">什么是 DQN</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-DQN1/">DQN 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-2-DQN2/">DQN 神经网络 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/">DQN 思维决策 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/" style="color:#ffffff;">OpenAI gym 环境库</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#要点" style="color:#ffffff;">要点</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#安装-gym" style="color:#ffffff;">安装 gym</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#CartPole-例子" style="color:#ffffff;">CartPole 例子</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/#MountainCar-例子" style="color:#ffffff;">MountainCar 例子</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">Double DQN (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/">Prioritized Experience Replay (DQN) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-7-dueling-DQN/">Dueling DQN (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Policy Gradient</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-A-PG/">什么是 Policy Gradients</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-policy-gradient-softmax1/">Policy Gradients 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/">Policy Gradients 思维决策 (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Actor Critic</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-A-AC/">什么是 Actor Critic</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/">Actor Critic (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-A-DDPG/">什么是 Deep Deterministic Policy Gradient (DDPG)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-DDPG/">Deep Deterministic Policy Gradient (DDPG) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A1-A3C/">什么是 Asynchronous Advantage Actor-Critic (A3C)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">Asynchronous Advantage Actor-Critic (A3C) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/">Distributed Proximal Policy Optimization (DPPO) (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Model Based RL</p>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

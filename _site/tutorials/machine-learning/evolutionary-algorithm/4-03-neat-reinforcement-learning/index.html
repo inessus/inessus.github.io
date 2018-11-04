@@ -1,0 +1,1087 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="我们见到了使用 NEAT 来进化出一个类似于监督学习中的神经网络, 这次我们用 NEAT 来做强化学习 (Reinforcement Learning), 这个强化学习可是没有反向传播的神经网络哦, 有的只是一个不断进化 (还可能进化到主宰人类) 的神经网络!! (哈哈, 骗你的, 因为每次提到在电脑里进化, 联想到科幻片, 我就激动!) 立杆子的机器人最后学习的效果提前看">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,evolutionary algorithm, 进化算法, 遗传算法, genetic algorithm, neuro evalution">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/evolutionary-algorithm/43neat.jpg" />
+  <title>NEAT 强化学习 - 进化算法 Evolutionary Algorithm | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='NEAT 强化学习 - 进化算法 Evolutionary Algorithm | 易学习Python' />
+  <meta property="og:description" content="我们见到了使用 NEAT 来进化出一个类似于监督学习中的神经网络, 这次我们用 NEAT 来做强化学习 (Reinforcement Learning), 这个强化学习可是没有反向传播的神经网络哦, 有的只是一个不断进化 (还可能进化到主宰人类) 的神经网络!! (哈哈, 骗你的, 因为每次提到在电脑里进化, 联想到科幻片, 我就激动!) 立杆子的机器人最后学习的效果提前看"/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/evolutionary-algorithm/43neat.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/",
+    "headline": "NEAT 强化学习",
+    "image": "http://localhost:4000/static/thumbnail-small/evolutionary-algorithm/43neat.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "我们见到了使用 NEAT 来进化出一个类似于监督学习中的神经网络, 这次我们用 NEAT 来做强化学习 (Reinforcement Learning), 这个强化学习可是没有反向传播的神经网络哦, 有的只是一个不断进化 (还可能进化到主宰人类) 的神经网络!! (哈哈, 骗你的, 因为每次提到在电脑里进化, 联想到科幻片, 我就激动!) 立杆子的机器人最后学习的效果提前看",
+    "url": "http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/",
+    "datePublished": "2017-09-23",
+    "dateModified": "2017-09-23",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/ZgFzC7uBShM";
+			var youku_src = "//player.youku.com/embed/XMzA0MTEzNzAzNg==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=16926245&cid=27670572&page=14";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=16926245&page=14";
+
+    	getEmbeddedVideo(bilibili_src, "16926245&page=14", youtube_src, "ZgFzC7uBShM", youku_src, "XMzA0MTEzNzAzNg");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', 'ZgFzC7uBShM')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMzA0MTEzNzAzNg')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '16926245&page=14')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/evolutionary-algorithm/4-02-neat-supervised-learning/">
+    <strong>&laquo;</strong> <i>NEAT 监督学习</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/evolutionary-algorithm/4-04-evolution-strategy-reinforcement-learning/">
+    <i>Evolution Strategy 强化学习</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>NEAT 强化学习</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-09-23
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="https://github.com/MorvanZhou/Evolutionary-Algorithm/tree/master/tutorial-contents/Using%20Neural%20Nets/NEAT_gym" target="_blank">本节的全部代码</a></li>
+  <li><a href="/tutorials/machine-learning/ML-intro/5-03-neuro-evolution/">我制作的 什么是神经进化 动画简介</a></li>
+  <li><a href="/tutorials/machine-learning/ML-intro/5-01-genetic-algorithm/">什么是遗传算法</a></li>
+  <li><a href="/tutorials/machine-learning/ML-intro/5-02-evolution-strategy/">什么是进化策略</a></li>
+  <li>NEAT 论文 (<a href="http://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf" target="_blank">Evolving Neural Networks through Augmenting Topologies</a>)</li>
+  <li>NEAT <a href="http://neat-python.readthedocs.io/en/latest/neat_overview.html" target="_blank">Python 模块</a></li>
+</ul>
+
+<h2 class="tut-h2-pad" id="要点">要点
+  <a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#要点" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/tutorials/machine-learning/evolutionary-algorithm/4-02-neat-supervised-learning/">上节内容</a> 里,
+我们见到了使用 NEAT 来进化出一个类似于监督学习中的神经网络, 这次我们用 NEAT 来做强化学习 (Reinforcement Learning), 这个强化学习可是没有反向传播的神经网络哦,
+有的只是一个不断进化 (还可能进化到主宰人类) 的神经网络!! (哈哈, 骗你的, 因为每次提到在电脑里进化, 联想到科幻片, 我就激动!)</p>
+
+<p>立杆子的机器人最后学习的效果提前看:</p>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/evolutionary-algorithm/4-3-0.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<p>这个机器人的神经网络长这样:</p>
+
+<p><a href="/static/results/evolutionary-algorithm/4-2-0.png">
+ <img class="course-image lazy-img" data-src="/static/results/evolutionary-algorithm/4-2-0.png" src="/static/img/description/loading.gif" alt="NEAT 强化学习" title="NEAT 强化学习" />
+</a></p>
+
+<h2 class="tut-h2-pad" id="gym-模拟环境">gym 模拟环境
+  <a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#gym-模拟环境" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="https://gym.openai.com/" target="_blank">OpenAI gym</a> 应该算是当下最流行的 强化学习练手模块了吧. 它有超级多的虚拟环境可以让你 plugin 你的 python 脚本.</p>
+
+<p><a href="/static/results/evolutionary-algorithm/4-3-1.png">
+ <img class="course-image lazy-img" data-src="/static/results/evolutionary-algorithm/4-3-1.png" src="/static/img/description/loading.gif" alt="NEAT 强化学习" title="NEAT 强化学习" />
+</a></p>
+
+<p>安装 gym 的方式也很简单, 大家可以直接参考我在之前做 强化学习 Reinforcement learning 教程中的<a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/">这节内容</a>,
+简单的介绍了如何安装 Gym. 如果还是遇到了问题, <a href="https://github.com/openai/gym#installation" target="_blank">这里</a>或许能够找到答案.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="CartPole-进化吧">CartPole 进化吧
+  <a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#CartPole-进化吧" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>这次进化的框架系统大致是这样的:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">eval_genomes</span><span class="p">(</span><span class="n">genomes</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="c1"># 这是我们为每一个 genome 计算 fitness 的功能, 在 NEAT 中必备.
+</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="c1"># 这是我们生成 population, 不断适者生存的地方
+</span>
+<span class="k">def</span> <span class="nf">evaluation</span><span class="p">():</span>
+    <span class="c1"># 我们挑选出最好的个体进行可视化测试
+</span></code></pre></div></div>
+
+<p>在 neat 的 <code class="highlighter-rouge">config</code> <a href="https://github.com/MorvanZhou/Evolutionary-Algorithm/blob/master/tutorial-contents/Using%20Neural%20Nets/NEAT_gym/config" target="_blank">文件</a>中, 我想提到的几个地方是:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fitness_criterion     <span class="o">=</span> max     <span class="c"># 按照适应度最佳的模式选个体</span>
+<span class="c"># 为了一直立杆子下去, 这一个封顶值设置成永远达不到,</span>
+<span class="c"># 具体看我在 eval_genomes 中如何计算 fitness 的</span>
+fitness_threshold     <span class="o">=</span> 2.
+
+activation_default      <span class="o">=</span> relu      <span class="c"># 我挑选的 激活函数</span>
+
+<span class="c"># network 输入输出个数</span>
+num_hidden              <span class="o">=</span> 0
+num_inputs              <span class="o">=</span> 4
+num_outputs             <span class="o">=</span> 2
+</code></pre></div></div>
+
+<p>有了这个 <code class="highlighter-rouge">config</code> 文件里面的信息, 我们就能创建网络和评估网络了. 和上次一样, 下面的功能对每一个个体生成一个神经网络,
+然后把这个网络放在立杆子游戏中玩, 一个 generation 中我们对每一个 <code class="highlighter-rouge">genome</code> 的 <code class="highlighter-rouge">net</code> 测试 <code class="highlighter-rouge">GENERATION_EP</code> 这么多回合,
+然后最后挑选这么多回合中总 <code class="highlighter-rouge">reward</code> 最少的那个回合当成这个 <code class="highlighter-rouge">net</code> 的 <code class="highlighter-rouge">fitness</code> (你可以想象这是木桶效应, 整体的效应取决于最差的那个结果).
+然后要注意的是, <code class="highlighter-rouge">net.activate()</code> output 的是动作的值.
+然后我们挑选一个值最大的动作.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">eval_genomes</span><span class="p">(</span><span class="n">genomes</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">genome_id</span><span class="p">,</span> <span class="n">genome</span> <span class="ow">in</span> <span class="n">genomes</span><span class="p">:</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">neat</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">FeedForwardNetwork</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+        <span class="n">ep_r</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">GENERATION_EP</span><span class="p">):</span> <span class="c1"># run many episodes for the genome in case it's lucky
+</span>            <span class="n">accumulative_r</span> <span class="o">=</span> <span class="mf">0.</span>         <span class="c1"># stage longer to get a greater episode reward
+</span>            <span class="n">observation</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EP_STEP</span><span class="p">):</span>
+                <span class="n">action_values</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">action_values</span><span class="p">)</span>
+                <span class="n">observation_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="n">accumulative_r</span> <span class="o">+=</span> <span class="n">reward</span>
+                <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">observation</span> <span class="o">=</span> <span class="n">observation_</span>
+            <span class="n">ep_r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accumulative_r</span><span class="p">)</span>
+        <span class="n">genome</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">min</span><span class="p">(</span><span class="n">ep_r</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">EP_STEP</span><span class="p">)</span>    <span class="c1"># depends on the minimum episode reward
+</span></code></pre></div></div>
+
+<p>不知道大家看到这里有没有想过, 如果我们能并行运算该多好. 所以, 我亲测失败. 原因是, <code class="highlighter-rouge">gym</code> + <code class="highlighter-rouge">neat</code> 的环境不方便运行 <code class="highlighter-rouge">multiprocessing</code>. 如果你想多线程的话, 可以考虑使用
+<code class="highlighter-rouge">threading</code>, 不过不保证效率有提高. 想知道为什么的话, <a href="/tutorials/python-basic/multiprocessing/4-comparison/">请看这里</a>.</p>
+
+<p>接下来我们就开始写 <code class="highlighter-rouge">run</code> 里面的内容了, 创建种群, 繁衍后代, 适者生存, 不适者淘汰.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">neat</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">neat</span><span class="o">.</span><span class="n">DefaultGenome</span><span class="p">,</span> <span class="n">neat</span><span class="o">.</span><span class="n">DefaultReproduction</span><span class="p">,</span>
+                         <span class="n">neat</span><span class="o">.</span><span class="n">DefaultSpeciesSet</span><span class="p">,</span> <span class="n">neat</span><span class="o">.</span><span class="n">DefaultStagnation</span><span class="p">,</span> <span class="n">CONFIG</span><span class="p">)</span>
+    <span class="n">pop</span> <span class="o">=</span> <span class="n">neat</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">pop</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">eval_genomes</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>       <span class="c1"># train 10 generations
+</span></code></pre></div></div>
+
+<p>那些可视化种群进化图的代码, 请在我的 <a href="https://github.com/MorvanZhou/Evolutionary-Algorithm/blob/master/tutorial-contents/Using%20Neural%20Nets/NEAT_gym/run_cartpole.py" target="_blank">github</a> 中看全套代码吧.</p>
+
+<p>最后我们挑选一下保存的 <code class="highlighter-rouge">checkpoint</code> 文件, 展示出最强神经网络的样子吧.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">evaluation</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">neat</span><span class="o">.</span><span class="n">Checkpointer</span><span class="o">.</span><span class="n">restore_checkpoint</span><span class="p">(</span><span class="s">'neat-checkpoint-</span><span class="si">%</span><span class="s">i'</span> <span class="o">%</span> <span class="n">CHECKPOINT</span><span class="p">)</span>
+    <span class="n">winner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">eval_genomes</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>     <span class="c1"># find the winner in restored population
+</span>    <span class="n">net</span> <span class="o">=</span> <span class="n">neat</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">FeedForwardNetwork</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">winner</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+            <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span> <span class="k">break</span>
+</code></pre></div></div>
+
+<p>这串代码的结果就是这节内容最上面的那个视频效果啦. <code class="highlighter-rouge">winner</code> 的神经网络进化成这样了. 不过你的生成的神经网络可能并不是长这样.
+有时候还可能某个 <code class="highlighter-rouge">input</code> 都没有使用到. 就说明这个 <code class="highlighter-rouge">input</code> 的效用可能并不大.</p>
+
+<p><a href="/static/results/evolutionary-algorithm/4-2-0.png">
+ <img class="course-image lazy-img" data-src="/static/results/evolutionary-algorithm/4-2-0.png" src="/static/img/description/loading.gif" alt="NEAT 强化学习" title="NEAT 强化学习" />
+</a></p>
+
+<p>如果是实线, 如 B-&gt;1, B-&gt;2, 说明这个链接是 Enabled 的. 如果是虚线(点线), 如 B-&gt;A XOR B 就说明这个链接是 Disabled 的.
+红色的线代表 weight &lt;= 0, 绿色的线代表 weight &gt; 0. 线的宽度和 weight 的大小有关.</p>
+
+<h2 class="tut-h2-pad" id="Recurrent-link-和-node">Recurrent link 和 node
+  <a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#Recurrent-link-和-node" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>如果修改一下 <code class="highlighter-rouge">config</code> <a href="https://github.com/MorvanZhou/Evolutionary-Algorithm/blob/master/tutorial-contents/Using%20Neural%20Nets/NEAT_gym/config" target="_blank">文件</a>里面的参数, 比如下面的 <code class="highlighter-rouge">feed_forward = True</code> 改成 <code class="highlighter-rouge">False</code>, 我们就允许网络能产生 recurrent 节点或者链接.
+这样的设置能使网络产生记忆功能. 就像循环神经网络那样. 神经网络的形式结构就能更加多种多样. 不过这里的 recurrent 貌似是和我们一般见到的 Recurrent Neural Network 有所不同,
+我们通常说的 RNN 是通过一个 hidden state 来传递记忆, 而 NEAT 中的 Recurrent 是通过一种 “延迟刷新的形式” (不知道这样说对不对, 我是细看了一遍 NEAT-python 的底层代码发现的),
+每一个时间点每个节点只接收这一时刻传来的信息. 比如下面第一张图中, 现在所有节点都为0, 如果我先更新 <code class="highlighter-rouge">node3</code>, 由于接收到了 <code class="highlighter-rouge">act2=0</code>,  <code class="highlighter-rouge">node3</code> 还是会为0. 但是如果是先更新 <code class="highlighter-rouge">act2</code>, 等 <code class="highlighter-rouge">act2</code> 有值了再更新 <code class="highlighter-rouge">node3</code>,
+那 <code class="highlighter-rouge">node3</code> 这时刻也会有值. 如果这是一个 feedforward net, 更新 link/node 的顺序十分重要, 上述情况肯定会出问题的. 不过在这种版本中的 recurrent, 程序不知道顺序,
+所以每次都 copy 一份所有 node 的值, 用上一步的 node 的值进行这一步的操作, 这样进行 recurrent 的操作.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>feed_forward            <span class="o">=</span> False
+</code></pre></div></div>
+
+<p>将所有原来的 <code class="highlighter-rouge">net = neat.nn.FeedForwardNetwork</code> 改成 <code class="highlighter-rouge">neat.nn.RecurrentNetwork</code>, 就能按上面所说的方式进行 recurrent 操作了.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># net = neat.nn.FeedForwardNetwork.create(winner, p.config)
+</span><span class="n">net</span> <span class="o">=</span> <span class="n">neat</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">RecurrentNetwork</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这样我们就能发现, 产生的网络还能是这样, 注意箭头的方向和位置.</p>
+
+<p><a href="/static/results/evolutionary-algorithm/4-3-2.png">
+ <img class="course-image lazy-img" data-src="/static/results/evolutionary-algorithm/4-3-2.png" src="/static/img/description/loading.gif" alt="NEAT 强化学习" title="NEAT 强化学习" />
+</a></p>
+
+<p><a href="/static/results/evolutionary-algorithm/4-3-3.png">
+ <img class="course-image lazy-img" data-src="/static/results/evolutionary-algorithm/4-3-3.png" src="/static/img/description/loading.gif" alt="NEAT 强化学习" title="NEAT 强化学习" />
+</a></p>
+
+<p>最后, 在这里提一下, 还有一些根据 NEAT 改良的算法. 比如</p>
+<ul>
+  <li><a href="http://axon.cs.byu.edu/Dan/778/papers/NeuroEvolution/stanley3**.pdf" target="_blank">HyperNEAT (A Hypercube-Based Encoding for Evolving Large-Scale Neural Networks)</a>, 使用 NEAT 形式生成 CPPN 的网络, 用 CPPN 进行 indirect encoding 生成更大更复杂的神经网络, 但是后者的网络结构的 capacity 不能改变;</li>
+  <li><a href="http://eplex.cs.ucf.edu/papers/risi_alife12.pdf" target="_blank">ES-HyperNEAT (An Enhanced Hypercube-Based Encoding for Evolving the Placement, Density and Connectivity of Neurons)</a>, 解决上面提到的网络结构 capacity 不可变问题.</li>
+</ul>
+
+<p><a href="/tutorials/machine-learning/evolutionary-algorithm/4-04-evolution-strategy-reinforcement-learning/">下一节</a>我们会关注使用 Evolution Strategy 来做大规模强化学习.</p>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/&pic=https://morvanzhou.github.io/static/thumbnail-small/evolutionary-algorithm/43neat.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/&type=icon&language=zh_cn&searchPic=true&title=NEAT 强化学习+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/evolutionary-algorithm/43neat.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/&title=NEAT 强化学习+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/evolutionary-algorithm/4-02-neat-supervised-learning/">
+    <strong>&laquo;</strong> <i>NEAT 监督学习</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/evolutionary-algorithm/4-04-evolution-strategy-reinforcement-learning/">
+    <i>Evolution Strategy 强化学习</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/evolutionary-algorithm/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/evolutionary-algorithm/"><p><strong>进化算法 Evolutionary Algorithm</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">算法简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/1-01-intro/">进化算法 简介</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">遗传算法 (Genetic Algorithm)</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/2-00-genetic-algorithm/">遗传算法 (Genetic Algorithm)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/2-01-genetic-algorithm/">遗传算法</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/2-02-genetic-algorithm-match-phrase/">例子 配对句子</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/2-03-genetic-algorithm-travel-sales-problem/">例子 旅行商人问题 (Travel Sales Problem)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/2-04-microbial-genetic-algorithm/">Microbial Genetic Algorithm</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">进化策略 (Evolution Strategy)</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/3-00-evolution-strategy/">什么是进化策略 (Evolution Strategy)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/3-01-evolution-strategy/">进化策略</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/3-02-evolution-strategy-1+1-ES/">(1+1)-ES</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/3-03-evolution-strategy-natural-evolution-strategy/">Natural Evolution Strategy</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">神经进化 (NeuroEvolution)</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/4-00-neuro-evolution/">什么是神经网络进化 (Neuro-Evolution)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/4-01-neuro-evolution/">神经进化</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/4-02-neat-supervised-learning/">NEAT 监督学习</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/" style="color:#ffffff;">NEAT 强化学习</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#要点" style="color:#ffffff;">要点</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#gym-模拟环境" style="color:#ffffff;">gym 模拟环境</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#CartPole-进化吧" style="color:#ffffff;">CartPole 进化吧</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/evolutionary-algorithm/4-03-neat-reinforcement-learning/#Recurrent-link-和-node" style="color:#ffffff;">Recurrent link 和 node</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/evolutionary-algorithm/4-04-evolution-strategy-reinforcement-learning/">Evolution Strategy 强化学习</a>
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

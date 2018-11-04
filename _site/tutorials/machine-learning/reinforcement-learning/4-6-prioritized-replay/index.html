@@ -1,0 +1,1309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="这一次还是使用 MountainCar 来进行实验, 因为这次我们不需要重度改变他的 reward 了. 所以只要是没有拿到小旗子, reward=-1, 拿到小旗子时, 我们定义它获得了 +10 的 reward. 比起之前 DQN 中, 这个 reward 定义更加准确. 如果使用这种 reward 定义方式, 可以想象 Natural DQN 会花很久的时间学习, 因为记忆库中只有很少很少的 +10 reward 可以学习. 正负样本不一样. 而使用 Prioritized replay, 就会重视这种少量的, 但值得学习的样本.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,reinforcement learning, 强化学习, tensorflow">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/rl/4.6_prioritized_replay.jpg" />
+  <title>Prioritized Experience Replay (DQN) (Tensorflow) - 强化学习 Reinforcement Learning | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='Prioritized Experience Replay (DQN) (Tensorflow) - 强化学习 Reinforcement Learning | 易学习Python' />
+  <meta property="og:description" content="这一次还是使用 MountainCar 来进行实验, 因为这次我们不需要重度改变他的 reward 了. 所以只要是没有拿到小旗子, reward=-1, 拿到小旗子时, 我们定义它获得了 +10 的 reward. 比起之前 DQN 中, 这个 reward 定义更加准确. 如果使用这种 reward 定义方式, 可以想象 Natural DQN 会花很久的时间学习, 因为记忆库中只有很少很少的 +10 reward 可以学习. 正负样本不一样. 而使用 Prioritized replay, 就会重视这种少量的, 但值得学习的样本."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/rl/4.6_prioritized_replay.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/",
+    "headline": "Prioritized Experience Replay (DQN) (Tensorflow)",
+    "image": "http://localhost:4000/static/thumbnail-small/rl/4.6_prioritized_replay.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "这一次还是使用 MountainCar 来进行实验, 因为这次我们不需要重度改变他的 reward 了. 所以只要是没有拿到小旗子, reward=-1, 拿到小旗子时, 我们定义它获得了 +10 的 reward. 比起之前 DQN 中, 这个 reward 定义更加准确. 如果使用这种 reward 定义方式, 可以想象 Natural DQN 会花很久的时间学习, 因为记忆库中只有很少很少的 +10 reward 可以学习. 正负样本不一样. 而使用 Prioritized replay, 就会重视这种少量的, 但值得学习的样本.",
+    "url": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/reinforcement-learning/",
+    "datePublished": "2017-03-07",
+    "dateModified": "2017-03-07",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/9gQl-TkmA80";
+			var youku_src = "//player.youku.com/embed/XMjYxMTE2NTEzNg==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=16921335&cid=27657236&page=20";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=16921335&page=20";
+
+    	getEmbeddedVideo(bilibili_src, "16921335&page=20", youtube_src, "9gQl-TkmA80", youku_src, "XMjYxMTE2NTEzNg");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', '9gQl-TkmA80')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMjYxMTE2NTEzNg')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '16921335&page=20')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">
+    <strong>&laquo;</strong> <i>Double DQN (Tensorflow)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/reinforcement-learning/4-7-dueling-DQN/">
+    <i>Dueling DQN (Tensorflow)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>Prioritized Experience Replay (DQN) (Tensorflow)</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-03-07
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/tree/master/contents/5.2_Prioritized_Replay_DQN" target="_blank">全部代码</a></li>
+  <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">强化学习实战</a></li>
+  <li>论文 <a href="https://arxiv.org/abs/1511.05952" target="_blank">Prioritized Experience Replay</a></li>
+</ul>
+
+<h2 class="tut-h2-pad" id="要点">要点
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#要点" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><strong>本篇教程是基于 Deep Q network (DQN) 的选学教程.
+以下教程缩减了在 DQN 方面的介绍, 着重强调 DQN with Prioritized Replay 和 DQN 在代码上不同的地方.
+所以还没了解 DQN 的同学们, 有关于 DQN 的知识,
+请从 <a href="/tutorials/machine-learning/ML-intro/4-06-DQN/">这个视频</a>
+和 <a href="/tutorials/machine-learning/reinforcement-learning/4-1-DQN1/">这个Python教程</a> 开始学习.</strong></p>
+
+<p>这一次还是使用 MountainCar 来进行实验, 因为这次我们不需要重度改变他的 reward 了.
+所以只要是没有拿到小旗子, reward=-1, 拿到小旗子时, 我们定义它获得了 +10 的 reward.
+比起之前 DQN 中, 这个 reward 定义更加准确. 如果使用这种 reward 定义方式,
+可以想象 Natural DQN 会花很久的时间学习, 因为记忆库中只有很少很少的 +10 reward 可以学习. 正负样本不一样.
+而使用 Prioritized replay, 就会重视这种少量的, 但值得学习的样本.</p>
+
+<video class="tut-content-video" controls="" loop="" autoplay="" muted="">
+  <source src="/static/results/reinforcement-learning/mountaincar dqn.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+<h2 class="tut-h2-pad" id="Prioritized-replay-算法">Prioritized replay 算法
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#Prioritized-replay-算法" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/reinforcement-learning/4-6-1.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/4-6-1.png" src="/static/img/description/loading.gif" alt="Prioritized Experience Replay (DQN) (Tensorflow)" title="Prioritized Experience Replay (DQN) (Tensorflow)" />
+</a></p>
+
+<p>这一套算法重点就在我们 batch 抽样的时候并不是随机抽样, 而是按照 Memory 中的样本优先级来抽.
+所以这能更有效地找到我们需要学习的样本.</p>
+
+<p>那么样本的优先级是怎么定的呢? 原来我们可以用到 <code class="highlighter-rouge">TD-error</code>, 也就是 <code class="highlighter-rouge">Q现实 - Q估计</code> 来规定优先学习的程度.
+如果 <code class="highlighter-rouge">TD-error</code> 越大, 就代表我们的预测精度还有很多上升空间, 那么这个样本就越需要被学习, 也就是优先级 <code class="highlighter-rouge">p</code> 越高.</p>
+
+<p>有了 <code class="highlighter-rouge">TD-error</code> 就有了优先级 <code class="highlighter-rouge">p</code>, 那我们如何有效地根据 <code class="highlighter-rouge">p</code> 来抽样呢?
+如果每次抽样都需要针对 <code class="highlighter-rouge">p</code> 对所有样本排序, 这将会是一件非常消耗计算能力的事.
+好在我们还有其他方法, 这种方法不会对得到的样本进行排序. 这就是这篇 <a href="https://arxiv.org/abs/1511.05952" target="_blank">paper</a>
+中提到的 <code class="highlighter-rouge">SumTree</code>.</p>
+
+<p>SumTree 是一种树形结构, 每片树叶存储每个样本的优先级 <code class="highlighter-rouge">p</code>, 每个树枝节点只有两个分叉, 节点的值是两个分叉的合,
+所以 SumTree 的顶端就是所有 <code class="highlighter-rouge">p</code> 的合. 正如下面<a href="https://jaromiru.com/2016/11/07/lets-make-a-dqn-double-learning-and-prioritized-experience-replay/" target="_blank">图片(来自Jaromír Janisch)</a>,
+最下面一层树叶存储样本的 <code class="highlighter-rouge">p</code>, 叶子上一层最左边的 13 = 3 + 10, 按这个规律相加, 顶层的 root 就是全部 <code class="highlighter-rouge">p</code> 的合了.</p>
+
+<p><a href="https://jaromiru.com/2016/11/07/lets-make-a-dqn-double-learning-and-prioritized-experience-replay/"></a></p>
+
+<p><a href="/static/results/reinforcement-learning/4-6-2.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/4-6-2.png" src="/static/img/description/loading.gif" alt="Prioritized Experience Replay (DQN) (Tensorflow)" title="Prioritized Experience Replay (DQN) (Tensorflow)" />
+</a></p>
+
+<p>&lt;/a&gt;</p>
+
+<p>抽样时, 我们会将 <code class="highlighter-rouge">p</code> 的总合 除以 batch size, 分成 batch size 那么多区间, (n=sum(p)/batch_size).
+如果将所有 node 的 priority 加起来是42的话, 我们如果抽6个样本, 这时的区间拥有的 priority 可能是这样.</p>
+
+<p><code class="highlighter-rouge">[0-7], [7-14], [14-21], [21-28], [28-35], [35-42]</code></p>
+
+<p>然后在每个区间里随机选取一个数. 比如在第区间 <code class="highlighter-rouge">[21-28]</code> 里选到了24, 就按照这个 24 从最顶上的42开始向下搜索.
+首先看到最顶上 <code class="highlighter-rouge">42</code> 下面有两个 child nodes, 拿着手中的24对比左边的 child <code class="highlighter-rouge">29</code>, 如果 左边的 child 比自己手中的值大, 那我们就走左边这条路,
+接着再对比 <code class="highlighter-rouge">29</code> 下面的左边那个点 <code class="highlighter-rouge">13</code>, 这时, 手中的 24 比 <code class="highlighter-rouge">13</code> 大, 那我们就走右边的路,
+并且将手中的值根据 <code class="highlighter-rouge">13</code> 修改一下, 变成 24-13 = 11. 接着拿着 11 和 <code class="highlighter-rouge">13</code> 左下角的 <code class="highlighter-rouge">12</code> 比, 结果 <code class="highlighter-rouge">12</code> 比 11 大,
+那我们就选 12 当做这次选到的 priority, 并且也选择 12 对应的数据.</p>
+
+<h2 class="tut-h2-pad" id="SumTree-有效抽样">SumTree 有效抽样
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#SumTree-有效抽样" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><strong>注意: 下面的代码和视频中有一点点不同, 下面的代码是根据评论中讨论的进行了修改, 多谢大家的评论.</strong></p>
+
+<p>首先要提的是, 这个 SumTree 的算法是对于 <a href="https://github.com/jaara/AI-blog/blob/master/SumTree.py" target="_blank">Jaromír Janisch 写的 Sumtree</a> 的修改版.
+Jaromír Janisch 的代码在更新 sumtree 的时候和抽样的时候多次用到了 recursive 递归结构, 我使用的是 while 循环, 测试要比递归结构运行快.
+在 class 中的功能也比它的代码少几个, 我优化了一下.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SumTree</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1"># 建立 tree 和 data,
+</span>    <span class="c1"># 因为 SumTree 有特殊的数据结构,
+</span>    <span class="c1"># 所以两者都能用一个一维 np.array 来存储
+</span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity</span><span class="p">):</span>
+
+    <span class="c1"># 当有新 sample 时, 添加进 tree 和 data
+</span>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+    <span class="c1"># 当 sample 被 train, 有了新的 TD-error, 就在 tree 中更新
+</span>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree_idx</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+
+    <span class="c1"># 根据选取的 v 点抽取样本
+</span>    <span class="k">def</span> <span class="nf">get_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+
+    <span class="c1"># 获取 sum(priorities)
+</span>    <span class="o">@</span><span class="nb">property</span>
+    <span class="k">def</span> <span class="nf">totoal_p</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></pre></div></div>
+
+<p>具体的抽要和更新值的规则和上面说的类似.
+具体的代码在这里呈现的话比较累赘, 详细代码请去往我的 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/5.2_Prioritized_Replay_DQN/RL_brain.py#L18-L86" target="_blank">Github对应的位置</a></p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="Memory-类">Memory 类
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#Memory-类" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>这个 Memory 类也是基于 <a href="https://github.com/jaara/AI-blog/blob/master/Seaquest-DDQN-PER.py" target="_blank">Jaromír Janisch 所写的 Memory</a> 进行了修改和优化.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Memory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1"># 建立 SumTree 和各种参数
+</span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity</span><span class="p">):</span>
+
+    <span class="c1"># 存储数据, 更新 SumTree
+</span>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transition</span><span class="p">):</span>
+
+    <span class="c1"># 抽取 sample
+</span>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+
+    <span class="c1"># train 完被抽取的 samples 后更新在 tree 中的 sample 的 priority
+</span>    <span class="k">def</span> <span class="nf">batch_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree_idx</span><span class="p">,</span> <span class="n">abs_errors</span><span class="p">):</span>
+
+</code></pre></div></div>
+
+<p>具体的代码在这里呈现的话比较累赘, 详细代码请去往我的 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/5.2_Prioritized_Replay_DQN/RL_brain.py#L89-L129" target="_blank">Github对应的位置</a>
+下面有很多朋友经常问的一个问题, 这个 ISweight 到底怎么算. 需要提到的一点是, 代码中的计算方法是经过了简化的, 将 paper 中的步骤合并了一些.
+比如 <code class="highlighter-rouge">prob = p / self.tree.total_p; ISWeights = np.power(prob/min_prob, -self.beta)</code></p>
+
+<p><a href="/static/results/reinforcement-learning/4-6-5.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/4-6-5.png" src="/static/img/description/loading.gif" alt="Prioritized Experience Replay (DQN) (Tensorflow)" title="Prioritized Experience Replay (DQN) (Tensorflow)" />
+</a></p>
+
+<p>下面是我的推导, 如果有不正确还请指出. 在paper 中, <code class="highlighter-rouge">ISWeight = (N*Pj)^(-beta) / maxi_wi</code> 里面的 <code class="highlighter-rouge">maxi_wi</code> 是为了 normalize ISWeight, 所以我们先把他放在一边.
+所以单纯的 importance sampling 就是 <code class="highlighter-rouge">(N*Pj)^(-beta)</code>, 那 <code class="highlighter-rouge">maxi_wi = maxi[(N*Pi)^(-beta)]</code>.</p>
+
+<p>如果将这两个式子合并,</p>
+
+<p><code class="highlighter-rouge">ISWeight = (N*Pj)^(-beta) / maxi[ (N*Pi)^(-beta) ]</code></p>
+
+<p>而且如果将 <code class="highlighter-rouge">maxi[ (N*Pi)^(-beta) ]</code> 中的 (-beta) 提出来, 这就变成了 <code class="highlighter-rouge">mini[ (N*Pi) ] ^ (-beta)</code></p>
+
+<p>看出来了吧, 有的东西可以抵消掉的. 最后</p>
+
+<p><code class="highlighter-rouge">ISWeight = (Pj / mini[Pi])^(-beta)</code></p>
+
+<p>这样我们就有了代码中的样子.</p>
+
+<p>还有代码中的 <code class="highlighter-rouge">alpha</code> 是一个决定我们要使用多少 ISweight 的影响, 如果 <code class="highlighter-rouge">alpha = 0</code>, 我们就没使用到任何 Importance Sampling.</p>
+
+<h2 class="tut-h2-pad" id="更新方法">更新方法
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#更新方法" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>基于之前的 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/5.1_Double_DQN/RL_brain.py" target="_blank">DQN 代码</a>,
+我们做出以下修改. 我们将 class 的名字改成 <code class="highlighter-rouge">DQNPrioritiedReplay</code>, 为了对比 Natural DQN,
+我们也保留原来大部分的 DQN 的代码. 我们在 <code class="highlighter-rouge">__init__</code> 中加一个 <code class="highlighter-rouge">prioritized</code> 参数来表示 DQN 是否具备 prioritized 能力.
+为了对比的需要, 我们的 <code class="highlighter-rouge">tf.Session()</code> 也单独传入. 并移除原本在 DQN 代码中的这一句:</p>
+
+<p><code class="highlighter-rouge">self.sess.run(tf.global_variables_initializer())</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DQNPrioritiedReplay</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">prioritized</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">sess</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prioritized</span> <span class="o">=</span> <span class="n">prioritized</span>
+        <span class="o">...</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prioritized</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="p">(</span><span class="n">capacity</span><span class="o">=</span><span class="n">memory_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_size</span><span class="p">,</span> <span class="n">n_features</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">sess</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sess</span> <span class="o">=</span> <span class="n">sess</span>
+</code></pre></div></div>
+
+<p><a href="/static/results/reinforcement-learning/4-6-3.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/4-6-3.png" src="/static/img/description/loading.gif" alt="Prioritized Experience Replay (DQN) (Tensorflow)" title="Prioritized Experience Replay (DQN) (Tensorflow)" />
+</a></p>
+
+<p>搭建神经网络时, 我们发现 DQN with Prioritized replay 只多了一个 <code class="highlighter-rouge">ISWeights</code>, 这个正是<a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#algorithm">刚刚算法中</a>提到的
+<code class="highlighter-rouge">Importance-Sampling Weights</code>, 用来恢复被 Prioritized replay 打乱的抽样概率分布.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DQNPrioritizedReplay</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_build_net</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="o">...</span>
+        <span class="c1"># self.prioritized 时 eval net 的 input 多加了一个 ISWeights
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">'s'</span><span class="p">)</span>  <span class="c1"># input
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">q_target</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_actions</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">'Q_target'</span><span class="p">)</span>  <span class="c1"># for calculating loss
+</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prioritized</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ISWeights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">'IS_weights'</span><span class="p">)</span>
+
+        <span class="o">...</span>
+        <span class="c1"># 为了得到 abs 的 TD error 并用于修改这些 sample 的 priority, 我们修改如下
+</span>        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s">'loss'</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prioritized</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">abs_errors</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_target</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_eval</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    <span class="c1"># for updating Sumtree
+</span>                <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ISWeights</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">squared_difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_eval</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">squared_difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_eval</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>因为和 Natural DQN 使用的 Memory 不一样, 所以在存储 transition 的时候方式也略不相同.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DQNPrioritizedReplay</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">store_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s_</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prioritized</span><span class="p">:</span>    <span class="c1"># prioritized replay
+</span>            <span class="n">transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">],</span> <span class="n">s_</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>       <span class="c1"># random replay
+</span>            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">'memory_counter'</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">memory_counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">],</span> <span class="n">s_</span><span class="p">))</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_counter</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_size</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">transition</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>接下来是相对于 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/5_Deep_Q_Network/RL_brain.py" target="_blank">Natural DQN 代码</a>,
+我们在 <code class="highlighter-rouge">learn()</code> 改变的部分也在如下展示.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DQNPrioritizedReplay</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="c1"># 相对于 DQN 代码, 改变的部分
+</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prioritized</span><span class="p">:</span>
+            <span class="n">tree_idx</span><span class="p">,</span> <span class="n">batch_memory</span><span class="p">,</span> <span class="n">ISWeights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sample_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_size</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+            <span class="n">batch_memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">[</span><span class="n">sample_index</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="o">...</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prioritized</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">abs_errors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_train_op</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs_errors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">],</span>
+                                         <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">:</span> <span class="n">batch_memory</span><span class="p">[:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_features</span><span class="p">],</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">q_target</span><span class="p">:</span> <span class="n">q_target</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">ISWeights</span><span class="p">:</span> <span class="n">ISWeights</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">batch_update</span><span class="p">(</span><span class="n">tree_idx</span><span class="p">,</span> <span class="n">abs_errors</span><span class="p">)</span>   <span class="c1"># update priority
+</span>        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_train_op</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">],</span>
+                                         <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">:</span> <span class="n">batch_memory</span><span class="p">[:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_features</span><span class="p">],</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">q_target</span><span class="p">:</span> <span class="n">q_target</span><span class="p">})</span>
+
+        <span class="o">...</span>
+</code></pre></div></div>
+
+<h2 class="tut-h2-pad" id="对比结果">对比结果
+  <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#对比结果" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p><a href="/static/results/reinforcement-learning/4-6-4.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/4-6-4.png" src="/static/img/description/loading.gif" alt="Prioritized Experience Replay (DQN) (Tensorflow)" title="Prioritized Experience Replay (DQN) (Tensorflow)" />
+</a></p>
+
+<p>运行我 Github 中的这个 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/5.2_Prioritized_Replay_DQN/run_MountainCar.py" target="_blank">MountainCar 脚本</a>,
+我们就不难发现, 我们都从两种方法最初拿到第一个 <code class="highlighter-rouge">R=+10</code> 奖励的时候算起, 看看经历过一次 <code class="highlighter-rouge">R=+10</code> 后, 他们有没有好好利用这次的奖励,
+可以看出, 有 Prioritized replay 的可以高效的利用这些不常拿到的奖励, 并好好学习他们. 所以 Prioritized replay 会更快结束每个 episode, 很快就到达了小旗子.</p>
+
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/4.6_prioritized_replay.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/&type=icon&language=zh_cn&searchPic=true&title=Prioritized Experience Replay (DQN) (Tensorflow)+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/4.6_prioritized_replay.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/&title=Prioritized Experience Replay (DQN) (Tensorflow)+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">
+    <strong>&laquo;</strong> <i>Double DQN (Tensorflow)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/reinforcement-learning/4-7-dueling-DQN/">
+    <i>Dueling DQN (Tensorflow)</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/reinforcement-learning/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/reinforcement-learning/"><p><strong>强化学习 Reinforcement Learning</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-A-RL/">什么是 强化学习 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-B-RL-methods/">强化学习方法汇总 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-why/">为什么用强化学习 Why?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-2-requirment/">课程要求</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Q-learning</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-1-general-rl/">小例子</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-A-q-learning/">什么是 Q Leaning</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-tabular-q1/">Q-learning 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-3-tabular-q2/">Q-learning 思维决策</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Sarsa</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-A-sarsa/">什么是 Sarsa</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-tabular-sarsa1/">Sarsa 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-2-tabular-sarsa2/">Sarsa 思维决策</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-A-sarsa-lambda/">什么是 Sarsa(lambda)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-tabular-sarsa-lambda/">Sarsa-lambda</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Deep Q Network</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-A-DQN/">什么是 DQN</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-DQN1/">DQN 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-2-DQN2/">DQN 神经网络 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/">DQN 思维决策 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/">OpenAI gym 环境库</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">Double DQN (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/" style="color:#ffffff;">Prioritized Experience Replay (DQN) (Tensorflow)</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#要点" style="color:#ffffff;">要点</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#Prioritized-replay-算法" style="color:#ffffff;">Prioritized replay 算法</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#SumTree-有效抽样" style="color:#ffffff;">SumTree 有效抽样</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#Memory-类" style="color:#ffffff;">Memory 类</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#更新方法" style="color:#ffffff;">更新方法</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/#对比结果" style="color:#ffffff;">对比结果</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-7-dueling-DQN/">Dueling DQN (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Policy Gradient</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-A-PG/">什么是 Policy Gradients</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-policy-gradient-softmax1/">Policy Gradients 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/">Policy Gradients 思维决策 (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Actor Critic</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-A-AC/">什么是 Actor Critic</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/">Actor Critic (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-A-DDPG/">什么是 Deep Deterministic Policy Gradient (DDPG)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-DDPG/">Deep Deterministic Policy Gradient (DDPG) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A1-A3C/">什么是 Asynchronous Advantage Actor-Critic (A3C)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">Asynchronous Advantage Actor-Critic (A3C) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/">Distributed Proximal Policy Optimization (DPPO) (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Model Based RL</p>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

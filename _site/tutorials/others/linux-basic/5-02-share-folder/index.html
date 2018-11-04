@@ -1,0 +1,1014 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="云端计算固然方便, 如果让你的电脑上直接显示云端的文件, 是不是更方便呢? 哈哈, 这次我就来探讨一下可行的方式.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,linux, 基础">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/linux-basic/5-02.jpg" />
+  <title>自己的云计算, 多电脑共享你云端文件 - Linux 简易教学 | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='自己的云计算, 多电脑共享你云端文件 - Linux 简易教学 | 易学习Python' />
+  <meta property="og:description" content="云端计算固然方便, 如果让你的电脑上直接显示云端的文件, 是不是更方便呢? 哈哈, 这次我就来探讨一下可行的方式."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/linux-basic/5-02.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/others/linux-basic/5-02-share-folder/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/others/linux-basic/5-02-share-folder/",
+    "headline": "自己的云计算, 多电脑共享你云端文件",
+    "image": "http://localhost:4000/static/thumbnail-small/linux-basic/5-02.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "云端计算固然方便, 如果让你的电脑上直接显示云端的文件, 是不是更方便呢? 哈哈, 这次我就来探讨一下可行的方式.",
+    "url": "http://localhost:4000/tutorials/others/linux-basic/5-02-share-folder/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/others/linux-basic/",
+    "datePublished": "2017-10-30",
+    "dateModified": "2017-10-30",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/ud1N7P25ZMI";
+			var youku_src = "//player.youku.com/embed/XMzEzMTIyNDg0NA==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=15976434&cid=26070871&page=15";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=15976434&page=15";
+
+    	getEmbeddedVideo(bilibili_src, "15976434&page=15", youtube_src, "ud1N7P25ZMI", youku_src, "XMzEzMTIyNDg0NA");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', 'ud1N7P25ZMI')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMzEzMTIyNDg0NA')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '15976434&page=15')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/others/linux-basic/5-01-remote-learning/">
+    <strong>&laquo;</strong> <i>自己的云计算, 把 Linux 当成你的云计算平台</i></a>
+  
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>自己的云计算, 多电脑共享你云端文件</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-10-30
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>云端计算固然方便, 如果让你的电脑上直接显示云端的文件, 是不是更方便呢? 哈哈, 这次我就来探讨一下可行的方式.</p>
+
+<p>假设你的情况是这样:</p>
+<ul>
+  <li>有两台电脑(其中一台是 Linux)</li>
+  <li>电脑们都在同一个局域网 (LAN, 同一个路由器下)</li>
+  <li>想把那台 Linux 当做云端, 做云计算, 又不想来回复制文件</li>
+  <li>能不能把云端的某个文件夹分享到我的本地, 在本地及时修改这个共享文件夹的文件</li>
+  <li>不是云计算也行, 只是想在几台电脑中共享文件</li>
+</ul>
+
+<p>如果你也是这样, 恭喜你, 这个教程非常适合你. 我经常直接在 Mac 上的文件管理器使用 Linux 里的文件.</p>
+
+<p><a href="/static/results/linux-basic/05-02-01.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-01.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<h2 class="tut-h2-pad" id="设置分享文件夹">设置分享文件夹
+  <a href="/tutorials/others/linux-basic/5-02-share-folder/#设置分享文件夹" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>我们可以单独创建一个要分享的文件夹, 这样你就知道自己要将哪个文件夹里的文件分享给大家了.
+比如说, 在 Linux 的 Home 目录下创建一个 Shared 文件夹. 你可以用鼠标来创建或者直接在 terminal 中输入指令.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> ~/Shared/
+</code></pre></div></div>
+
+<p><a href="/static/results/linux-basic/05-02-02.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-02.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<p>有了这个 Shared 文件夹以后, 我们来对这个文件夹动手脚. 右键选择 <code class="highlighter-rouge">Local Network Share</code>,
+之后你会跳出来一个 Folder Sharing 的窗口, 在这个窗口中, 勾选 Share this folder.</p>
+
+<p><a href="/static/results/linux-basic/05-02-03.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-03.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<p>如果你第一次做这件事, 当你选定的时候, 应该会出现上面那个要求安装东西的窗口, 点击 <code class="highlighter-rouge">install</code> 就好, 他会帮你安装必要组建.
+安装好之后, 还会弹出一个重启 session 的窗口, 重启它. 然后给你的这个文件夹起一个 “响亮” 的名字, 这个名字会出现在其它的电脑上.
+所以, 我就起了一个名字叫 “Shared”. 哈哈.</p>
+
+<p><a href="/static/results/linux-basic/05-02-04.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-04.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<p>最后如果你会在其它电脑上编辑这个 “Shared” 里的文件, 那你就需要勾选 “Allow others to create and delete files in this folder”.
+我觉得最下面那个选项不要选比较好, 如果选了, 任何在这个局域网内的人都能”玩弄”你的文件. 你肯定不想这样.</p>
+
+<p>这还不够, 在 terminal 中, 我们最好给这个分享文件设置一个密码. 如果有人想要登录这个分享文件, 就需要密码登录.
+设置密码的步骤很容易, 你只要在<strong>云端的 terminal</strong> 中输入下面内容, 将分享文件夹的账号密码设置成你 linux 用户的账号密码就好了, 好记又方便.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>smbpasswd <span class="nt">-a</span> 用户名      <span class="c"># 比如下面我的用户名是 morvan</span>
+<span class="nv">$ </span><span class="nb">sudo </span>smbpasswd <span class="nt">-a</span> morvan
+</code></pre></div></div>
+
+<p>之后它会要求你输入用户名的密码, 然后再设置分享的密码 <code class="highlighter-rouge">New SMB password</code>, 再 <code class="highlighter-rouge">Retype new SMB password</code>. 完了以后就大功告成,
+你就能在其它电脑上找到这个文件夹, 使用这个用户名和密码查看文件啦.</p>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="Windows-找到云端的分享文件">Windows 找到云端的分享文件
+  <a href="/tutorials/others/linux-basic/5-02-share-folder/#Windows-找到云端的分享文件" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>Windows 找到共享的文件也非常简单, 只需要找到你的局域网电脑们就好了. 当你打开文件浏览器. 找到 “网络”, 或者是”网上邻居”
+然后找到你的 Linux 电脑, 输入之前设置的账号密码. 就能查看你共享的 Linux 文件夹啦.</p>
+
+<p><a href="/static/results/linux-basic/05-02-08.jpg">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-08.jpg" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<h2 class="tut-h2-pad" id="Mac-找到云端的分享文件夹">Mac 找到云端的分享文件夹
+  <a href="/tutorials/others/linux-basic/5-02-share-folder/#Mac-找到云端的分享文件夹" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>我们已经设置好的云端的共享文件. 接着就是在其他电脑上找到这个共享文件. 我用 MacOS 来演示一遍.
+首先你需要找到这个共享的地方. 打开你的 <code class="highlighter-rouge">Finder</code> 文件管理器, 然后在上面的菜单中找到 <code class="highlighter-rouge">Go</code>, 点击 <code class="highlighter-rouge">Network</code>,</p>
+
+<p><a href="/static/results/linux-basic/05-02-05.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-05.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<p>然后找到你的计算机名, 我这里是 <code class="highlighter-rouge">MORVAN-LINUX</code>, 之后点击 <code class="highlighter-rouge">connect as</code>, 这个意思是说要登录上之前设置好的账号密码.
+如果没有经过这一步, 是无法打开 “Shared” 文件夹的.</p>
+
+<p><a href="/static/results/linux-basic/05-02-06.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-06.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<p>点击 <code class="highlighter-rouge">connect as</code> 之后, 我们就按要求填写刚刚的你在 Linux 上设置的账号密码就好.</p>
+
+<p><a href="/static/results/linux-basic/05-02-07.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-07.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<p>最后成功登录上, 你就能用这个云端文件夹的内容啦.</p>
+
+<p><a href="/static/results/linux-basic/05-02-01.png">
+ <img class="course-image lazy-img" data-src="/static/results/linux-basic/05-02-01.png" src="/static/img/description/loading.gif" alt="自己的云计算, 多电脑共享你云端文件" title="自己的云计算, 多电脑共享你云端文件" />
+</a></p>
+
+<p>现在我就能直接在我的 Mac 上编辑云端的文件, 比如做一个 Python 的项目, 然后 <a href="/tutorials/others/linux-basic/4-01-ssh-from-linux-or-mac/">SSH</a>
+去 Linux 云端运行这个写好的文件. 方便又不占你 Mac 的空间.</p>
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/others/linux-basic/5-02-share-folder/&pic=https://morvanzhou.github.io/static/thumbnail-small/linux-basic/5-02.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/others/linux-basic/5-02-share-folder/&type=icon&language=zh_cn&searchPic=true&title=自己的云计算, 多电脑共享你云端文件+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/linux-basic/5-02.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/others/linux-basic/5-02-share-folder/&title=自己的云计算, 多电脑共享你云端文件+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/others/linux-basic/5-02-share-folder/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/others/linux-basic/5-02-share-folder/&original_referer=https://morvanzhou.github.io/tutorials/others/linux-basic/5-02-share-folder/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/others/linux-basic/5-01-remote-learning/">
+    <strong>&laquo;</strong> <i>自己的云计算, 把 Linux 当成你的云计算平台</i></a>
+  
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/others/linux-basic/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/others/linux-basic/"><p><strong>Linux 简易教学</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">介绍</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/1-1-why/">Why Linux?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/1-2-install/">安装 Ubuntu 17.10</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/1-3-system-overview/">快速了解 Ubuntu 17.10 基本界面</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/1-4-install-software/">给你的 Ubuntu 安装软件</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">和文件打交道</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/2-01-basic-command/">Linux 基本指令 ls 和 cd</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/2-02-basic-command/">Linux 基本指令 touch, cp 和 mv</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/2-03-basic-command/">Linux 基本指令 mkdir, rmdir 和 rm</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/2-04-basic-command/">Linux 基本指令 nano 和 cat</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">文件权限</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/3-01-file-permissions/">Linux 文件权限</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">远程操控</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/4-01-ssh-from-linux-or-mac/">怎么样从 MacOS 或 Linux 通过 SSH 远程 Linux</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/4-02-ssh-from-windows/">怎么样从 Windows 通过 SSH 远程 Linux</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/4-03-ssh-from-phone/">怎么样从手机 (Android安卓/IOS苹果) 通过 SSH 远程 Linux</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/4-04-teamviewer-vnc/">怎么样用 TeamViewer 和 VNC 从远程控制电脑</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">云端机器学习</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/5-01-remote-learning/">自己的云计算, 把 Linux 当成你的云计算平台</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/others/linux-basic/5-02-share-folder/" style="color:#ffffff;">自己的云计算, 多电脑共享你云端文件</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/others/linux-basic/5-02-share-folder/#设置分享文件夹" style="color:#ffffff;">设置分享文件夹</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/others/linux-basic/5-02-share-folder/#Windows-找到云端的分享文件" style="color:#ffffff;">Windows 找到云端的分享文件</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/others/linux-basic/5-02-share-folder/#Mac-找到云端的分享文件夹" style="color:#ffffff;">Mac 找到云端的分享文件夹</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/others/linux-basic/5-02-share-folder/#其他电脑上编辑/运行云端文件" style="color:#ffffff;">其他电脑上编辑/运行云端文件</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+

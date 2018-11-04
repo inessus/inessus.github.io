@@ -1,0 +1,1335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh-CN en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="接着上节内容, 我们来实现 RL_brain 的 PolicyGradient 部分, 这也是 RL 的大脑部分, 负责决策和思考.">
+  <meta name="keywords" content="易学习,python,tutorial,machine learning,reinforcement learning, 强化学习, tensorflow">
+  <meta name="author" content="易学习 inessus,易学习">
+  <meta name="thumbnail" content="http://localhost:4000/static/thumbnail/rl/5.2_PG2.jpg" />
+  <title>Policy Gradients 思维决策 (Tensorflow) - 强化学习 Reinforcement Learning | 易学习Python</title>
+
+  <meta property="fb:app_id" content="2053270218284962"/>
+  <meta property="og:site_name" content="易学习 人工智能"/>
+  <meta property="og:title" content='Policy Gradients 思维决策 (Tensorflow) - 强化学习 Reinforcement Learning | 易学习Python' />
+  <meta property="og:description" content="接着上节内容, 我们来实现 RL_brain 的 PolicyGradient 部分, 这也是 RL 的大脑部分, 负责决策和思考."/>
+  <meta property="og:image" content="http://localhost:4000/static/thumbnail/rl/5.2_PG2.jpg">
+  <meta property="og:url" content="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/">
+  <meta property="og:type" content="article"/>
+
+  <link href="http://localhost:4000/stylesheets/page-style.css" type="text/css" rel="stylesheet">
+  <link href="http://localhost:4000/stylesheets/syntax.css" type="text/css" rel="stylesheet">
+  <link rel="icon" href="http://localhost:4000/static/img/description/tab_icon.png">
+
+  <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//pv.sohu.com/cityjson"></script>
+  <script type="text/javascript" src="/js/video-select.js"></script>
+  <!--<script type="text/javascript">-->
+    <!--/* video-select.js */-->
+    <!--function videoChinaIP(src, src_name, vid) {-->
+
+      <!--if (window.XMLHttpRequest)-->
+      <!--{// code for IE7+, Firefox, Chrome, Opera, Safari-->
+          <!--var request = new XMLHttpRequest();-->
+      <!--}-->
+      <!--else-->
+      <!--{// code for IE6, IE5-->
+          <!--var request = new ActiveXObject("Microsoft.XMLHTTP");-->
+      <!--}-->
+      <!--request.open('GET', '//ip-api.com/xml');-->
+      <!--request.onreadystatechange = function() {-->
+        <!--if (request.readyState == 4 && request.status == 200) {-->
+          <!--var xmlDoc = request.responseXML;-->
+          <!--var root = xmlDoc.documentElement;-->
+          <!--var element = root.getElementsByTagName("countryCode");-->
+          <!--var country = element[0].firstChild.nodeValue;-->
+          <!--if (country == "CN"){-->
+            <!--chooseVideo(src, src_name, vid);-->
+            <!--alert('china');-->
+          <!--}-->
+          <!--else {-->
+           <!--alert('others')}-->
+
+        <!--}-->
+      <!--}-->
+      <!--request.send(null);-->
+    <!--}-->
+
+    <!--function chooseVideo(src, src_name, vid){-->
+      <!--var velem = document.getElementById('videogfw');-->
+      <!--var vai = document.getElementById("video-alrt-info");-->
+      <!--if (src_name == "bilibili") {-->
+        <!--if (vid.includes("&page=")) {-->
+            <!--var words = vid.split("&page=");-->
+            <!--var vid = words[0] +"/?p=" + words[1];-->
+        <!--}-->
+        <!--if (vai) {-->
+            <!--vai.style.display = "block";-->
+            <!--vai.innerHTML = '(Bilibili 无法播放? 请 <a href="https://www.bilibili.com/video/av' + vid +'" target="_blank" >点击这里</a> 跳转至B站内)';-->
+        <!--}-->
+        <!--if (src.includes("hdslb")) {-->
+          <!--velem.style.paddingBottom = "70%";-->
+        <!--}-->
+        <!--else if (src.includes("bilibili")) {-->
+          <!--velem.style.paddingBottom = "72.5%";-->
+        <!--}-->
+      <!--}-->
+      <!--else if (src_name == "youku") {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--var aid = src.split("embed/")[1];-->
+        <!--if (vai) {-->
+          <!--vai.style.display = "block";-->
+          <!--vai.innerHTML = '(优酷无法播放? 请 <a href="http://v.youku.com/v_show/id_' + vid +'==.html" target="_blank" >点击这里</a> 跳转至优酷站内)';-->
+        <!--}-->
+      <!--}-->
+      <!--else {-->
+        <!--velem.style.paddingBottom = "56.25%";-->
+        <!--velem.style.lineHeight = "0";-->
+        <!--velem.style.fontSize = "0";-->
+        <!--if (vai) { vai.style.display = "none"; }-->
+      <!--}-->
+      <!--if (src.includes("swf") && (!FlashDetect.installed)){-->
+        <!--$("#myVideo").remove();-->
+        <!--velem.style.paddingBottom = "0";-->
+        <!--velem.style.lineHeight = "90px";-->
+        <!--velem.style.textAlign = "center";-->
+        <!--velem.style.fontSize = "2.5em";-->
+        <!--velem.innerHTML = "您的浏览器不支持 Flash 播放器, 请前往<a href='https://www.bilibili.com/video/av" + vid +"' target='_blank'>B站内</a>观看或切换视频源";-->
+      <!--}-->
+      <!--else {-->
+        <!--var video = '<iframe id="myVideo" class="myvideo" width="560" height=315 src=' + src + ' frameborder="0" allowfullscreen></iframe>';-->
+        <!--$("#myVideo").remove();-->
+        <!--$("#videogfw").append(video);}}-->
+  <!--</script>-->
+  <script type="text/javascript">
+    /* check-flash.js */
+    var FlashDetect=new function(){var self=this;self.installed=false;self.raw="";self.major=-1;self.minor=-1;self.revision=-1;self.revisionStr="";var activeXDetectRules=[{"name":"ShockwaveFlash.ShockwaveFlash.7","version":function(obj){return getActiveXVersion(obj);}},{"name":"ShockwaveFlash.ShockwaveFlash.6","version":function(obj){var version="6,0,21";try{obj.AllowScriptAccess="always";version=getActiveXVersion(obj);}catch(err){}
+    return version;}},{"name":"ShockwaveFlash.ShockwaveFlash","version":function(obj){return getActiveXVersion(obj);}}];var getActiveXVersion=function(activeXObj){var version=-1;try{version=activeXObj.GetVariable("$version");}catch(err){}
+    return version;};var getActiveXObject=function(name){var obj=-1;try{obj=new ActiveXObject(name);}catch(err){obj={activeXError:true};}
+    return obj;};var parseActiveXVersion=function(str){var versionArray=str.split(",");return{"raw":str,"major":parseInt(versionArray[0].split(" ")[1],10),"minor":parseInt(versionArray[1],10),"revision":parseInt(versionArray[2],10),"revisionStr":versionArray[2]};};var parseStandardVersion=function(str){var descParts=str.split(/ +/);var majorMinor=descParts[2].split(/\./);var revisionStr=descParts[3];return{"raw":str,"major":parseInt(majorMinor[0],10),"minor":parseInt(majorMinor[1],10),"revisionStr":revisionStr,"revision":parseRevisionStrToInt(revisionStr)};};var parseRevisionStrToInt=function(str){return parseInt(str.replace(/[a-zA-Z]/g,""),10)||self.revision;};self.majorAtLeast=function(version){return self.major>=version;};self.minorAtLeast=function(version){return self.minor>=version;};self.revisionAtLeast=function(version){return self.revision>=version;};self.versionAtLeast=function(major){var properties=[self.major,self.minor,self.revision];var len=Math.min(properties.length,arguments.length);for(i=0;i<len;i++){if(properties[i]>=arguments[i]){if(i+1<len&&properties[i]==arguments[i]){continue;}else{return true;}}else{return false;}}};self.FlashDetect=function(){if(navigator.plugins&&navigator.plugins.length>0){var type='application/x-shockwave-flash';var mimeTypes=navigator.mimeTypes;if(mimeTypes&&mimeTypes[type]&&mimeTypes[type].enabledPlugin&&mimeTypes[type].enabledPlugin.description){var version=mimeTypes[type].enabledPlugin.description;var versionObj=parseStandardVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revisionStr=versionObj.revisionStr;self.revision=versionObj.revision;self.installed=true;}}else if(navigator.appVersion.indexOf("Mac")==-1&&window.execScript){var version=-1;for(var i=0;i<activeXDetectRules.length&&version==-1;i++){var obj=getActiveXObject(activeXDetectRules[i].name);if(!obj.activeXError){self.installed=true;version=activeXDetectRules[i].version(obj);if(version!=-1){var versionObj=parseActiveXVersion(version);self.raw=versionObj.raw;self.major=versionObj.major;self.minor=versionObj.minor;self.revision=versionObj.revision;self.revisionStr=versionObj.revisionStr;}}}}}();};FlashDetect.JS_RELEASE="1.0.4";
+  </script>
+
+  <script type="text/javascript" async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  <!-- mathjax supported -->
+  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>-->
+
+
+  
+  <!-- google post page data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/",
+    "headline": "Policy Gradients 思维决策 (Tensorflow)",
+    "image": "http://localhost:4000/static/thumbnail-small/rl/5.2_PG2.jpg",
+    "author": {
+      "@type": "Person",
+      "name": "易学习",
+      "email": "inessus@163.com"
+    },
+    "description": "接着上节内容, 我们来实现 RL_brain 的 PolicyGradient 部分, 这也是 RL 的大脑部分, 负责决策和思考.",
+    "url": "http://localhost:4000/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/",
+    "mainEntityOfPage":"http://localhost:4000/tutorials/machine-learning/reinforcement-learning/",
+    "datePublished": "2017-03-21",
+    "dateModified": "2017-03-21",
+    "publisher": {
+    "@type": "Organization",
+      "name":"易学习",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http://localhost:4000/static/img/description/tab_icon.png",
+        "width": 100
+        }
+     }
+  }
+  </script>
+  
+
+  <!-- click dropdown -->
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.clicker').on("click", function(e){
+      $(this).next('.dropdown-content').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+
+</head>
+
+<body>
+
+  <header>
+  <nav id="home-nav">
+    <ul>
+      <li><a class="nav-home" href="/" ><strong>易学习 人工智能</strong></a></li>
+      <li><a href="/discuss/">大家说</a></li>
+      <li><a href="/support/">赞助</a></li>
+      <li><a href="/about/">About</a></li>
+      <li>
+
+        <a class="search-bar clicker"><img class="search-img" src="/static/img/icon/search_icon.png" alt="Go"></a>
+
+        <!-- 360 search -->
+        <!--<form class="search-box dropdown-content" action="https://www.so.com/s" target="_blank">-->
+          <!--<input class="search-text" type="text" autocomplete="on" name="q" size="20" >-->
+          <!--<input type="hidden" name="ie" value="utf8">-->
+          <!--<input type="hidden" name="src" value="zz_morvanzhou.github.io">-->
+          <!--<input type="hidden" name="site" value="morvanzhou.github.io">-->
+          <!--<input type="hidden" name="rg" value="1">-->
+        <!--</form>-->
+
+        <!-- bing search -->
+        <form class="search-box dropdown-content" method="get" action="https://www.bing.com/search" target="_blank">
+          <input type="hidden" name="q1" value="site:morvanzhou.github.io" />
+          <input class="search-text" type="text" name="q" placeholder="Search.." size="20" value=""/>
+        </form>
+      </li>
+
+      <!-- tutorial navigation -->
+      <li class="dropbtn"><a class="clicker">教程 ▾</a>
+        <ul class="dropdown-content">
+          
+            <li class="dropbtn">
+              <a class="" href="/learning-steps/">
+                <img class="icon-image" src="/static/img/icon/learning-steps.png">
+                推荐学习顺序
+              </a>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/python_icon.png">
+                Python基础 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/basic_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/basic/">基础</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/multiprocessing_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/multiprocessing/">多进程 multiprocessing</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/thread_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/threading/">多线程 threading</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/GUI_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/python-basic/tkinter/">窗口视窗 Tkinter</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/ML_icon.png">
+                机器学习 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML_intro_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-intro/">有趣的机器学习</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/rl_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/reinforcement-learning/">强化学习 Reinforcement Learning</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/evolution_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/evolutionary-algorithm/">进化算法 Evolutionary Algorithm</a></li>
+                  
+                
+                  
+                    <li class="dropbtn"><img class="icon-image" src="/static/img/icon/neural_net_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a class="clicker">神经网络 ▾</a>
+                      <ul class="dropdown-content">
+                        
+                        <li><img class="icon-image" src="/static/img/icon/tf_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/tensorflow/">Tensorflow</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/torch_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/torch/">PyTorch</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/theano_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/theano/">Theano</a></li>
+                        
+                        <li><img class="icon-image" src="/static/img/icon/keras_icon.jpg" style="max-width:1.5em; max-height:1.1em;">
+                          <a href="http://localhost:4000/tutorials/machine-learning/keras/">Keras</a></li>
+                        
+                      </ul>
+                    </li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/sklearn_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/sklearn/">通用机器学习 Scikit-learn</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/cv_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/computer-vision/">计算机视觉</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/ML-practice_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/machine-learning/ML-practice/">机器学习实战</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/data_icon.png">
+                数据处理 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/np_pd_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/np-pd/">数据 Numpy & Pandas</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/plt_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/plt/">画图 Matplotlib</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/scraping_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/data-manipulation/scraping/">网页爬虫</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+            <li class="dropbtn">
+              <a class="clicker" href="">
+                <img class="icon-image" src="/static/img/icon/others_icon.png">
+                提效工具 ▾
+              </a>
+              
+              <ul class="dropdown-content">
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/git_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/git/">Git 版本管理</a></li>
+                  
+                
+                  
+                    <li><img class="icon-image" src="/static/img/icon/linux_icon.png" style="max-width:1.5em; max-height:1.1em;">
+                      <a href="http://localhost:4000/tutorials/others/linux-basic/">Linux 简易教学</a></li>
+                  
+                
+              </ul>
+              
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<main class="tut-main">
+
+  <div class="tut-post-main">
+    <!-- top a-d-s google -->
+    <div class="section ie-size" id="top-a-d-s">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="6002797349"
+           data-ad-format="auto"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- top a-d-s juejin -->
+    <!--<div class="section ie-size" id="juejin">-->
+      <!--<a target="_blank" style="width:inherit;height:inherit"-->
+          <!--href="https://juejin.im/welcome/ai?utm_source=mofan&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+        <!--<img style="width:inherit;height:inherit"-->
+           <!--src="/static/img/support/juejin_top.png" alt="Juejin">-->
+      <!--</a>-->
+    <!--</div>-->
+
+
+    <!-- video section -->
+    <div class="section ie-size">
+      <!-- video section -->
+      
+
+	
+
+	<div id="videogfw" class="video-container">
+		<!-- video embedding-->
+		<script type="text/javascript">
+			var youtube_src = "//www.youtube.com/embed/DwrGHh9Nkvg";
+			var youku_src = "//player.youku.com/embed/XMjY1MzU2NTc2NA==";
+			
+			var bilibili_src = "//player.bilibili.com/player.html?aid=16921335&cid=27657236&page=24";
+			// var bilibili_src = "//static.hdslb.com/miniloader.swf?aid=16921335&page=24";
+
+    	getEmbeddedVideo(bilibili_src, "16921335&page=24", youtube_src, "DwrGHh9Nkvg", youku_src, "XMjY1MzU2NTc2NA");
+		</script>
+	</div>
+
+	<div class="switch-video-div">
+		<span style="font-weight: bold;vertical-align: super;" >切换视频源：</span>
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youtube_src, 'youtube', 'DwrGHh9Nkvg')">
+			<img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(youku_src, 'youku', 'XMjY1MzU2NTc2NA')">
+			<img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道">
+		</button>
+		
+
+		
+		<button class="switch-video-btn" onclick="chooseVideo(bilibili_src, 'bilibili', '16921335&page=24')">
+	    	<img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili">
+	    </button>
+		
+
+		<p id="video-alrt-info" style="display: none; font-size: 0.8em; text-align: center;"></p>
+		<hr style="width: 60%;">
+
+
+	</div>
+
+
+	
+
+
+
+
+
+      <!-- upper page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/5-1-policy-gradient-softmax1/">
+    <strong>&laquo;</strong> <i>Policy Gradients 算法更新 (Tensorflow)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/reinforcement-learning/6-1-A-AC/">
+    <i>什么是 Actor Critic</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- post main content -->
+    <div class="section ie-size">
+
+      <!-- main content -->
+      <div class="tut-main-content-pad">
+        <br>
+        <h1>Policy Gradients 思维决策 (Tensorflow)</h1>
+        <div style="text-align: center;">
+          作者:
+          <span class="author" >
+          
+            易学习
+          
+          </span>
+          编辑:
+          <span class="editor">
+            易学习
+          </span>
+          <span class="publish-date">
+          
+            2017-03-21
+          
+          </span>
+
+        </div>
+
+        
+        <!-- under title a-d-s -->
+        <div id="under-title-a-d-s">
+          <!-- under-title -->
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:250px;height:250px"
+               data-ad-client="ca-pub-4601203457616636"
+               data-ad-slot="2975922481"></ins>
+          <script>
+            window.addEventListener('load', function(){
+              (function(d, s) {
+
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+              })(document, 'script');
+            }, false)
+          </script>
+        </div>
+
+        <!-- under title a-d-s juejin -->
+        <!--<div id="under-title-a-d-s" style="width:250px;height:200px">-->
+          <!--<a target="_blank" style="width:inherit;height:inherit"-->
+              <!--href="https://juejin.im/welcome/ai?utm_source=mofan1&utm_medium=banner&utm_content=ai&utm_campaign=q2_website">-->
+            <!--<img style="width:inherit;height:inherit"-->
+               <!--src="/static/img/support/juejin_under_title.png" alt="Juejin">-->
+          <!--</a>-->
+        <!--</div>-->
+        
+
+        <p>学习资料:</p>
+<ul>
+  <li><a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/tree/master/contents/7_Policy_gradient_softmax" target="_blank">全部代码</a></li>
+  <li><a href="/tutorials/machine-learning/ML-intro/4-07-PG/">什么是 Policy Gradient 短视频</a></li>
+  <li>模拟视频效果<a href="https://www.youtube.com/playlist?list=PLXO45tsB95cLYyEsEylpPvTY-8ErPt2O_" target="_blank">Youtube</a>, <a href="http://list.youku.com/albumlist/show/id_27485743" target="_blank">Youku</a></li>
+  <li><a href="/tutorials/machine-learning/ML-practice/RL-build-arm-from-scratch1/">强化学习实战</a></li>
+  <li>论文 <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf" target="_blank">Policy gradient methods for reinforcement learning with function approximation.</a></li>
+</ul>
+
+<p>接着上节内容, 我们来实现 <code class="highlighter-rouge">RL_brain</code> 的 <code class="highlighter-rouge">PolicyGradient</code> 部分, 这也是 RL 的大脑部分, 负责决策和思考.</p>
+
+<h2 class="tut-h2-pad" id="要代码主结构">要代码主结构
+  <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#要代码主结构" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>用基本的 Policy gradient 算法, 和之前的 value-based 算法看上去很类似.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">:</span>
+    <span class="c1"># 初始化 (有改变)
+</span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">reward_decay</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">output_graph</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+    <span class="c1"># 建立 policy gradient 神经网络 (有改变)
+</span>    <span class="k">def</span> <span class="nf">_build_net</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="c1"># 选行为 (有改变)
+</span>    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+
+    <span class="c1"># 存储回合 transition (有改变)
+</span>    <span class="k">def</span> <span class="nf">store_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+
+    <span class="c1"># 学习更新参数 (有改变)
+</span>    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s_</span><span class="p">):</span>
+
+    <span class="c1"># 衰减回合的 reward (新内容)
+</span>    <span class="k">def</span> <span class="nf">_discount_and_norm_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></pre></div></div>
+
+<h2 class="tut-h2-pad" id="初始化">初始化
+  <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#初始化" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>初始化时, 我们需要给出这些参数, 并创建一个神经网络.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">reward_decay</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">output_graph</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_actions</span> <span class="o">=</span> <span class="n">n_actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">n_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">learning_rate</span>     <span class="c1"># 学习率
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">reward_decay</span>   <span class="c1"># reward 递减率
+</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ep_obs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ep_as</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ep_rs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>    <span class="c1"># 这是我们存储 回合信息的 list
+</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_net</span><span class="p">()</span>   <span class="c1"># 建立 policy 神经网络
+</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">output_graph</span><span class="p">:</span>    <span class="c1"># 是否输出 tensorboard 文件
+</span>            <span class="c1"># $ tensorboard --logdir=logs
+</span>            <span class="c1"># http://0.0.0.0:6006/
+</span>            <span class="c1"># tf.train.SummaryWriter soon be deprecated, use following
+</span>            <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">FileWriter</span><span class="p">(</span><span class="s">"logs/"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+</code></pre></div></div>
+
+<h2 class="tut-h2-pad" id="建立-Policy-神经网络">建立 Policy 神经网络
+  <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#建立-Policy-神经网络" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>这次我们要建立的神经网络是这样的:</p>
+
+<p><a href="/static/results/reinforcement-learning/5-2-1.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/5-2-1.png" src="/static/img/description/loading.gif" alt="Policy Gradients 思维决策 (Tensorflow)" title="Policy Gradients 思维决策 (Tensorflow)" />
+</a></p>
+
+<p>因为这是强化学习, 所以神经网络中并没有我们熟知的监督学习中的 y label. 取而代之的是我们选的 action.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">reward_decay</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">output_graph</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">_build_net</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s">'inputs'</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tf_obs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">"observations"</span><span class="p">)</span>  <span class="c1"># 接收 observation
+</span>            <span class="bp">self</span><span class="o">.</span><span class="n">tf_acts</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">"actions_num"</span><span class="p">)</span>   <span class="c1"># 接收我们在这个回合中选过的 actions
+</span>            <span class="bp">self</span><span class="o">.</span><span class="n">tf_vt</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s">"actions_value"</span><span class="p">)</span> <span class="c1"># 接收每个 state-action 所对应的 value (通过 reward 计算)
+</span>
+        <span class="c1"># fc1
+</span>        <span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tf_obs</span><span class="p">,</span>
+            <span class="n">units</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>   <span class="c1"># 输出个数
+</span>            <span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">tanh</span><span class="p">,</span>  <span class="c1"># 激励函数
+</span>            <span class="n">kernel_initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal_initializer</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.3</span><span class="p">),</span>
+            <span class="n">bias_initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant_initializer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s">'fc1'</span>
+        <span class="p">)</span>
+        <span class="c1"># fc2
+</span>        <span class="n">all_act</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span>
+            <span class="n">units</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_actions</span><span class="p">,</span>   <span class="c1"># 输出个数
+</span>            <span class="n">activation</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>    <span class="c1"># 之后再加 Softmax
+</span>            <span class="n">kernel_initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal_initializer</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.3</span><span class="p">),</span>
+            <span class="n">bias_initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant_initializer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s">'fc2'</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_act_prob</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">all_act</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'act_prob'</span><span class="p">)</span>  <span class="c1"># 激励函数 softmax 出概率
+</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s">'loss'</span><span class="p">):</span>
+            <span class="c1"># 最大化 总体 reward (log_p * R) 就是在最小化 -(log_p * R), 而 tf 的功能里只有最小化 loss
+</span>            <span class="n">neg_log_prob</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sparse_softmax_cross_entropy_with_logits</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">all_act</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tf_acts</span><span class="p">)</span> <span class="c1"># 所选 action 的概率 -log 值
+</span>            <span class="c1"># 下面的方式是一样的:
+</span>            <span class="c1"># neg_log_prob = tf.reduce_sum(-tf.log(self.all_act_prob)*tf.one_hot(self.tf_acts, self.n_actions), axis=1)
+</span>            <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">neg_log_prob</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tf_vt</span><span class="p">)</span>  <span class="c1"># (vt = 本reward + 衰减的未来reward) 引导参数的梯度下降
+</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s">'train'</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_op</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这里有必要解释一下为什么我们使用的 <code class="highlighter-rouge">loss= -log(prob)*vt</code> 当做 loss,
+因为下面有很多评论说这里不理解.
+简单来说, 上面提到了两种形式来计算 <code class="highlighter-rouge">neg_log_prob</code>, 这两种形式是一模一样的, 只是第二个是第一个的展开形式. 如果你仔细看第一个形式, 这不就是在神经网络分类问题中的 cross-entropy 嘛!
+使用 softmax 和神经网络的最后一层 logits 输出和真实标签 (<code class="highlighter-rouge">self.tf_acts</code>) 对比的误差. 并将神经网络的参数按照这个真实标签改进.
+这显然和一个分类问题没有太多区别. 我们能将这个 <code class="highlighter-rouge">neg_log_prob</code> 理解成 cross-entropy 的分类误差. 分类问题中的标签是真实 x 对应的 y,
+而我们 Policy gradient 中, x 是 state, y 就是它按照这个 x 所做的动作号码. 所以也可以理解成, 它按照 x 做的动作永远是对的 (出来的动作永远是正确标签),
+它也永远会按照这个 “正确标签” 修改自己的参数. 可是事实却不是这样, 他的动作不一定都是 “正确标签”, 这就是强化学习(Policy gradient)和监督学习(classification)的不同.</p>
+
+<p>为了确保这个动作真的是 “正确标签”, 我们的 loss 在原本的 cross-entropy 形式上乘以 <code class="highlighter-rouge">vt</code>, 用 <code class="highlighter-rouge">vt</code> 来告诉这个 cross-entropy 算出来的梯度是不是一个值得信任的梯度.
+如果 <code class="highlighter-rouge">vt</code> 小, 或者是负的, 就说明这个梯度下降是一个错误的方向, 我们应该向着另一个方向更新参数, 如果这个 <code class="highlighter-rouge">vt</code> 是正的, 或很大, <code class="highlighter-rouge">vt</code> 就会称赞 cross-entropy 出来的梯度,
+并朝着这个方向梯度下降. 下面有一张从 <a href="http://karpathy.github.io/2016/05/31/rl/" target="_blank">karpathy 大神</a> 网页上扣下来的图, 也正是阐述的这个思想.</p>
+
+<p><a href="/static/results/reinforcement-learning/5-2-4.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/5-2-4.png" src="/static/img/description/loading.gif" alt="Policy Gradients 思维决策 (Tensorflow)" title="Policy Gradients 思维决策 (Tensorflow)" />
+</a></p>
+
+<p>而不明白为什么是 <code class="highlighter-rouge">loss=-log(prob)*vt</code> 而不是 <code class="highlighter-rouge">loss=-prob*vt</code> 的朋友们, 下面留言有很多问道这个问题.
+原因是这里的 <code class="highlighter-rouge">prob</code> 是从 softmax 出来的, 而计算神经网络里的所有参数梯度, 使用到的就是 cross-entropy,
+然后将这个梯度乘以 <code class="highlighter-rouge">vt</code> 来控制梯度下降的方向和力度. 而我上面使用 <code class="highlighter-rouge">neg_log_prob</code> 这个名字只是为了区分这不是真正意义上的 cross-entropy, 因为标签不是真标签.
+我在下面提供一些扩展链接.</p>
+
+<ul>
+  <li><a href="http://cs231n.github.io/neural-networks-2/#losses" target="_blank">Loss 的定义</a></li>
+  <li><a href="http://karpathy.github.io/2016/05/31/rl/" target="_blank">karpathy 大神的 PG 算法说明</a></li>
+  <li><a href="http://www0.cs.ucl.ac.uk/staff/D.Silver/web/Teaching_files/pg.pdf" target="_blank">David Silver 的 PG 课件</a></li>
+</ul>
+
+<h2 class="tut-h2-pad" id="选行为">选行为
+  <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#选行为" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>这个行为不再是用 Q value 来选定的, 而是用概率来选定. 即使不用 epsilon-greedy, 也具有一定的随机性.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">reward_decay</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">output_graph</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">_build_net</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+        <span class="n">prob_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_act_prob</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tf_obs</span><span class="p">:</span> <span class="n">observation</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]})</span>    <span class="c1"># 所有 action 的概率
+</span>        <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">prob_weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">p</span><span class="o">=</span><span class="n">prob_weights</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>  <span class="c1"># 根据概率来选 action
+</span>        <span class="k">return</span> <span class="n">action</span>
+</code></pre></div></div>
+
+<div>
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-4601203457616636" data-ad-slot="3397817325"></ins>
+  <script>
+    window.addEventListener('load', function(){
+      (function(d, s) {
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+      })(document, 'script');
+    }, false)
+  </script>
+</div>
+
+<h2 class="tut-h2-pad" id="存储回合">存储回合
+  <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#存储回合" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>这一部很简单, 就是将这一步的 <code class="highlighter-rouge">observation</code>, <code class="highlighter-rouge">action</code>, <code class="highlighter-rouge">reward</code> 加到列表中去.
+因为本回合完毕之后要清空列表, 然后存储下一回合的数据, 所以我们会在 <code class="highlighter-rouge">learn()</code> 当中进行清空列表的动作.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">reward_decay</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">output_graph</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">_build_net</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">store_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ep_obs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ep_as</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ep_rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 class="tut-h2-pad" id="学习">学习
+  <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#学习" class="headerlink" title="Permalink to this headline">¶</a>
+</h2>
+
+<p>本节的 <code class="highlighter-rouge">learn()</code> 很简单, 首先我们要对这回合的所有 <code class="highlighter-rouge">reward</code> 动动手脚, 使他变得更适合被学习.
+第一就是随着时间推进, 用 <code class="highlighter-rouge">gamma</code> 衰减未来的 <code class="highlighter-rouge">reward</code>, 然后为了一定程度上减小 policy gradient 回合 variance,
+我们标准化回合的 state-action value <a href="http://karpathy.github.io/2016/05/31/rl/" target="_blank">依据在 Andrej Karpathy 的 blog</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">reward_decay</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">output_graph</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">_build_net</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">store_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 衰减, 并标准化这回合的 reward
+</span>        <span class="n">discounted_ep_rs_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_discount_and_norm_rewards</span><span class="p">()</span>   <span class="c1"># 功能再面
+</span>
+        <span class="c1"># train on episode
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_op</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">tf_obs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ep_obs</span><span class="p">),</span>  <span class="c1"># shape=[None, n_obs]
+</span>             <span class="bp">self</span><span class="o">.</span><span class="n">tf_acts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ep_as</span><span class="p">),</span>  <span class="c1"># shape=[None, ]
+</span>             <span class="bp">self</span><span class="o">.</span><span class="n">tf_vt</span><span class="p">:</span> <span class="n">discounted_ep_rs_norm</span><span class="p">,</span>  <span class="c1"># shape=[None, ]
+</span>        <span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ep_obs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ep_as</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ep_rs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>    <span class="c1"># 清空回合 data
+</span>        <span class="k">return</span> <span class="n">discounted_ep_rs_norm</span>    <span class="c1"># 返回这一回合的 state-action value
+</span></code></pre></div></div>
+
+<p>我们再来看看这个 <code class="highlighter-rouge">discounted_ep_rs_norm</code> 到底长什么样, 不知道大家还记不记得上节内容的这一段:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vt</span> <span class="o">=</span> <span class="n">RL</span><span class="o">.</span><span class="n">learn</span><span class="p">()</span> <span class="c1"># 学习, 输出 vt, 我们下节课讲这个 vt 的作用
+</span>
+<span class="k">if</span> <span class="n">i_episode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vt</span><span class="p">)</span>    <span class="c1"># plot 这个回合的 vt
+</span>    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'episode steps'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'normalized state-action value'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>我们看看这一段的输出, <code class="highlighter-rouge">vt</code> 也就是 <code class="highlighter-rouge">discounted_ep_rs_norm</code>, 看他是怎么样诱导我们的 gradient descent.</p>
+
+<p><a href="/static/results/reinforcement-learning/5-2-2.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/5-2-2.png" src="/static/img/description/loading.gif" alt="Policy Gradients 思维决策 (Tensorflow)" title="Policy Gradients 思维决策 (Tensorflow)" />
+</a></p>
+
+<p>可以看出, 左边一段的 <code class="highlighter-rouge">vt</code> 有较高的值, 右边较低, 这就是 <code class="highlighter-rouge">vt</code> 在说:</p>
+
+<p><strong>“请重视我这回合开始时的一系列动作, 因为前面一段时间杆子还没有掉下来.
+而且请惩罚我之后的一系列动作, 因为后面的动作让杆子掉下来了”</strong> 或者是</p>
+
+<p><strong>“我每次都想让这个动作在下一次增加被做的可能性 (<code class="highlighter-rouge">grad(log(Policy))</code>),
+但是增加可能性的这种做法是好还是坏呢?
+这就要由 <code class="highlighter-rouge">vt</code> 告诉我了, 所以后段时间的 <code class="highlighter-rouge">增加可能性</code> 做法并没有被提倡, 而前段时间的
+ <code class="highlighter-rouge">增加可能性</code> 做法是被提倡的.”</strong></p>
+
+<p>这样 <code class="highlighter-rouge">vt</code> 就能在这里 <code class="highlighter-rouge">loss = tf.reduce_mean(log_prob * self.tf_vt)</code>
+诱导 gradient descent 朝着正确的方向发展了.</p>
+
+<p>如果你玩了下 <code class="highlighter-rouge">MountainCar</code> 的模拟程序, 你会发现 <code class="highlighter-rouge">MountainCar</code> 模拟程序中的 <code class="highlighter-rouge">vt</code> 长这样:</p>
+
+<p><a href="/static/results/reinforcement-learning/5-2-3.png">
+ <img class="course-image lazy-img" data-src="/static/results/reinforcement-learning/5-2-3.png" src="/static/img/description/loading.gif" alt="Policy Gradients 思维决策 (Tensorflow)" title="Policy Gradients 思维决策 (Tensorflow)" />
+</a></p>
+
+<p>这张图在说: <strong>“请重视我这回合最后的一系列动作, 因为这一系列动作让我爬上了山.
+而且请惩罚我开始的一系列动作, 因为这些动作没能让我爬上山”.</strong></p>
+
+<p>也是通过这些 <code class="highlighter-rouge">vt</code> 来诱导梯度下降的方向.</p>
+
+<p>最后是如何用算法实现对未来 reward 的衰减.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">reward_decay</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">output_graph</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">_build_net</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">store_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">_discount_and_norm_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># discount episode rewards
+</span>        <span class="n">discounted_ep_rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ep_rs</span><span class="p">)</span>
+        <span class="n">running_add</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ep_rs</span><span class="p">))):</span>
+            <span class="n">running_add</span> <span class="o">=</span> <span class="n">running_add</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ep_rs</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+            <span class="n">discounted_ep_rs</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">running_add</span>
+
+        <span class="c1"># normalize episode rewards
+</span>        <span class="n">discounted_ep_rs</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">discounted_ep_rs</span><span class="p">)</span>
+        <span class="n">discounted_ep_rs</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">discounted_ep_rs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">discounted_ep_rs</span>
+</code></pre></div></div>
+
+<p>如果想一次性看到全部代码, 请去我的 <a href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/tree/master/contents/7_Policy_gradient_softmax" target="_blank">Github</a></p>
+
+
+
+
+        <!-- donation -->
+        <div id="bottom-donation-section">
+          
+<p style="font-size: 0.8em; padding:4em 1em 0.5em 1em; margin: 0 auto;">
+  <!-- share -->
+  <strong style="vertical-align: top;">分享到:</strong>
+  <!-- facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/5.2_PG2.jpg" target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_facebook_icon.jpg" width="50px" height="50px" alt="Facebook">
+  </a>
+  <!-- weibo -->
+  <a href='https://service.weibo.com/share/share.php?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/&type=icon&language=zh_cn&searchPic=true&title=Policy Gradients 思维决策 (Tensorflow)+|+易学习Python&pic=https://morvanzhou.github.io/static/thumbnail-small/rl/5.2_PG2.jpg' target="_blank">
+      <img class="cycle-img" src="http://localhost:4000/static/img/icon/share_weibo_icon.png" width="50px" height="50px" alt="微博">
+  </a>
+	<!-- weichat -->
+	<a href="https://api.addthis.com/oexchange/0.8/forward/wechat/offer?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/&title=Policy Gradients 思维决策 (Tensorflow)+|+易学习Python&pco=bmt-300&pubid=ra-51801b2377872ab3&referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_wechat_icon.jpg" width="50px" height="50px" alt="微信">
+	</a>
+	<!-- twitter -->
+	<a href="https://twitter.com/intent/tweet?url=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/&original_referer=https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/" target="_blank">
+		<img class="cycle-img" src="http://localhost:4000/static/img/icon/share_twitter_icon.jpg" width="50px" height="50px" alt="Twitter">
+	</a>
+
+
+
+  <br>
+  如果你觉得这篇文章或视频对你的学习很有帮助, 请你也分享它, 让它能再次帮助到更多的需要学习的人.
+
+  易学习没有正式的经济来源, 如果你也想支持 <strong>易学习Python</strong> 并看到更好的教学内容, <a href="/support/">赞助</a>他一点点, 作为鼓励他继续开源的动力.
+</p>
+
+<h3 id="bottom-donation-title">支持 让教学变得更优秀</h3>
+<br>
+<div>
+    <a id="bottom-donation-button" href="/support/">点我 赞助 易学习</a>
+</div>
+<br>
+
+        </div>
+
+        <hr>
+      </div>
+
+      <!-- lower page navigation -->
+      <div class="pad-page-navigation">
+        
+<div class="PageNavigation">
+  <!-- select url for next and previous -->
+  
+  
+  
+
+  <!-- assign url for next and previous -->
+  
+  <a class="prev" href="/tutorials/machine-learning/reinforcement-learning/5-1-policy-gradient-softmax1/">
+    <strong>&laquo;</strong> <i>Policy Gradients 算法更新 (Tensorflow)</i></a>
+  
+  
+  <a class="next" href="/tutorials/machine-learning/reinforcement-learning/6-1-A-AC/">
+    <i>什么是 Actor Critic</i> <strong>&raquo;</strong></a>
+  
+</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- comment a-d-s section -->
+    <div class="section ie-size">
+      <!-- comment a-d-s -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-4601203457616636"
+           data-ad-slot="3952173485"></ins>
+      <script>
+        window.addEventListener('load', function(){
+          (function(d, s) {
+
+            (adsbygoogle = window.adsbygoogle || []).push({});
+
+          })(document, 'script');
+        }, false)
+      </script>
+    </div>
+
+    <!-- comment section -->
+    <div class="section ie-size">
+      
+<!-- 来必力 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yNzI5MC8zODc1">
+	<script async type="text/javascript">
+	window.addEventListener('load', function(){
+    // 来必力正式代码
+		(function(d, s) {
+
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+
+		})(document, 'script');
+  }, false)
+	</script>
+	<noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+    </div>
+
+    <!-- menu button -->
+    <div class="tut-content-menu">
+      <a class="hover-move" href="/tutorials/machine-learning/reinforcement-learning/">
+      <img src="/static/img/icon/tutorial_contents_icon.jpg" alt="教程目录"></a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- right side section -->
+  <div class="tut-right-bar">
+
+
+    <!-- table-content-nav side section -->
+    <div class="tut-table-content-nav section">
+      <a href="/tutorials/machine-learning/reinforcement-learning/"><p><strong>强化学习 Reinforcement Learning</strong></p></a>
+      
+      
+
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">简介</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-A-RL/">什么是 强化学习 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-B-RL-methods/">强化学习方法汇总 (Reinforcement Learning)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-1-why/">为什么用强化学习 Why?</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/1-2-requirment/">课程要求</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Q-learning</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-1-general-rl/">小例子</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-A-q-learning/">什么是 Q Leaning</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-2-tabular-q1/">Q-learning 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/2-3-tabular-q2/">Q-learning 思维决策</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Sarsa</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-A-sarsa/">什么是 Sarsa</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-1-tabular-sarsa1/">Sarsa 算法更新</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-2-tabular-sarsa2/">Sarsa 思维决策</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-A-sarsa-lambda/">什么是 Sarsa(lambda)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/3-3-tabular-sarsa-lambda/">Sarsa-lambda</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Deep Q Network</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-A-DQN/">什么是 DQN</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-1-DQN1/">DQN 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-2-DQN2/">DQN 神经网络 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-3-DQN3/">DQN 思维决策 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-4-gym/">OpenAI gym 环境库</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-5-double_DQN/">Double DQN (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-6-prioritized-replay/">Prioritized Experience Replay (DQN) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/4-7-dueling-DQN/">Dueling DQN (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Policy Gradient</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-A-PG/">什么是 Policy Gradients</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-1-policy-gradient-softmax1/">Policy Gradients 算法更新 (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/" style="color:#ffffff;">Policy Gradients 思维决策 (Tensorflow)</a>
+               
+                <ul style="padding-left: 1em;">
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#要代码主结构" style="color:#ffffff;">要代码主结构</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#初始化" style="color:#ffffff;">初始化</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#建立-Policy-神经网络" style="color:#ffffff;">建立 Policy 神经网络</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#选行为" style="color:#ffffff;">选行为</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#存储回合" style="color:#ffffff;">存储回合</a> </li>
+                  
+                  
+                    <li><a href="/tutorials/machine-learning/reinforcement-learning/5-2-policy-gradient-softmax2/#学习" style="color:#ffffff;">学习</a> </li>
+                  
+                </ul>
+              
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Actor Critic</p>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-A-AC/">什么是 Actor Critic</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/">Actor Critic (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-A-DDPG/">什么是 Deep Deterministic Policy Gradient (DDPG)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-2-DDPG/">Deep Deterministic Policy Gradient (DDPG) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A1-A3C/">什么是 Asynchronous Advantage Actor-Critic (A3C)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-3-A3C/">Asynchronous Advantage Actor-Critic (A3C) (Tensorflow)</a>
+            
+          </li>
+        
+
+          <li class="tut-table-content-nav-li">
+            
+            <a href="/tutorials/machine-learning/reinforcement-learning/6-4-DPPO/">Distributed Proximal Policy Optimization (DPPO) (Tensorflow)</a>
+            
+          </li>
+        
+      </ul>
+      
+		  
+      <ul class="tut-table-content-nav-contents">
+        
+        <p style="text-align: right; padding:0; margin:0; color: white; font-size:1.1em; background-color: #44a371;">Model Based RL</p>
+        
+      </ul>
+      
+    </div>
+
+    <!-- side a-d-s -->
+    
+<div class="section">
+	<!-- side-fixed-size -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:300px;height:250px"
+	     data-ad-client="ca-pub-4601203457616636"
+	     data-ad-slot="8101278819"></ins>
+	<script>
+		window.addEventListener('load', function(){
+		  (function(d, s) {
+
+			(adsbygoogle = window.adsbygoogle || []).push({});
+
+		  })(document, 'script');
+		}, false)
+	</script>
+</div>
+
+
+
+  </div>
+</main>
+
+
+
+
+
+
+  <footer>
+    <p>关注我的动向:</p>
+<ul>
+  <li><a href="https://www.youtube.com/user/enessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youtube.png" alt="Youtube频道"></a></li>
+  <li><a href="http://i.youku.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/youku.jpg" alt="优酷频道"></a></li>
+  <li><a href="https://space.bilibili.com/243821484#!/" target="_blank">
+    <img class="icon" src="/static/img/icon/bilibili_icon.png" alt="Bilibili"></a></li>
+  <li><a href="https://github.com/inessus" target="_blank">
+    <img class="icon" src="/static/img/icon/github.png" alt="Github"></a></li>
+  <li><a href="http://weibo.com/u/5945530751" target="_blank">
+    <img class="icon" src="/static/img/icon/weibo.png" alt="微博"></a></li>
+  <li><a href="https://https://www.jianshu.com/u/4c31cc0a3eb4" target="_blank">
+    <img class="icon" src="/static/img/icon/jianshu.jpg" alt="简书"></a></li>
+</ul>
+<br>
+<br>
+<p><strong>Email:</strong>  inessus@163.com</p>
+<p>&copy; 2018 inessus.github.io All Rights Reserved</p>
+  </footer>
+
+  <!-- load images after page load -->
+  <script type="text/javascript">
+  window.addEventListener('load', function(){
+    var allimages = document.getElementsByClassName('lazy-img');
+    for (var i=0; i<allimages.length; i++) {
+        if (allimages[i].getAttribute('data-src')) {
+            allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+        }
+    };
+  }, false)
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-108653085-1"></script>
+  <script type="text/javascript">
+    window.addEventListener('load', function(){
+    (function(d, s) {
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-108653085-1');
+
+      })(document, 'script');
+    }, false)
+  </script>
+
+</body>
+</html>
+
