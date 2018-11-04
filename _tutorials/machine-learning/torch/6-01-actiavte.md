@@ -1,3 +1,21 @@
+---
+youku_id: XMjc4ODM5MzQyNA
+youtube_id: NGO0oxdz-zs
+bilibili_id: 15997678&page=35
+title: 激活函数
+publish-date: 2018-11-04
+thumbnail: "/static/thumbnail-small/torch/5.4_batch_normalization.jpg"
+chapter: 6
+description: "激活函数（Activation functions）对于人工神经网络模型去学习、理解非常复杂和非线性的函数来说具有十分重要的作用。它们将非线性特性引入到我们的网络中。如图1，在神经元中，输入的 inputs 通过加权，求和后，还被作用了一个函数，这个函数就是激活函数。引入激活函数是为了增
+              加神经网络模型的非线性。没有激活函数的每层都相当于矩阵相乘。就算你叠加了若干层之后，无非还是个矩阵相乘罢了。"
+post-headings:
+  - 要点
+  - 做点数据
+  - 搭建神经网络
+  - 训练
+  - 画图
+  - 对比结果
+---
 
 pytorch中实现了大部分激活函数，你也可以自定义激活函数，激活函数的实现在torch.nn.functional中，每个激活函数都对应激活模块类，但最终还是调用torch.nn.functional，看了定义，你也能自定义激活函数,我们从最早的激活函数来看
 # sigmoid
